@@ -117,11 +117,46 @@ class _ExamImagePickerSheetState extends State<ExamImagePickerSheet> {
           ),
           if (_selectedPaths.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.md),
-            Text(
-              '${_selectedPaths.length} صور مختارة',
-              style: AppTypography.caption.copyWith(color: AppColors.success, fontWeight: FontWeight.w600),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.surfaceVariantDark : const Color(0xFFE6F4F1),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+                border: Border.all(
+                  color: isDark ? AppColors.primary.withValues(alpha: 0.4) : AppColors.primary.withValues(alpha: 0.25),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.check_circle_rounded,
+                    size: 16,
+                    color: isDark ? AppColors.primaryLight : AppColors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'تم اختيار ${_selectedPaths.length} ${_selectedPaths.length == 1 ? 'صورة' : 'صور'}',
+                      style: AppTypography.caption.copyWith(
+                        color: isDark ? AppColors.onBackgroundDark : AppColors.primaryDark,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => setState(() => _selectedPaths.clear()),
+                    child: Text(
+                      'إلغاء',
+                      style: AppTypography.caption.copyWith(
+                        color: AppColors.error,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.sm),
             TextField(
               controller: _descController,
               style: AppTypography.bodySmall,
@@ -130,22 +165,9 @@ class _ExamImagePickerSheetState extends State<ExamImagePickerSheet> {
                 isDense: true,
                 filled: true,
                 fillColor: isDark ? AppColors.surfaceVariantDark : const Color(0xFFF8FAFC),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: isDark ? AppColors.dividerDark : const Color(0xFFE2E8F0),
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: isDark ? AppColors.dividerDark : const Color(0xFFE2E8F0),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
-                ),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: isDark ? AppColors.dividerDark : const Color(0xFFE2E8F0))),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: isDark ? AppColors.dividerDark : const Color(0xFFE2E8F0))),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.primary, width: 1.5)),
               ),
             ),
             const SizedBox(height: AppSpacing.md),
