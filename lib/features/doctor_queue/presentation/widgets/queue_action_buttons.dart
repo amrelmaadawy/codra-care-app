@@ -39,19 +39,19 @@ class QueueActionButtons extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
         decoration: BoxDecoration(
-          color: AppColors.success.withValues(alpha: 0.08),
+          color: AppColors.emerald.withValues(alpha: 0.08),
           borderRadius: AppRadius.buttonRadius,
-          border: Border.all(color: AppColors.success.withValues(alpha: 0.25)),
+          border: Border.all(color: AppColors.emerald.withValues(alpha: 0.25)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.check_circle_rounded, size: 18, color: AppColors.success),
+            const Icon(Icons.check_circle_rounded, size: 18, color: AppColors.emerald),
             const SizedBox(width: AppSpacing.xs),
             Text(
               'doctor_queue.visit_completed'.tr(),
               style: AppTypography.labelMedium.copyWith(
-                color: AppColors.success,
+                color: AppColors.emerald,
                 fontWeight: FontWeight.bold,
               ),
             ),

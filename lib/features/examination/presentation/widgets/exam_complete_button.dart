@@ -55,8 +55,10 @@ class ExamCompleteButton extends StatelessWidget {
         style: AppTypography.labelLarge.copyWith(fontWeight: FontWeight.w700),
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.success,
+        backgroundColor: AppColors.emerald,
         foregroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: AppColors.emerald.withValues(alpha: 0.35),
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: const RoundedRectangleBorder(borderRadius: AppRadius.buttonRadius),
       ),

@@ -50,7 +50,7 @@ class ExamCompleteDialog extends StatelessWidget {
             onConfirm();
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.success,
+            backgroundColor: AppColors.emerald,
             foregroundColor: Colors.white,
             shape: const RoundedRectangleBorder(borderRadius: AppRadius.buttonRadius),
           ),

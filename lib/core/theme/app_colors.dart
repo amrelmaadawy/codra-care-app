@@ -22,6 +22,11 @@ abstract final class AppColors {
   static const Color info = Color(0xFF3B82F6);
   static const Color infoLight = Color(0xFFDBEAFE);
 
+  // Deep Emerald Palette (Medical Completion & Success)
+  static const Color emerald = Color(0xFF047857);
+  static const Color emeraldDark = Color(0xFF065F46);
+  static const Color emeraldLight = Color(0xFFD1FAE5);
+
   // Dark Theme Backgrounds & Surfaces
   static const Color backgroundDark = Color(0xFF0F1723);
   static const Color surfaceDark = Color(0xFF1A2535);
@@ -44,7 +49,7 @@ abstract final class AppColors {
   static const Color statusScheduled = Color(0xFF3B82F6);
   static const Color statusConfirmed = Color(0xFF8B5CF6);
   static const Color statusInConsultation = Color(0xFFF59E0B);
-  static const Color statusCompleted = Color(0xFF22C55E);
+  static const Color statusCompleted = Color(0xFF047857);
   static const Color statusCancelled = Color(0xFFEF4444);
   static const Color statusWaiting = Color(0xFF06B6D4);
   static const Color statusUrgent = Color(0xFFDC2626);
