@@ -1,11 +1,22 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/cubits/auth_cubit.dart';
 import '../../features/auth/presentation/cubits/auth_state.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/doctor_dashboard/presentation/screens/doctor_dashboard_screen.dart';
+import '../../features/doctor_patients/presentation/cubit/patient_detail_cubit.dart';
+import '../../features/doctor_patients/presentation/cubit/patient_list_cubit.dart';
+import '../../features/doctor_patients/presentation/screens/doctor_patient_detail_screen.dart';
+import '../../features/doctor_patients/presentation/screens/doctor_patient_list_screen.dart';
 import '../../features/doctor_queue/presentation/screens/doctor_queue_screen.dart';
+import '../../features/prescription/presentation/cubit/prescription_detail_cubit.dart';
+import '../../features/prescription/presentation/cubit/prescription_form_cubit.dart';
+import '../../features/prescription/presentation/cubit/prescription_list_cubit.dart';
+import '../../features/prescription/presentation/screens/prescription_detail_screen.dart';
+import '../../features/prescription/presentation/screens/prescription_form_screen.dart';
+import '../../features/prescription/presentation/screens/prescriptions_list_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/shell/presentation/screens/app_shell_screen.dart';
 import '../../features/shell/presentation/screens/placeholder_shell_content.dart';
@@ -13,21 +24,7 @@ import '../constants/app_icons.dart';
 import '../di/permission_service.dart';
 import '../widgets/app_loading_widget.dart';
 import 'app_routes.dart';
-
-class GoRouterRefreshStream extends ChangeNotifier {
-  late final StreamSubscription<dynamic> _subscription;
-
-  GoRouterRefreshStream(Stream<dynamic> stream) {
-    notifyListeners();
-    _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-}
+import 'go_router_refresh_stream.dart';
 
 GoRouter createRouter(
   AuthCubit authCubit,
@@ -52,7 +49,9 @@ GoRouter createRouter(
       }
 
       if (isAuthenticated && (isLoginPage || isSplashPage)) {
-        return permissionService.isDoctor ? AppRoutes.doctorDashboard : AppRoutes.reception;
+        return permissionService.isDoctor
+            ? AppRoutes.doctorDashboard
+            : AppRoutes.reception;
       }
 
       return null;
@@ -68,13 +67,60 @@ GoRouter createRouter(
         path: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.patientDetail,
+        builder: (context, state) {
+          final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          return BlocProvider(
+            create: (_) => GetIt.I<PatientDetailCubit>(),
+            child: DoctorPatientDetailScreen(patientId: id),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.prescriptionNew,
+        builder: (context, state) {
+          final visitId =
+              int.tryParse(state.uri.queryParameters['visitId'] ?? '');
+          final patientId =
+              int.tryParse(state.uri.queryParameters['patientId'] ?? '');
+          return BlocProvider(
+            create: (_) => GetIt.I<PrescriptionFormCubit>(),
+            child: PrescriptionFormScreen(
+              visitId: visitId,
+              patientId: patientId,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.prescriptionDetail,
+        builder: (context, state) {
+          final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          return BlocProvider(
+            create: (_) => GetIt.I<PrescriptionDetailCubit>(),
+            child: PrescriptionDetailScreen(prescriptionId: id),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.prescriptionEdit,
+        builder: (context, state) {
+          final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          return BlocProvider(
+            create: (_) => GetIt.I<PrescriptionFormCubit>(),
+            child: PrescriptionFormScreen(prescriptionId: id),
+          );
+        },
+      ),
       ShellRoute(
         builder: (context, state, child) => AppShellScreen(child: child),
         routes: [
           GoRoute(
             path: AppRoutes.shell,
-            redirect: (context, state) =>
-                permissionService.isDoctor ? AppRoutes.doctorDashboard : AppRoutes.reception,
+            redirect: (context, state) => permissionService.isDoctor
+                ? AppRoutes.doctorDashboard
+                : AppRoutes.reception,
           ),
           GoRoute(
             path: AppRoutes.doctorDashboard,
@@ -86,16 +132,16 @@ GoRouter createRouter(
           ),
           GoRoute(
             path: AppRoutes.patients,
-            builder: (context, state) => const PlaceholderShellContent(
-              titleKey: 'shell.patients',
-              icon: AppIcons.patients,
+            builder: (context, state) => BlocProvider(
+              create: (_) => GetIt.I<PatientListCubit>(),
+              child: const DoctorPatientListScreen(),
             ),
           ),
           GoRoute(
             path: AppRoutes.prescriptions,
-            builder: (context, state) => const PlaceholderShellContent(
-              titleKey: 'shell.prescriptions',
-              icon: AppIcons.prescriptions,
+            builder: (context, state) => BlocProvider(
+              create: (_) => GetIt.I<PrescriptionListCubit>(),
+              child: const PrescriptionsListScreen(),
             ),
           ),
           GoRoute(

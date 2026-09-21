@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/utils/safe_tr_extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -12,6 +13,7 @@ import '../widgets/exam_followup_section.dart';
 import '../widgets/exam_images_section.dart';
 import '../widgets/exam_notes_section.dart';
 import '../widgets/exam_patient_header.dart';
+import '../widgets/exam_prescription_button.dart';
 import '../widgets/exam_previous_visits_sheet.dart';
 import '../widgets/exam_questions_section.dart';
 import '../widgets/exam_shimmer.dart';
@@ -19,7 +21,6 @@ import '../widgets/exam_vital_signs_section.dart';
 
 class ExaminationView extends StatefulWidget {
   const ExaminationView({super.key});
-
   @override
   State<ExaminationView> createState() => _ExaminationViewState();
 }
@@ -32,13 +33,8 @@ class _ExaminationViewState extends State<ExaminationView> {
   String? _followupNotes;
   final List<Map<String, dynamic>> _answers = [];
 
-  void _snack(BuildContext context, String msg, {bool isError = false}) {
-    if (isError) {
-      AppSnackBar.showError(context, msg);
-    } else {
-      AppSnackBar.showSuccess(context, msg);
-    }
-  }
+  void _snack(BuildContext context, String msg, {bool isError = false}) =>
+      isError ? AppSnackBar.showError(context, msg) : AppSnackBar.showSuccess(context, msg);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +62,7 @@ class _ExaminationViewState extends State<ExaminationView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(state.message.tr(), style: AppTypography.bodyMedium),
+                  Text(state.message.trOrSelf(), style: AppTypography.bodyMedium),
                   const SizedBox(height: AppSpacing.md),
                   ElevatedButton(
                     onPressed: () => context.read<ExaminationCubit>().loadExamination(),
@@ -175,10 +171,14 @@ class _ExaminationViewState extends State<ExaminationView> {
                   isUploading: loaded.isUploading,
                   onUpload: (paths, type, desc) =>
                       context.read<ExaminationCubit>().uploadFiles(paths, type, desc),
-                  onDelete: (imgId) =>
-                      context.read<ExaminationCubit>().deleteFile(imgId),
+                  onDelete: (imgId) => context.read<ExaminationCubit>().deleteFile(imgId),
                 ),
-                const SizedBox(height: AppSpacing.xl),
+                const SizedBox(height: AppSpacing.lg),
+                ExamPrescriptionButton(
+                  visitId: visit.id,
+                  patientId: visit.patient.id,
+                ),
+                const SizedBox(height: AppSpacing.lg),
                 ExamCompleteButton(
                   loaded: loaded,
                   complaint: _complaint,

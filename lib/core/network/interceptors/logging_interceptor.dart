@@ -22,7 +22,11 @@ class LoggingInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (kDebugMode) {
-      debugPrint('<-- ERROR ${err.response?.statusCode} ${err.requestOptions.path}: ${err.message}');
+      final status = err.response?.statusCode != null
+          ? '${err.response!.statusCode}'
+          : err.type.name;
+      final msg = err.error ?? err.message ?? '';
+      debugPrint('<-- ERROR [$status] ${err.requestOptions.path}: $msg');
     }
     super.onError(err, handler);
   }

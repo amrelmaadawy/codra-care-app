@@ -1,8 +1,10 @@
 import 'package:get_it/get_it.dart';
 import '../../features/auth/auth_di.dart';
 import '../../features/doctor_dashboard/doctor_dashboard_di.dart';
+import '../../features/doctor_patients/doctor_patients_di.dart';
 import '../../features/doctor_queue/doctor_queue_di.dart';
 import '../../features/examination/examination_di.dart';
+import '../../features/prescription/prescription_di.dart';
 import '../../features/shell/shell_di.dart';
 import '../network/api_client.dart';
 import 'permission_service.dart';
@@ -20,4 +22,7 @@ Future<void> setupDi() async {
   setupDoctorDashboardDi();
   setupDoctorQueueDi();
   setupExaminationDi();
+  setupPrescriptionDi();
+  setupDoctorPatientsDi();
 }
+

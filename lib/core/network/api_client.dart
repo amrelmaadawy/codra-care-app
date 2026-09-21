@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'interceptors/auth_interceptor.dart';
@@ -22,17 +23,32 @@ class ApiClient {
       BaseOptions(
         baseUrl: baseUrl,
         connectTimeout: const Duration(seconds: 15),
-        receiveTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 60),
         sendTimeout: const Duration(seconds: 30),
+        // Receive raw bytes and decode manually with UTF-8 to prevent
+        // FormatException when \uXXXX sequences are split across TCP chunks
+        // by the PHP built-in dev server.
+        responseDecoder: _utf8Decoder,
       ),
     );
 
     dio.interceptors.addAll([
-      LoggingInterceptor(),
       const AuthInterceptor(),
       LocaleInterceptor(),
+      LoggingInterceptor(),
       ErrorInterceptor(),
       RetryInterceptor(dio),
     ]);
+  }
+
+  /// Decode response bytes as UTF-8 explicitly.
+  /// This prevents Dart's JSON parser from seeing a partially-received
+  /// escape sequence (e.g. a \uXXXX split across two TCP packets).
+  static String? _utf8Decoder(
+    List<int> responseBytes,
+    RequestOptions options,
+    ResponseBody responseBody,
+  ) {
+    return utf8.decode(responseBytes, allowMalformed: false);
   }
 }

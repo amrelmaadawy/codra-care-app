@@ -118,7 +118,9 @@ class AppShellScreen extends StatelessWidget {
     final currentTitle = items[selectedIndex].labelKey.tr();
     final selectedRoute = items[selectedIndex].route;
     final hasOwnAppBar = selectedRoute == AppRoutes.doctorDashboard ||
-        selectedRoute == AppRoutes.queue;
+        selectedRoute == AppRoutes.queue ||
+        selectedRoute == AppRoutes.patients ||
+        selectedRoute == AppRoutes.prescriptions;
 
     if (isMobile) {
       return Scaffold(

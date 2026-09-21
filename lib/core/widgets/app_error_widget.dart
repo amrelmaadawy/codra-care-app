@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import '../utils/safe_tr_extension.dart';
 import '../constants/app_icons.dart';
 import '../constants/app_sizes.dart';
 import '../error/failures.dart';
@@ -33,7 +34,7 @@ class AppErrorWidget extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              failure.message.tr(),
+              failure.message.trOrSelf(),
               style: AppTypography.bodyMedium.copyWith(
                 color: context.textColor,
               ),

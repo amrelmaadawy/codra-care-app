@@ -18,7 +18,11 @@ class RetryInterceptor extends Interceptor {
     final extra = err.requestOptions.extra;
     final int currentRetries = (extra[_retryCountKey] as int?) ?? 0;
 
-    final isNetworkError = err.error is NetworkException;
+    final isNetworkError = err.error is NetworkException ||
+        err.type == DioExceptionType.connectionError ||
+        err.type == DioExceptionType.connectionTimeout ||
+        err.type == DioExceptionType.sendTimeout ||
+        err.type == DioExceptionType.receiveTimeout;
 
     if (isNetworkError && currentRetries < maxRetries) {
       final nextRetry = currentRetries + 1;

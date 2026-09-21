@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/utils/safe_tr_extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
@@ -134,7 +135,7 @@ class DoctorQueueView extends StatelessWidget {
               const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
               const SizedBox(height: AppSpacing.md),
               Text(
-                message.tr(),
+                message.trOrSelf(),
                 style: AppTypography.bodyMedium.copyWith(color: context.textColor),
                 textAlign: TextAlign.center,
               ),

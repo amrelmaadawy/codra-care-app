@@ -13,4 +13,15 @@ abstract final class DoctorEndpoints {
   static String deleteExaminationFile(int visitId, int imageId) => '/doctor/examination/$visitId/files/$imageId';
   static String completeExamination(int visitId) => '/doctor/examination/$visitId/complete';
   static String copyPreviousVisit(int visitId, int prevId) => '/doctor/examination/$visitId/previous-visit/$prevId/copy';
+
+  // Prescriptions
+  static const String prescriptions = '/doctor/prescriptions';
+  static String prescriptionDetail(int id) => '/doctor/prescriptions/$id';
+  static String prescriptionCopy(int id) => '/doctor/prescriptions/$id/copy';
+  static const String prescriptionCreateContext = '/doctor/prescriptions/context/create';
+
+  // Patients
+  static const String patients = '/doctor/patients';
+  static String patientDetail(int id) => '/doctor/patients/$id';
 }
+

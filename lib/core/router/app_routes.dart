@@ -7,7 +7,11 @@ abstract final class AppRoutes {
   static const String doctorDashboard = '/shell/dashboard';
   static const String queue = '/shell/queue';
   static const String patients = '/shell/patients';
+  static const String patientDetail = '/patients/:id';
   static const String prescriptions = '/shell/prescriptions';
+  static const String prescriptionNew = '/prescriptions/new';
+  static const String prescriptionDetail = '/prescriptions/:id';
+  static const String prescriptionEdit = '/prescriptions/:id/edit';
   static const String reports = '/shell/reports';
   static const String profile = '/shell/profile';
 

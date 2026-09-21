@@ -20,7 +20,11 @@ extension ThemeContextExtensions on BuildContext {
 
   Color get textColor => isDarkMode ? AppColors.onBackgroundDark : AppColors.onBackgroundLight;
   Color get textMutedColor => isDarkMode ? AppColors.onSurfaceMutedDark : AppColors.onSurfaceMutedLight;
+  Color get textPrimaryColor => textColor;
+  Color get textSecondaryColor => textMutedColor;
 
   List<BoxShadow> get primaryShadow => isDarkMode ? const [] : AppShadows.card;
+  List<BoxShadow> get cardShadow => primaryShadow;
   List<BoxShadow> get elevatedShadow => isDarkMode ? const [] : AppShadows.elevated;
 }
+

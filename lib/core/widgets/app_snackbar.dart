@@ -1,5 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import '../utils/safe_tr_extension.dart';
 import '../constants/app_durations.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
@@ -108,7 +108,7 @@ class AppSnackBar {
               const SizedBox(width: AppSpacing.sm + 4),
               Expanded(
                 child: Text(
-                  message.tr(),
+                  message.trOrSelf(),
                   style: AppTypography.bodySmall.copyWith(
                     color: isDark ? Colors.white : const Color(0xFF0F172A),
                     fontWeight: FontWeight.w600,
