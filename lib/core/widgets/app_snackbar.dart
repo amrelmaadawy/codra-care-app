@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_durations.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 
@@ -56,24 +55,44 @@ class AppSnackBar {
             vertical: AppSpacing.sm + 4,
           ),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.surfaceVariantDark : const Color(0xFF1E293B),
-            borderRadius: AppRadius.cardRadius,
+            color: isDark ? AppColors.surfaceVariantDark : Colors.white,
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: config.color.withValues(alpha: 0.35),
+              color: isDark
+                  ? config.color.withValues(alpha: 0.35)
+                  : config.color.withValues(alpha: 0.25),
               width: 1.2,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 14,
-                offset: const Offset(0, 6),
-              ),
-              BoxShadow(
-                color: config.color.withValues(alpha: 0.12),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            boxShadow: isDark
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.35),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
+                    ),
+                    BoxShadow(
+                      color: config.color.withValues(alpha: 0.15),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : [
+                    BoxShadow(
+                      color: const Color(0xFF0F172A).withValues(alpha: 0.08),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                    BoxShadow(
+                      color: const Color(0xFF0F172A).withValues(alpha: 0.04),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                    BoxShadow(
+                      color: config.color.withValues(alpha: 0.10),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
           ),
           child: Row(
             children: [
@@ -81,7 +100,7 @@ class AppSnackBar {
                 width: 38,
                 height: 38,
                 decoration: BoxDecoration(
-                  color: config.color.withValues(alpha: 0.15),
+                  color: config.color.withValues(alpha: isDark ? 0.20 : 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(config.icon, color: config.color, size: 20),
@@ -91,7 +110,7 @@ class AppSnackBar {
                 child: Text(
                   message.tr(),
                   style: AppTypography.bodySmall.copyWith(
-                    color: Colors.white,
+                    color: isDark ? Colors.white : const Color(0xFF0F172A),
                     fontWeight: FontWeight.w600,
                     height: 1.35,
                   ),
@@ -103,12 +122,12 @@ class AppSnackBar {
               InkWell(
                 onTap: () => messenger.hideCurrentSnackBar(),
                 borderRadius: BorderRadius.circular(20),
-                child: const Padding(
-                  padding: EdgeInsets.all(6),
+                child: Padding(
+                  padding: const EdgeInsets.all(6),
                   child: Icon(
                     Icons.close_rounded,
                     size: 18,
-                    color: Color(0xFF94A3B8),
+                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
                   ),
                 ),
               ),
@@ -124,7 +143,7 @@ class AppSnackBar {
       case AppSnackBarType.success:
         return const _SnackBarConfig(
           icon: Icons.check_circle_rounded,
-          color: AppColors.success,
+          color: AppColors.emerald,
         );
       case AppSnackBarType.error:
         return const _SnackBarConfig(
