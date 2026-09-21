@@ -38,4 +38,6 @@ abstract class PrescriptionRepository {
   Future<Either<Failure, void>> deletePrescription(int id);
 
   Future<Either<Failure, PrescriptionEntity>> copyPrescription(int id);
+
+  Future<Either<Failure, void>> markPrinted(int id);
 }

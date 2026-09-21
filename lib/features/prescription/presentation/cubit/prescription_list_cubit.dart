@@ -17,6 +17,13 @@ class PrescriptionListCubit extends Cubit<PrescriptionListState> {
     required this.deletePrescriptionUseCase,
   }) : super(const PrescriptionListInitial());
 
+  @override
+  void emit(PrescriptionListState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   Future<void> loadPrescriptions({
     String? search,
     bool? filterPrinted,
@@ -38,6 +45,8 @@ class PrescriptionListCubit extends Cubit<PrescriptionListState> {
       search: _currentSearch,
       isPrinted: _currentFilterPrinted,
     );
+
+    if (isClosed) return;
 
     result.fold(
       (failure) => emit(PrescriptionListError(failure)),
@@ -65,7 +74,9 @@ class PrescriptionListCubit extends Cubit<PrescriptionListState> {
   void onSearchChanged(String query) {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 400), () {
-      loadPrescriptions(search: query);
+      if (!isClosed) {
+        loadPrescriptions(search: query);
+      }
     });
   }
 
@@ -94,6 +105,8 @@ class PrescriptionListCubit extends Cubit<PrescriptionListState> {
       isPrinted: current.filterPrinted,
     );
 
+    if (isClosed) return;
+
     result.fold(
       (failure) => emit(current.copyWith(isFetchingMore: false)),
       (paginated) {
@@ -112,6 +125,7 @@ class PrescriptionListCubit extends Cubit<PrescriptionListState> {
 
   Future<bool> deletePrescription(int id) async {
     final result = await deletePrescriptionUseCase(id);
+    if (isClosed) return false;
     return result.fold(
       (failure) => false,
       (_) {

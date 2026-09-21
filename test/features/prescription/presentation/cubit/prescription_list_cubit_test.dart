@@ -118,4 +118,16 @@ void main() {
       const PrescriptionListEmpty(),
     ],
   );
+
+  test('loadPrescriptions does not emit after cubit is closed', () async {
+    when(() => mockGetPrescriptionsUseCase())
+        .thenAnswer((_) async {
+          await Future.delayed(const Duration(milliseconds: 50));
+          return const Left(ServerFailure(message: 'Error'));
+        });
+
+    final loadFuture = cubit.loadPrescriptions();
+    await cubit.close();
+    await expectLater(loadFuture, completes);
+  });
 }

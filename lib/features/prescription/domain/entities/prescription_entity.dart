@@ -27,6 +27,32 @@ class PrescriptionEntity extends Equatable {
     this.createdAt,
   });
 
+  PrescriptionEntity copyWith({
+    int? id,
+    String? prescriptionNumber,
+    PrescriptionPatientEntity? patient,
+    int? visitId,
+    String? visitNumber,
+    String? notes,
+    bool? isPrinted,
+    DateTime? printedAt,
+    List<PrescriptionItemEntity>? items,
+    DateTime? createdAt,
+  }) {
+    return PrescriptionEntity(
+      id: id ?? this.id,
+      prescriptionNumber: prescriptionNumber ?? this.prescriptionNumber,
+      patient: patient ?? this.patient,
+      visitId: visitId ?? this.visitId,
+      visitNumber: visitNumber ?? this.visitNumber,
+      notes: notes ?? this.notes,
+      isPrinted: isPrinted ?? this.isPrinted,
+      printedAt: printedAt ?? this.printedAt,
+      items: items ?? this.items,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
   @override
   List<Object?> get props => [
         id,

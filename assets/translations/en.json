@@ -231,7 +231,16 @@
     "no_previous_prescriptions": "No previous prescriptions found for this patient",
     "filter_all": "All",
     "filter_printed": "Printed",
-    "filter_unprinted": "Unprinted"
+    "filter_unprinted": "Unprinted",
+    "export_pdf": "Export & Print PDF",
+    "share": "Share Prescription",
+    "share_desc": "Send prescription to patient via apps",
+    "print": "Print Prescription",
+    "print_desc": "Preview & print prescription as PDF",
+    "actions": "Prescription Options",
+    "pdf_generating": "Generating prescription...",
+    "pdf_error": "Failed to generate prescription PDF",
+    "shared_title": "Medical Prescription"
   },
   "doctor_patients": {
     "title": "Patients Directory",

@@ -43,9 +43,9 @@ class _AppShimmerState extends State<AppShimmer>
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
     final base = widget.baseColor ??
-        (isDark ? AppColors.surfaceVariantDark : const Color(0xFFE2E8F0));
+        (isDark ? AppColors.surfaceDark : const Color(0xFFE2E8F0));
     final highlight = widget.highlightColor ??
-        (isDark ? AppColors.surfaceDark : const Color(0xFFF8FAFC));
+        (isDark ? AppColors.surfaceVariantDark : const Color(0xFFF8FAFC));
 
     return AnimatedBuilder(
       animation: _controller,
@@ -54,10 +54,10 @@ class _AppShimmerState extends State<AppShimmer>
           blendMode: BlendMode.srcATop,
           shaderCallback: (bounds) {
             return LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [base, highlight, base],
-              stops: const [0.0, 0.5, 1.0],
+              begin: const Alignment(-1.0, -0.3),
+              end: const Alignment(1.0, 0.3),
+              colors: [base, base, highlight, base, base],
+              stops: const [0.0, 0.35, 0.5, 0.65, 1.0],
               transform: _SlidingGradientTransform(
                 slidePercent: _controller.value,
               ),
@@ -79,7 +79,7 @@ class _SlidingGradientTransform extends GradientTransform {
   @override
   Matrix4? transform(Rect bounds, {TextDirection? textDirection}) {
     return Matrix4.translationValues(
-      bounds.width * (slidePercent * 2.0 - 1.0),
+      bounds.width * (slidePercent * 3.2 - 1.6),
       0.0,
       0.0,
     );

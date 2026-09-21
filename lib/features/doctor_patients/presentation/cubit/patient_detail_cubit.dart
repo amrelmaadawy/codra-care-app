@@ -9,10 +9,19 @@ class PatientDetailCubit extends Cubit<PatientDetailState> {
     required this.getPatientDetailUseCase,
   }) : super(const PatientDetailInitial());
 
+  @override
+  void emit(PatientDetailState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   Future<void> loadPatientDetail(int id) async {
     emit(const PatientDetailLoading());
 
     final result = await getPatientDetailUseCase(id);
+
+    if (isClosed) return;
 
     result.fold(
       (failure) => emit(PatientDetailError(failure)),

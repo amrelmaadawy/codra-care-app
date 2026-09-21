@@ -180,5 +180,20 @@ void main() {
       final result = await repository.copyPrescription(10);
       expect(result, const Right(tRx));
     });
+
+    test('markPrinted returns Right(null) on success', () async {
+      when(() => mockDataSource.markPrinted(10))
+          .thenAnswer((_) async => {});
+      final result = await repository.markPrinted(10);
+      expect(result, const Right(null));
+      verify(() => mockDataSource.markPrinted(10)).called(1);
+    });
+
+    test('markPrinted returns ServerFailure on ServerException', () async {
+      when(() => mockDataSource.markPrinted(10))
+          .thenThrow(const ServerException(message: 'Error', statusCode: 500));
+      final result = await repository.markPrinted(10);
+      expect(result, const Left(ServerFailure(message: 'Error', statusCode: 500)));
+    });
   });
 }

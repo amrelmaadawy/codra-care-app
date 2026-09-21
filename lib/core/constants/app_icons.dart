@@ -40,6 +40,9 @@ abstract final class AppIcons {
   static const IconData visibility = Icons.visibility_outlined;
   static const IconData visibilityOff = Icons.visibility_off_outlined;
   static const IconData logout = Icons.logout;
+  static const IconData print = Icons.print_outlined;
+  static const IconData share = Icons.share_outlined;
+  static const IconData pdfExport = Icons.picture_as_pdf_outlined;
 
   // Medical specifics
   static const IconData vitals = Icons.monitor_heart_outlined;

@@ -18,6 +18,7 @@ abstract final class DoctorEndpoints {
   static const String prescriptions = '/doctor/prescriptions';
   static String prescriptionDetail(int id) => '/doctor/prescriptions/$id';
   static String prescriptionCopy(int id) => '/doctor/prescriptions/$id/copy';
+  static String prescriptionMarkPrinted(int id) => '/doctor/prescriptions/$id/mark-printed';
   static const String prescriptionCreateContext = '/doctor/prescriptions/context/create';
 
   // Patients

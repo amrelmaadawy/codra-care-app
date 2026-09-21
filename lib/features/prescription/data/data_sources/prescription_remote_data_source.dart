@@ -41,6 +41,8 @@ abstract class PrescriptionRemoteDataSource {
   Future<void> deletePrescription(int id);
 
   Future<PrescriptionModel> copyPrescription(int id);
+
+  Future<void> markPrinted(int id);
 }
 
 class PrescriptionRemoteDataSourceImpl implements PrescriptionRemoteDataSource {
@@ -157,11 +159,15 @@ class PrescriptionRemoteDataSourceImpl implements PrescriptionRemoteDataSource {
 
   @override
   Future<PrescriptionModel> copyPrescription(int id) async {
-    final response = await _apiClient.dio.get(
-      DoctorEndpoints.prescriptionCopy(id),
-    );
+    final response = await _apiClient.dio.get(DoctorEndpoints.prescriptionCopy(id));
     final data = _unwrapResponse(response);
     return PrescriptionModel.fromJson(data);
+  }
+
+  @override
+  Future<void> markPrinted(int id) async {
+    final response = await _apiClient.dio.post(DoctorEndpoints.prescriptionMarkPrinted(id));
+    _unwrapResponse(response);
   }
 
   Map<String, dynamic> _unwrapResponse(Response response) {

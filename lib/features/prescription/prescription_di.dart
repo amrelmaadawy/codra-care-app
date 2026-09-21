@@ -8,6 +8,7 @@ import 'domain/use_cases/delete_prescription_use_case.dart';
 import 'domain/use_cases/get_prescription_context_use_case.dart';
 import 'domain/use_cases/get_prescription_detail_use_case.dart';
 import 'domain/use_cases/get_prescriptions_use_case.dart';
+import 'domain/use_cases/mark_printed_use_case.dart';
 import 'domain/use_cases/update_prescription_use_case.dart';
 import 'presentation/cubit/prescription_detail_cubit.dart';
 import 'presentation/cubit/prescription_form_cubit.dart';
@@ -34,6 +35,7 @@ void setupPrescriptionDi() {
   sl.registerLazySingleton(() => UpdatePrescriptionUseCase(sl()));
   sl.registerLazySingleton(() => DeletePrescriptionUseCase(sl()));
   sl.registerLazySingleton(() => CopyPrescriptionUseCase(sl()));
+  sl.registerLazySingleton(() => MarkPrintedUseCase(sl()));
 
   // Cubits
   sl.registerFactory(
@@ -56,6 +58,7 @@ void setupPrescriptionDi() {
   sl.registerFactory(
     () => PrescriptionDetailCubit(
       getPrescriptionDetailUseCase: sl(),
+      markPrintedUseCase: sl(),
     ),
   );
 }

@@ -1,10 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_assets.dart';
-import '../../../../core/constants/app_icons.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -106,27 +102,6 @@ class PrescriptionListAppBar extends StatelessWidget implements PreferredSizeWid
                 ],
               ),
             ),
-          const SizedBox(width: AppSpacing.sm),
-          InkWell(
-            onTap: () => context.go(AppRoutes.profile),
-            borderRadius: AppRadius.circleRadius,
-            child: Container(
-              width: AppSizes.avatarSm,
-              height: AppSizes.avatarSm,
-              decoration: BoxDecoration(
-                color: context.primaryColor.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: context.primaryColor.withValues(alpha: 0.25),
-                ),
-              ),
-              child: Icon(
-                AppIcons.profile,
-                size: AppSizes.iconSm,
-                color: context.primaryColor,
-              ),
-            ),
-          ),
         ],
       ),
       bottom: PreferredSize(

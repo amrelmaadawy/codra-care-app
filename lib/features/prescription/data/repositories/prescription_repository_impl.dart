@@ -125,6 +125,16 @@ class PrescriptionRepositoryImpl implements PrescriptionRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, void>> markPrinted(int id) async {
+    try {
+      await _remoteDataSource.markPrinted(id);
+      return const Right(null);
+    } catch (e) {
+      return Left(_mapExceptionToFailure(e));
+    }
+  }
+
   Failure _mapExceptionToFailure(dynamic exception) {
     if (exception is DioException && exception.error != null) {
       return _mapExceptionToFailure(exception.error);

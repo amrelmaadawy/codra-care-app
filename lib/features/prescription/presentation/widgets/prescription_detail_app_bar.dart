@@ -10,11 +10,13 @@ import '../../domain/entities/prescription_entity.dart';
 class PrescriptionDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   final PrescriptionEntity? prescription;
   final VoidCallback onEdit;
+  final VoidCallback? onPdfAction;
 
   const PrescriptionDetailAppBar({
     super.key,
     this.prescription,
     required this.onEdit,
+    this.onPdfAction,
   });
 
   @override
@@ -86,9 +88,36 @@ class PrescriptionDetailAppBar extends StatelessWidget implements PreferredSizeW
                   ],
                 ),
               ),
+              if (onPdfAction != null) ...[
+                _buildPdfButton(context),
+                const SizedBox(width: 8),
+              ],
               _buildEditButton(context),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPdfButton(BuildContext context) {
+    return InkWell(
+      onTap: onPdfAction,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 38,
+        height: 38,
+        decoration: BoxDecoration(
+          color: AppColors.emerald.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.emerald.withValues(alpha: 0.25),
+          ),
+        ),
+        child: const Icon(
+          Icons.picture_as_pdf_rounded,
+          size: 18,
+          color: AppColors.emerald,
         ),
       ),
     );

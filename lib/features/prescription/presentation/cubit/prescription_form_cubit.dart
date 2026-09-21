@@ -25,6 +25,13 @@ class PrescriptionFormCubit extends Cubit<PrescriptionFormState> {
     required this.copyPrescriptionUseCase,
   }) : super(const PrescriptionFormInitial());
 
+  @override
+  void emit(PrescriptionFormState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   Future<void> initForm({int? visitId, int? patientId, int? prescriptionId}) async {
     emit(const PrescriptionFormLoading());
 
@@ -32,6 +39,8 @@ class PrescriptionFormCubit extends Cubit<PrescriptionFormState> {
       visitId: visitId,
       patientId: patientId,
     );
+
+    if (isClosed) return;
 
     await contextResult.fold(
       (failure) async => emit(PrescriptionFormError(mapPrescriptionFailure(failure))),

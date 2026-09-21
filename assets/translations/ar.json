@@ -231,7 +231,16 @@
     "no_previous_prescriptions": "لا توجد روشتات سابقة لهذا المريض",
     "filter_all": "الكل",
     "filter_printed": "مطبوعة",
-    "filter_unprinted": "غير مطبوعة"
+    "filter_unprinted": "غير مطبوعة",
+    "export_pdf": "تصدير وطباعة PDF",
+    "share": "مشاركة الروشتة",
+    "share_desc": "إرسال الروشتة للمريض عبر التطبيقات",
+    "print": "طباعة الروشتة",
+    "print_desc": "معاينة وطباعة الروشتة كـ PDF",
+    "actions": "خيارات الروشتة",
+    "pdf_generating": "جاري تجهيز الروشتة...",
+    "pdf_error": "حدث خطأ أثناء إنشاء ملف الروشتة",
+    "shared_title": "روشتة طبية"
   },
   "doctor_patients": {
     "title": "سجل المرضى",

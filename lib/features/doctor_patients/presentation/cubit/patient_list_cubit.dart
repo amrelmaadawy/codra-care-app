@@ -13,6 +13,13 @@ class PatientListCubit extends Cubit<PatientListState> {
     required this.getDoctorPatientsUseCase,
   }) : super(const PatientListInitial());
 
+  @override
+  void emit(PatientListState state) {
+    if (!isClosed) {
+      super.emit(state);
+    }
+  }
+
   Future<void> loadPatients({String? search}) async {
     emit(const PatientListLoading());
 
@@ -23,6 +30,8 @@ class PatientListCubit extends Cubit<PatientListState> {
     final result = await getDoctorPatientsUseCase(
       search: _currentSearch,
     );
+
+    if (isClosed) return;
 
     result.fold(
       (failure) => emit(PatientListError(failure)),
@@ -47,7 +56,9 @@ class PatientListCubit extends Cubit<PatientListState> {
   void onSearchChanged(String query) {
     _searchDebounce?.cancel();
     _searchDebounce = Timer(const Duration(milliseconds: 400), () {
-      loadPatients(search: query);
+      if (!isClosed) {
+        loadPatients(search: query);
+      }
     });
   }
 
@@ -66,6 +77,8 @@ class PatientListCubit extends Cubit<PatientListState> {
       page: nextPage,
       search: current.searchQuery,
     );
+
+    if (isClosed) return;
 
     result.fold(
       (failure) => emit(current.copyWith(isFetchingMore: false)),
