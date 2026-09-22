@@ -23,6 +23,8 @@ import '../../features/prescription/presentation/cubit/prescription_list_cubit.d
 import '../../features/prescription/presentation/screens/prescription_detail_screen.dart';
 import '../../features/prescription/presentation/screens/prescription_form_screen.dart';
 import '../../features/prescription/presentation/screens/prescriptions_list_screen.dart';
+import '../../features/doctor_reports/presentation/cubit/reports_cubit.dart';
+import '../../features/doctor_reports/presentation/screens/doctor_reports_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/shell/presentation/screens/app_shell_screen.dart';
 import '../../features/shell/presentation/screens/placeholder_shell_content.dart';
@@ -164,7 +166,10 @@ GoRouter createRouter(
           ),
           GoRoute(
             path: AppRoutes.reports,
-            builder: (_, _) => const PlaceholderShellContent(titleKey: 'shell.reports', icon: AppIcons.reports),
+            builder: (context, state) => BlocProvider(
+              create: (_) => GetIt.I<ReportsCubit>(),
+              child: const DoctorReportsScreen(),
+            ),
           ),
           GoRoute(
             path: AppRoutes.profile,

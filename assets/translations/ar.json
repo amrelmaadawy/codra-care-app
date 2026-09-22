@@ -36,7 +36,8 @@
     "no_data": "لا توجد بيانات",
     "select": "اختيار",
     "search_hint": "بحث...",
-    "no_results": "لا توجد نتائج مطابقة"
+    "no_results": "لا توجد نتائج مطابقة",
+    "refresh": "تحديث"
   },
   "add": "إضافة",
   "save": "حفظ",
@@ -444,5 +445,24 @@
     "validation_select_range": "يرجى تحديد تاريخ البداية والنهاية للفترة",
     "validation_past_date": "لا يمكن اختيار تاريخ في الماضي",
     "validation_end_before_start": "تاريخ النهاية يجب أن يكون بعد تاريخ البداية"
+  },
+  "doctor_reports": {
+    "title": "التقارير المالية",
+    "subtitle": "أرباحك ومؤشرات أدائك الطبي",
+    "all_months": "الكل",
+    "filter_year": "اختر السنة",
+    "stats_month_earnings": "أرباح الشهر",
+    "stats_month_patients": "مرضى الشهر",
+    "stats_avg_monthly": "متوسط شهري",
+    "stats_year_earnings": "أرباح السنة",
+    "stats_year_patients": "مرضى السنة",
+    "stats_best_month": "أفضل شهر",
+    "chart_title": "الأرباح الشهرية",
+    "visits_section": "سجل الكشوفات",
+    "visits_empty": "لا توجد زيارات مسجلة لهذه الفترة",
+    "visits_search_hint": "بحث باسم المريض أو رقم الكشف...",
+    "visit_earning": "العمولة",
+    "visit_service_price": "سعر الكشف",
+    "no_service": "كشف عام"
   }
 }

@@ -44,6 +44,9 @@ abstract final class DoctorEndpoints {
   static const String leaveDaysByDate = '/doctor/leave-days/by-date';
   static const String leaveDaysAppointmentsCount = '/doctor/leave-days/appointments-count';
   static String leaveDayDetail(int id) => '/doctor/leave-days/$id';
+
+  // Doctor Reports
+  static const String reports = '/doctor/reports';
 }
 
 

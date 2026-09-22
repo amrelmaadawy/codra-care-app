@@ -36,7 +36,8 @@
     "no_data": "No data available",
     "select": "Select",
     "search_hint": "Search...",
-    "no_results": "No matching results"
+    "no_results": "No matching results",
+    "refresh": "Refresh"
   },
   "add": "Add",
   "save": "Save",
@@ -444,5 +445,24 @@
     "validation_select_range": "Please select start and end dates",
     "validation_past_date": "Cannot select a past date",
     "validation_end_before_start": "End date must be after start date"
+  },
+  "doctor_reports": {
+    "title": "Financial Reports",
+    "subtitle": "Earnings and clinical performance",
+    "all_months": "All",
+    "filter_year": "Select Year",
+    "stats_month_earnings": "Month Earnings",
+    "stats_month_patients": "Month Patients",
+    "stats_avg_monthly": "Monthly Avg",
+    "stats_year_earnings": "Year Earnings",
+    "stats_year_patients": "Year Patients",
+    "stats_best_month": "Best Month",
+    "chart_title": "Monthly Earnings",
+    "visits_section": "Visits Log",
+    "visits_empty": "No visits found for this period",
+    "visits_search_hint": "Search by patient name or visit number...",
+    "visit_earning": "Commission",
+    "visit_service_price": "Service Price",
+    "no_service": "General Examination"
   }
 }
