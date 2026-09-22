@@ -24,5 +24,19 @@ abstract final class DoctorEndpoints {
   // Patients
   static const String patients = '/doctor/patients';
   static String patientDetail(int id) => '/doctor/patients/$id';
+
+  // Diagnosis Templates
+  static const String diagnosisTemplates = '/doctor/diagnosis-templates';
+  static const String diagnosisTemplatesForExam = '/doctor/diagnosis-templates/examination';
+  static String diagnosisTemplateDetail(int id) => '/doctor/diagnosis-templates/$id';
+  static String diagnosisTemplateUpdate(int id) => '/doctor/diagnosis-templates/$id';
+  static String diagnosisTemplateDelete(int id) => '/doctor/diagnosis-templates/$id';
+  static String diagnosisTemplateUse(int id) => '/doctor/diagnosis-templates/$id/use';
+
+  // Doctor Questions
+  static const String questions = '/doctor/questions';
+  static String questionDetail(int id) => '/doctor/questions/$id';
+  static String questionToggle(int id) => '/doctor/questions/$id/toggle';
+  static const String questionsReorder = '/doctor/questions/reorder';
 }
 

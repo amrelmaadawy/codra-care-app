@@ -5,7 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/cubits/auth_cubit.dart';
 import '../../features/auth/presentation/cubits/auth_state.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/diagnosis_templates/presentation/cubit/diagnosis_template_list_cubit.dart';
+import '../../features/diagnosis_templates/presentation/screens/diagnosis_templates_screen.dart';
 import '../../features/doctor_dashboard/presentation/screens/doctor_dashboard_screen.dart';
+import '../../features/doctor_questions/presentation/cubit/doctor_questions_cubit.dart';
+import '../../features/doctor_questions/presentation/screens/doctor_questions_screen.dart';
 import '../../features/doctor_patients/presentation/cubit/patient_detail_cubit.dart';
 import '../../features/doctor_patients/presentation/cubit/patient_list_cubit.dart';
 import '../../features/doctor_patients/presentation/screens/doctor_patient_detail_screen.dart';
@@ -69,49 +73,54 @@ GoRouter createRouter(
       ),
       GoRoute(
         path: AppRoutes.patientDetail,
-        builder: (context, state) {
-          final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
-          return BlocProvider(
-            create: (_) => GetIt.I<PatientDetailCubit>(),
-            child: DoctorPatientDetailScreen(patientId: id),
-          );
-        },
+        builder: (context, state) => BlocProvider(
+          create: (_) => GetIt.I<PatientDetailCubit>(),
+          child: DoctorPatientDetailScreen(
+            patientId: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+          ),
+        ),
       ),
       GoRoute(
         path: AppRoutes.prescriptionNew,
-        builder: (context, state) {
-          final visitId =
-              int.tryParse(state.uri.queryParameters['visitId'] ?? '');
-          final patientId =
-              int.tryParse(state.uri.queryParameters['patientId'] ?? '');
-          return BlocProvider(
-            create: (_) => GetIt.I<PrescriptionFormCubit>(),
-            child: PrescriptionFormScreen(
-              visitId: visitId,
-              patientId: patientId,
-            ),
-          );
-        },
+        builder: (context, state) => BlocProvider(
+          create: (_) => GetIt.I<PrescriptionFormCubit>(),
+          child: PrescriptionFormScreen(
+            visitId: int.tryParse(state.uri.queryParameters['visitId'] ?? ''),
+            patientId: int.tryParse(state.uri.queryParameters['patientId'] ?? ''),
+          ),
+        ),
       ),
       GoRoute(
         path: AppRoutes.prescriptionDetail,
-        builder: (context, state) {
-          final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
-          return BlocProvider(
-            create: (_) => GetIt.I<PrescriptionDetailCubit>(),
-            child: PrescriptionDetailScreen(prescriptionId: id),
-          );
-        },
+        builder: (context, state) => BlocProvider(
+          create: (_) => GetIt.I<PrescriptionDetailCubit>(),
+          child: PrescriptionDetailScreen(
+            prescriptionId: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+          ),
+        ),
       ),
       GoRoute(
         path: AppRoutes.prescriptionEdit,
-        builder: (context, state) {
-          final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
-          return BlocProvider(
-            create: (_) => GetIt.I<PrescriptionFormCubit>(),
-            child: PrescriptionFormScreen(prescriptionId: id),
-          );
-        },
+        builder: (context, state) => BlocProvider(
+          create: (_) => GetIt.I<PrescriptionFormCubit>(),
+          child: PrescriptionFormScreen(
+            prescriptionId: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+          ),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.diagnosisTemplates,
+        builder: (context, state) => BlocProvider(
+          create: (_) => GetIt.I<DiagnosisTemplateListCubit>(),
+          child: const DiagnosisTemplatesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.doctorQuestions,
+        builder: (context, state) => BlocProvider(
+          create: (_) => GetIt.I<DoctorQuestionsCubit>(),
+          child: const DoctorQuestionsScreen(),
+        ),
       ),
       ShellRoute(
         builder: (context, state, child) => AppShellScreen(child: child),

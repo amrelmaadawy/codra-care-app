@@ -69,6 +69,28 @@ class DashboardQuickActions extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: AppSpacing.sm),
+        Row(
+          children: [
+            Expanded(
+              child: _QuickActionButton(
+                label: 'doctor_dashboard.diagnosis_templates'.tr(),
+                icon: Icons.assignment_outlined,
+                color: AppColors.emerald,
+                onTap: () => context.push(AppRoutes.diagnosisTemplates),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: _QuickActionButton(
+                label: 'doctor_dashboard.reception_questions'.tr(),
+                icon: Icons.quiz_outlined,
+                color: AppColors.primaryLight,
+                onTap: () => context.push(AppRoutes.doctorQuestions),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

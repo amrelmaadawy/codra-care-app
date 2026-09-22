@@ -25,7 +25,8 @@ class LoggingInterceptor extends Interceptor {
       final status = err.response?.statusCode != null
           ? '${err.response!.statusCode}'
           : err.type.name;
-      final msg = err.error ?? err.message ?? '';
+      final data = err.response?.data;
+      final msg = data != null ? '$data' : (err.error ?? err.message ?? '');
       debugPrint('<-- ERROR [$status] ${err.requestOptions.path}: $msg');
     }
     super.onError(err, handler);

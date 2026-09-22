@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../diagnosis_templates/domain/use_cases/use_diagnosis_template_use_case.dart';
 import '../../domain/entities/doctor_template_entity.dart';
 
 class ExamTemplatePickerSheet extends StatelessWidget {
@@ -98,7 +100,12 @@ class ExamTemplatePickerSheet extends StatelessWidget {
                   itemBuilder: (ctx, index) {
                     final t = templates[index];
                     return InkWell(
-                      onTap: () => Navigator.of(ctx).pop(t.content),
+                      onTap: () {
+                        if (GetIt.I.isRegistered<UseDiagnosisTemplateUseCase>()) {
+                          GetIt.I<UseDiagnosisTemplateUseCase>()(t.id);
+                        }
+                        Navigator.of(ctx).pop(t.content);
+                      },
                       borderRadius: AppRadius.cardRadius,
                       child: Container(
                         padding: AppSpacing.cardPadding,

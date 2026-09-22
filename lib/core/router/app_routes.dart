@@ -12,6 +12,8 @@ abstract final class AppRoutes {
   static const String prescriptionNew = '/prescriptions/new';
   static const String prescriptionDetail = '/prescriptions/:id';
   static const String prescriptionEdit = '/prescriptions/:id/edit';
+  static const String diagnosisTemplates = '/diagnosis-templates';
+  static const String doctorQuestions = '/doctor-questions';
   static const String reports = '/shell/reports';
   static const String profile = '/shell/profile';
 

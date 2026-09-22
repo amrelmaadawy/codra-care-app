@@ -3,6 +3,7 @@
   "errors": {
     "network": "Check your internet connection and try again",
     "unauthorized": "Your session has expired, please log in again",
+    "forbidden": "You do not have permission to perform this action",
     "not_found": "The requested data was not found",
     "unexpected": "An unexpected error occurred, please try again",
     "cache": "Failed to load cached data",
@@ -25,6 +26,9 @@
     "retry": "Retry",
     "loading": "Loading...",
     "save": "Save",
+    "add": "Add",
+    "create": "Create",
+    "save_changes": "Save Changes",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
@@ -34,6 +38,14 @@
     "search_hint": "Search...",
     "no_results": "No matching results"
   },
+  "add": "Add",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "create": "Create",
+  "save_changes": "Save Changes",
+  "common.create": "Create",
+  "common.save_changes": "Save Changes",
   "shell": {
     "dashboard": "Dashboard",
     "queue": "Queue",
@@ -67,7 +79,9 @@
     "view_queue": "View Queue",
     "new_prescription": "New Prescription",
     "patient_records": "Patient Records",
-    "clinic_reports": "Clinic Reports"
+    "clinic_reports": "Clinic Reports",
+    "diagnosis_templates": "Diagnosis Templates",
+    "reception_questions": "Reception Questions"
   },
   "profile": {
     "title": "Profile",
@@ -282,5 +296,118 @@
     "prescriptions": "Rx",
     "new_prescription": "New Prescription",
     "no_visits_history": "No visits recorded for this patient"
+  },
+  "diagnosis_template": {
+    "title": "Diagnosis Templates",
+    "search_hint": "Search diagnosis templates...",
+    "empty_title": "No Diagnosis Templates",
+    "empty_msg": "Add templates to speed up and streamline diagnosis during examinations",
+    "no_search_results": "No Results Found",
+    "no_search_results_msg": "No templates matched \"{}\"",
+    "clear_filter": "Reset Search",
+    "edit_title": "Edit Diagnosis Template",
+    "add_title": "New Diagnosis Template",
+    "subtitle": "Speed up clinical documentation during examination",
+    "tip_at_least_one": "Enter at least one of (Diagnosis, Chief Complaint, or Notes)",
+    "hints": {
+      "title": "e.g. Acute Gastroenteritis, Pharyngitis...",
+      "diagnosis": "Enter confirmed clinical diagnosis...",
+      "chief_complaint": "Enter typical patient complaint...",
+      "notes": "Any clinical notes or treatment protocol..."
+    },
+    "validation_title": "Please enter a template title (at least 2 characters)",
+    "validation_at_least_one": "Please fill in at least one field (Diagnosis, Complaint, or Notes)",
+    "created_success": "Diagnosis template saved successfully",
+    "updated_success": "Diagnosis template updated successfully",
+    "deleted_success": "Diagnosis template deleted successfully",
+    "duplicated_success": "Diagnosis template duplicated successfully",
+    "copy_suffix": "Copy",
+    "delete_confirm_title": "Delete Diagnosis Template",
+    "delete_confirm_msg": "Are you sure you want to delete template \"{}\"? This action cannot be undone.",
+    "fields": {
+      "title": "Template Title",
+      "diagnosis": "Medical Diagnosis",
+      "chief_complaint": "Chief Complaint",
+      "notes": "Clinical Notes"
+    },
+    "actions": {
+      "add_new": "New Template",
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "delete": "Delete"
+    },
+    "filters": {
+      "all": "All",
+      "top_used": "Top Used",
+      "has_diagnosis": "Diagnosis",
+      "has_complaint": "Complaint",
+      "has_notes": "Notes"
+    }
+  },
+  "doctor_questions": {
+    "title": "Reception Questions",
+    "subtitle": "Questions asked to patients before consultation",
+    "add_new": "Add Question",
+    "edit_title": "Edit Question",
+    "add_title": "New Question",
+    "empty_title": "No Questions Yet",
+    "empty_subtitle": "Add questions to be asked at reception to assist consultation",
+    "created_success": "Question created successfully",
+    "updated_success": "Question updated successfully",
+    "deleted_success": "Question deleted successfully",
+    "reorder_saved": "Order saved successfully",
+    "delete_confirm_title": "Delete Question",
+    "delete_confirm_body": "Are you sure you want to delete this question? It will no longer be asked at reception.",
+    "filter_all": "All",
+    "filter_active": "Active",
+    "filter_inactive": "Inactive",
+    "filter_empty": "No questions match this filter",
+    "drag_hint": "Long-press and drag to reorder",
+    "preview_title": "Preview Questionnaire",
+    "preview_subtitle": "As seen by receptionist and patient",
+    "preview_empty": "No active questions to preview right now",
+    "preview_tooltip": "Preview Questionnaire",
+    "preview_text_hint": "Type answer here...",
+    "templates_title": "Predefined Medical Templates",
+    "templates_subtitle": "Select from common questions to add with one click",
+    "templates_tooltip": "Question Templates",
+    "template_added_success": "Question added from template successfully",
+    "already_added": "Already Added",
+    "yes": "Yes",
+    "no": "No",
+    "fields": {
+      "question_text": "Question Text",
+      "question_type": "Question Type",
+      "is_required": "Required for patient",
+      "options": "Answer Options",
+      "add_option": "Add Option",
+      "option_hint": "Option"
+    },
+    "types": {
+      "text": "Text Answer",
+      "yes_no": "Yes / No",
+      "multiple_choice": "Multiple Choice"
+    },
+    "badges": {
+      "required": "Required",
+      "optional": "Optional",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "validation": {
+      "text_required": "Please enter question text (at least 3 chars)",
+      "options_min": "At least 2 options are required",
+      "option_empty": "Option cannot be empty",
+      "option_duplicate": "This option is already added"
+    },
+    "templates": {
+      "allergies": "Do you have any known allergies to medications or substances?",
+      "chronic_diseases": "Do you suffer from any chronic diseases?",
+      "current_medications": "What medications are you currently taking regularly?",
+      "previous_surgeries": "Have you undergone any previous surgeries?",
+      "chief_complaint": "What is the primary reason for your visit today?",
+      "smoking": "Are you a smoker?",
+      "blood_type": "Blood Type"
+    }
   }
 }

@@ -21,10 +21,19 @@ class ErrorInterceptor extends Interceptor {
 
         if (statusCode == HttpStatus.unauthorized) {
           mappedException = const UnauthorizedException();
+        } else if (statusCode == HttpStatus.forbidden) {
+          mappedException = const ServerException(
+            message: 'errors.forbidden',
+            statusCode: HttpStatus.forbidden,
+          );
         } else if (statusCode == HttpStatus.notFound) {
           mappedException = const NotFoundException();
         } else if (data is Map<String, dynamic>) {
-          final message = data['message'] as String? ?? 'Server Error';
+          var message = data['message'] as String? ?? 'Server Error';
+          if (message.toLowerCase().contains('unauthorized') ||
+              message.toLowerCase().contains('forbidden')) {
+            message = 'errors.forbidden';
+          }
           final errors = data['errors'] as Map<String, dynamic>?;
           mappedException = ServerException(
             message: message,
@@ -33,7 +42,9 @@ class ErrorInterceptor extends Interceptor {
           );
         } else {
           mappedException = ServerException(
-            message: 'Server Error with status code $statusCode',
+            message: statusCode == HttpStatus.forbidden
+                ? 'errors.forbidden'
+                : 'Server Error with status code $statusCode',
             statusCode: statusCode,
           );
         }

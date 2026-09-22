@@ -6,6 +6,10 @@ extension SafeTrExtension on String {
   /// or does not look like a key, returns [this] directly without calling `tr()`,
   /// preventing Easy Localization "key not found" console warnings.
   String trOrSelf() {
+    final lower = toLowerCase().trim();
+    if (lower.contains('this action is unauthorized') || lower == 'unauthorized' || lower == 'forbidden') {
+      return tr('errors.forbidden');
+    }
     if (isEmpty ||
         contains(' ') ||
         contains('\n') ||

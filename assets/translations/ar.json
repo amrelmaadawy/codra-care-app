@@ -3,6 +3,7 @@
   "errors": {
     "network": "تحقق من اتصالك بالإنترنت وأعد المحاولة",
     "unauthorized": "انتهت صلاحية جلستك، يرجى تسجيل الدخول مجدداً",
+    "forbidden": "ليس لديك الصلاحية لتنفيذ هذا الإجراء",
     "not_found": "البيانات المطلوبة غير موجودة",
     "unexpected": "حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى",
     "cache": "فشل تحميل البيانات المحفوظة",
@@ -25,6 +26,9 @@
     "retry": "إعادة المحاولة",
     "loading": "جارٍ التحميل...",
     "save": "حفظ",
+    "add": "إضافة",
+    "create": "إنشاء",
+    "save_changes": "حفظ التغييرات",
     "cancel": "إلغاء",
     "delete": "حذف",
     "edit": "تعديل",
@@ -34,6 +38,14 @@
     "search_hint": "بحث...",
     "no_results": "لا توجد نتائج مطابقة"
   },
+  "add": "إضافة",
+  "save": "حفظ",
+  "cancel": "إلغاء",
+  "delete": "حذف",
+  "create": "إنشاء",
+  "save_changes": "حفظ التغييرات",
+  "common.create": "إنشاء",
+  "common.save_changes": "حفظ التغييرات",
   "shell": {
     "dashboard": "الرئيسية",
     "queue": "الانتظار",
@@ -67,7 +79,9 @@
     "view_queue": "عرض قائمة الانتظار",
     "new_prescription": "روشتة جديدة",
     "patient_records": "سجلات المرضى",
-    "clinic_reports": "تقارير العيادة"
+    "clinic_reports": "تقارير العيادة",
+    "diagnosis_templates": "قوالب التشخيص",
+    "reception_questions": "أسئلة الاستقبال"
   },
   "profile": {
     "title": "الملف الشخصي",
@@ -282,5 +296,118 @@
     "prescriptions": "روشتة",
     "new_prescription": "كتابة روشتة جديدة",
     "no_visits_history": "لا يوجد سجل زيارات مسجل لهذا المريض"
+  },
+  "diagnosis_template": {
+    "title": "قوالب التشخيص",
+    "search_hint": "بحث في قوالب التشخيص...",
+    "empty_title": "لا توجد قوالب تشخيص",
+    "empty_msg": "أضف قوالب لتسهيل وتسريع كتابة التشخيص أثناء الكشف",
+    "no_search_results": "لم يتم العثور على نتائج",
+    "no_search_results_msg": "لا توجد قوالب تطابق \"{}\"",
+    "clear_filter": "إعادة تعيين البحث",
+    "edit_title": "تعديل قالب التشخيص",
+    "add_title": "إضافة قالب تشخيص جديد",
+    "subtitle": "تسهيل وتسريع التوثيق أثناء الكشف الطبي",
+    "tip_at_least_one": "يكفي إدخال حقل واحد على الأقل من (التشخيص، الشكوى، أو الملاحظات)",
+    "hints": {
+      "title": "مثال: نزلة معوية حادة، التهاب الحلق...",
+      "diagnosis": "اكتب التشخيص السريري المعتمد...",
+      "chief_complaint": "اكتب شكوى المريض الشائعة...",
+      "notes": "أي ملاحظات سريرية أو بروتوكول علاجي..."
+    },
+    "validation_title": "يرجى كتابة عنوان القالب (حرفين على الأقل)",
+    "validation_at_least_one": "يجب إدخال حقل واحد على الأقل من (التشخيص، الشكوى، أو الملاحظات)",
+    "created_success": "تم حفظ قالب التشخيص بنجاح",
+    "updated_success": "تم تحديث قالب التشخيص بنجاح",
+    "deleted_success": "تم حذف قالب التشخيص بنجاح",
+    "duplicated_success": "تم نسخ قالب التشخيص بنجاح",
+    "copy_suffix": "نسخة",
+    "delete_confirm_title": "حذف قالب التشخيص",
+    "delete_confirm_msg": "هل أنت متأكد من رغبتك في حذف قالب \"{}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+    "fields": {
+      "title": "عنوان القالب",
+      "diagnosis": "التشخيص الطبي",
+      "chief_complaint": "الشكوى الرئيسية",
+      "notes": "الملاحظات الإكلينيكية"
+    },
+    "actions": {
+      "add_new": "قالب جديد",
+      "edit": "تعديل",
+      "duplicate": "نسخ",
+      "delete": "حذف"
+    },
+    "filters": {
+      "all": "الكل",
+      "top_used": "الأكثر استخداماً",
+      "has_diagnosis": "تشخيص",
+      "has_complaint": "شكوى",
+      "has_notes": "ملاحظات"
+    }
+  },
+  "doctor_questions": {
+    "title": "أسئلة الاستقبال",
+    "subtitle": "الأسئلة التي تُطرح على المريض قبل الكشف",
+    "add_new": "إضافة سؤال جديد",
+    "edit_title": "تعديل السؤال",
+    "add_title": "سؤال جديد",
+    "empty_title": "لا توجد أسئلة بعد",
+    "empty_subtitle": "أضف أسئلة ليتم طرحها على المريض في الاستقبال لتسهيل التشخيص",
+    "created_success": "تم إضافة السؤال بنجاح",
+    "updated_success": "تم تعديل السؤال بنجاح",
+    "deleted_success": "تم حذف السؤال بنجاح",
+    "reorder_saved": "تم حفظ الترتيب بنجاح",
+    "delete_confirm_title": "حذف السؤال",
+    "delete_confirm_body": "هل أنت متأكد من رغبتك في حذف هذا السؤال؟ لن يتم طرحه في الاستقبال بعد الآن.",
+    "filter_all": "الكل",
+    "filter_active": "مفعّل",
+    "filter_inactive": "معطّل",
+    "filter_empty": "لا توجد أسئلة تطابق هذا الفلتر",
+    "drag_hint": "اضغط مطولاً مع السحب لإعادة الترتيب",
+    "preview_title": "معاينة استبيان الاستقبال",
+    "preview_subtitle": "كما سيظهر لموظف الاستقبال والمريض",
+    "preview_empty": "لا توجد أسئلة مفعّلة للمعاينة حالياً",
+    "preview_tooltip": "معاينة الاستبيان",
+    "preview_text_hint": "اكتب الإجابة هنا...",
+    "templates_title": "قوالب أسئلة طبية جاهزة",
+    "templates_subtitle": "اختر من الأسئلة الشائعة لإضافتها بضغطة واحدة",
+    "templates_tooltip": "قوالب أسئلة جاهزة",
+    "template_added_success": "تمت إضافة السؤال من القالب بنجاح",
+    "already_added": "تمت الإضافة",
+    "yes": "نعم",
+    "no": "لا",
+    "fields": {
+      "question_text": "نص السؤال",
+      "question_type": "نوع السؤال",
+      "is_required": "إلزامي للمريض",
+      "options": "خيارات الإجابة",
+      "add_option": "إضافة خيار",
+      "option_hint": "الخيار"
+    },
+    "types": {
+      "text": "إجابة نصية",
+      "yes_no": "نعم / لا",
+      "multiple_choice": "اختيار من متعدد"
+    },
+    "badges": {
+      "required": "إلزامي",
+      "optional": "اختياري",
+      "active": "مفعّل",
+      "inactive": "معطّل"
+    },
+    "validation": {
+      "text_required": "يرجى كتابة نص السؤال (3 أحرف على الأقل)",
+      "options_min": "يجب إضافة خيارين على الأقل",
+      "option_empty": "لا يمكن ترك الخيار فارغاً",
+      "option_duplicate": "هذا الخيار مكرر بالفعل"
+    },
+    "templates": {
+      "allergies": "هل تعاني من حساسية تجاه أي دواء أو مادة معينة؟",
+      "chronic_diseases": "هل تعاني من أي أمراض مزمنة؟",
+      "current_medications": "ما هي الأدوية التي تتناولها بانتظام حالياً؟",
+      "previous_surgeries": "هل خضعت لأي عمليات جراحية سابقة؟",
+      "chief_complaint": "ما هو سبب زيارة الطبيب اليوم؟",
+      "smoking": "هل أنت مدخن؟",
+      "blood_type": "فصيلة الدم"
+    }
   }
 }
