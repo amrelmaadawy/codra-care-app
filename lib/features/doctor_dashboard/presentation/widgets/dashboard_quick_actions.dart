@@ -91,6 +91,21 @@ class DashboardQuickActions extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: AppSpacing.sm),
+        Row(
+          children: [
+            Expanded(
+              child: _QuickActionButton(
+                label: 'doctor_dashboard.leave_days'.tr(),
+                icon: AppIcons.calendar,
+                color: AppColors.warning,
+                onTap: () => context.push(AppRoutes.doctorLeaveDays),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            const Expanded(child: SizedBox.shrink()),
+          ],
+        ),
       ],
     );
   }

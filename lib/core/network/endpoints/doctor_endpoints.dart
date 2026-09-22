@@ -38,5 +38,12 @@ abstract final class DoctorEndpoints {
   static String questionDetail(int id) => '/doctor/questions/$id';
   static String questionToggle(int id) => '/doctor/questions/$id/toggle';
   static const String questionsReorder = '/doctor/questions/reorder';
+
+  // Doctor Leave Days
+  static const String leaveDays = '/doctor/leave-days';
+  static const String leaveDaysByDate = '/doctor/leave-days/by-date';
+  static const String leaveDaysAppointmentsCount = '/doctor/leave-days/appointments-count';
+  static String leaveDayDetail(int id) => '/doctor/leave-days/$id';
 }
+
 

@@ -25,6 +25,11 @@ abstract final class AppIcons {
   static const IconData settingsActive = Icons.settings;
 
   // Actions & Controls
+  static const IconData add = Icons.add;
+  static const IconData delete = Icons.delete_outline;
+  static const IconData calendar = Icons.calendar_today_outlined;
+  static const IconData schedule = Icons.schedule;
+  static const IconData clock = Icons.access_time;
   static const IconData search = Icons.search;
   static const IconData filter = Icons.tune;
   static const IconData refresh = Icons.refresh;

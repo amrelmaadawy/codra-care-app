@@ -8,6 +8,8 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/diagnosis_templates/presentation/cubit/diagnosis_template_list_cubit.dart';
 import '../../features/diagnosis_templates/presentation/screens/diagnosis_templates_screen.dart';
 import '../../features/doctor_dashboard/presentation/screens/doctor_dashboard_screen.dart';
+import '../../features/doctor_leave_days/presentation/cubit/leave_days_cubit.dart';
+import '../../features/doctor_leave_days/presentation/screens/doctor_leave_days_screen.dart';
 import '../../features/doctor_questions/presentation/cubit/doctor_questions_cubit.dart';
 import '../../features/doctor_questions/presentation/screens/doctor_questions_screen.dart';
 import '../../features/doctor_patients/presentation/cubit/patient_detail_cubit.dart';
@@ -122,6 +124,13 @@ GoRouter createRouter(
           child: const DoctorQuestionsScreen(),
         ),
       ),
+      GoRoute(
+        path: AppRoutes.doctorLeaveDays,
+        builder: (context, state) => BlocProvider(
+          create: (_) => GetIt.I<LeaveDaysCubit>(),
+          child: const DoctorLeaveDaysScreen(),
+        ),
+      ),
       ShellRoute(
         builder: (context, state, child) => AppShellScreen(child: child),
         routes: [
@@ -155,10 +164,7 @@ GoRouter createRouter(
           ),
           GoRoute(
             path: AppRoutes.reports,
-            builder: (context, state) => const PlaceholderShellContent(
-              titleKey: 'shell.reports',
-              icon: AppIcons.reports,
-            ),
+            builder: (_, _) => const PlaceholderShellContent(titleKey: 'shell.reports', icon: AppIcons.reports),
           ),
           GoRoute(
             path: AppRoutes.profile,
@@ -166,31 +172,19 @@ GoRouter createRouter(
           ),
           GoRoute(
             path: AppRoutes.reception,
-            builder: (context, state) => const PlaceholderShellContent(
-              titleKey: 'shell.reception',
-              icon: AppIcons.reception,
-            ),
+            builder: (_, _) => const PlaceholderShellContent(titleKey: 'shell.reception', icon: AppIcons.reception),
           ),
           GoRoute(
             path: AppRoutes.appointments,
-            builder: (context, state) => const PlaceholderShellContent(
-              titleKey: 'shell.appointments',
-              icon: AppIcons.appointments,
-            ),
+            builder: (_, _) => const PlaceholderShellContent(titleKey: 'shell.appointments', icon: AppIcons.appointments),
           ),
           GoRoute(
             path: AppRoutes.financial,
-            builder: (context, state) => const PlaceholderShellContent(
-              titleKey: 'shell.financial',
-              icon: AppIcons.financial,
-            ),
+            builder: (_, _) => const PlaceholderShellContent(titleKey: 'shell.financial', icon: AppIcons.financial),
           ),
           GoRoute(
             path: AppRoutes.settings,
-            builder: (context, state) => const PlaceholderShellContent(
-              titleKey: 'shell.settings',
-              icon: AppIcons.settings,
-            ),
+            builder: (_, _) => const PlaceholderShellContent(titleKey: 'shell.settings', icon: AppIcons.settings),
           ),
         ],
       ),

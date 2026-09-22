@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import '../../features/auth/auth_di.dart';
 import '../../features/diagnosis_templates/diagnosis_templates_di.dart';
 import '../../features/doctor_dashboard/doctor_dashboard_di.dart';
+import '../../features/doctor_leave_days/doctor_leave_days_di.dart';
 import '../../features/doctor_patients/doctor_patients_di.dart';
 import '../../features/doctor_questions/doctor_questions_di.dart';
 import '../../features/doctor_queue/doctor_queue_di.dart';
@@ -28,5 +29,6 @@ Future<void> setupDi() async {
   setupDoctorPatientsDi();
   setupDiagnosisTemplatesDi();
   setupDoctorQuestionsDi();
+  setupDoctorLeaveDaysDi();
 }
 

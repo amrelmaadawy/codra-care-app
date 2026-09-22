@@ -81,7 +81,8 @@
     "patient_records": "Patient Records",
     "clinic_reports": "Clinic Reports",
     "diagnosis_templates": "Diagnosis Templates",
-    "reception_questions": "Reception Questions"
+    "reception_questions": "Reception Questions",
+    "leave_days": "Leave Schedule"
   },
   "profile": {
     "title": "Profile",
@@ -409,5 +410,39 @@
       "smoking": "Are you a smoker?",
       "blood_type": "Blood Type"
     }
+  },
+  "leave_days": {
+    "title": "Doctor Leave Schedule",
+    "subtitle": "Manage vacations, days off, and leave periods",
+    "stats_total": "Total Leaves",
+    "stats_this_month": "This Month",
+    "stats_upcoming": "Upcoming",
+    "day_unit": "day",
+    "days_unit": "days",
+    "add_leave": "Add Leave",
+    "add_single_day": "Single Day",
+    "add_date_range": "Date Range",
+    "select_date": "Select Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "duration": "Duration",
+    "reason": "Reason (Optional)",
+    "reason_hint": "e.g., Annual vacation, Medical conference...",
+    "upcoming_section_title": "Upcoming Leaves",
+    "no_upcoming_leaves": "No upcoming leaves scheduled",
+    "no_upcoming_leaves_hint": "Tap any available date on calendar or add button to schedule leave",
+    "delete_leave_title": "Cancel Leave",
+    "delete_confirm_hint": "Are you sure you want to cancel this leave day?",
+    "delete_leave_confirm": "Are you sure you want to cancel leave on {}?",
+    "leave_details_title": "Leave Details",
+    "conflict_warning_title": "Appointments Conflict Warning",
+    "conflict_warning_body": "There are {} active appointments on this date. Do you want to proceed and notify reception?",
+    "conflict_continue": "Confirm & Proceed",
+    "delete_success": "Leave day cancelled successfully",
+    "create_success": "Leave scheduled successfully",
+    "validation_select_date": "Please select a leave date",
+    "validation_select_range": "Please select start and end dates",
+    "validation_past_date": "Cannot select a past date",
+    "validation_end_before_start": "End date must be after start date"
   }
 }

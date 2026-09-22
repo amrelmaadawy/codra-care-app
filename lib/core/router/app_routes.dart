@@ -14,6 +14,7 @@ abstract final class AppRoutes {
   static const String prescriptionEdit = '/prescriptions/:id/edit';
   static const String diagnosisTemplates = '/diagnosis-templates';
   static const String doctorQuestions = '/doctor-questions';
+  static const String doctorLeaveDays = '/doctor-leave-days';
   static const String reports = '/shell/reports';
   static const String profile = '/shell/profile';
 

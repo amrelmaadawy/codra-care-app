@@ -81,7 +81,8 @@
     "patient_records": "سجلات المرضى",
     "clinic_reports": "تقارير العيادة",
     "diagnosis_templates": "قوالب التشخيص",
-    "reception_questions": "أسئلة الاستقبال"
+    "reception_questions": "أسئلة الاستقبال",
+    "leave_days": "جدول الإجازات"
   },
   "profile": {
     "title": "الملف الشخصي",
@@ -409,5 +410,39 @@
       "smoking": "هل أنت مدخن؟",
       "blood_type": "فصيلة الدم"
     }
+  },
+  "leave_days": {
+    "title": "جدول الإجازات",
+    "subtitle": "إدارة أيام وفترات العطلات والإجازات السنوية",
+    "stats_total": "إجمالي الإجازات",
+    "stats_this_month": "إجازات الشهر",
+    "stats_upcoming": "إجازات قادمة",
+    "day_unit": "يوم",
+    "days_unit": "أيام",
+    "add_leave": "تسجيل إجازة",
+    "add_single_day": "يوم واحد",
+    "add_date_range": "فترة إجازة",
+    "select_date": "اختر التاريخ",
+    "start_date": "تاريخ البداية",
+    "end_date": "تاريخ النهاية",
+    "duration": "المدة",
+    "reason": "سبب الإجازة (اختياري)",
+    "reason_hint": "مثال: إجازة سنوية، مؤتمر طبي، ظرف طارئ...",
+    "upcoming_section_title": "الإجازات القادمة",
+    "no_upcoming_leaves": "لا توجد إجازات قادمة مسجلة",
+    "no_upcoming_leaves_hint": "اضغط على أي يوم متاح في التقويم أو زر الإضافة لتسجيل إجازة",
+    "delete_leave_title": "إلغاء الإجازة",
+    "delete_confirm_hint": "هل أنت متأكد من رغبتك في إلغاء يوم الإجازة هذا؟",
+    "delete_leave_confirm": "هل أنت متأكد من إلغاء إجازة يوم {}؟",
+    "leave_details_title": "تفاصيل الإجازة",
+    "conflict_warning_title": "تنبيه تعارض المواعيد",
+    "conflict_warning_body": "يوجد {} موعد محجوز للمرضى في هذا التاريخ. هل تريد تأكيد تسجيل الإجازة وإشعار الاستقبال؟",
+    "conflict_continue": "تأكيد ومتابعة",
+    "delete_success": "تم إلغاء يوم الإجازة بنجاح",
+    "create_success": "تم تسجيل الإجازة بنجاح",
+    "validation_select_date": "يرجى تحديد تاريخ الإجازة",
+    "validation_select_range": "يرجى تحديد تاريخ البداية والنهاية للفترة",
+    "validation_past_date": "لا يمكن اختيار تاريخ في الماضي",
+    "validation_end_before_start": "تاريخ النهاية يجب أن يكون بعد تاريخ البداية"
   }
 }
