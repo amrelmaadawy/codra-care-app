@@ -62,7 +62,8 @@ class _AppShellScreenState extends State<AppShellScreen> {
         location.startsWith(AppRoutes.reports) ||
         location.startsWith(AppRoutes.doctorLeaveDays) ||
         location.startsWith(AppRoutes.diagnosisTemplates) ||
-        location.startsWith(AppRoutes.doctorQuestions);
+        location.startsWith(AppRoutes.doctorQuestions) ||
+        location.startsWith(AppRoutes.profile);
   }
 
   @override

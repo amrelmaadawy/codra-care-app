@@ -47,6 +47,11 @@ abstract final class DoctorEndpoints {
 
   // Doctor Reports
   static const String reports = '/doctor/reports';
+
+  // Doctor Profile
+  static const String profile = '/doctor/profile';
+  static const String profilePassword = '/doctor/profile/password';
+  static const String profilePhoto = '/doctor/profile/photo';
 }
 
 
