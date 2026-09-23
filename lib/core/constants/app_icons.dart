@@ -23,6 +23,9 @@ abstract final class AppIcons {
   static const IconData financialActive = Icons.account_balance_wallet;
   static const IconData settings = Icons.settings_outlined;
   static const IconData settingsActive = Icons.settings;
+  static const IconData menu = Icons.menu_rounded;
+  static const IconData diagnosisTemplates = Icons.assignment_outlined;
+  static const IconData doctorQuestions = Icons.quiz_outlined;
 
   // Actions & Controls
   static const IconData add = Icons.add;
@@ -55,4 +58,5 @@ abstract final class AppIcons {
   static const IconData clinic = Icons.local_hospital_outlined;
   static const IconData lock = Icons.lock_outline;
   static const IconData email = Icons.email_outlined;
+  static const IconData phone = Icons.phone_outlined;
 }

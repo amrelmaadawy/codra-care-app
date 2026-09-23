@@ -112,27 +112,6 @@ GoRouter createRouter(
           ),
         ),
       ),
-      GoRoute(
-        path: AppRoutes.diagnosisTemplates,
-        builder: (context, state) => BlocProvider(
-          create: (_) => GetIt.I<DiagnosisTemplateListCubit>(),
-          child: const DiagnosisTemplatesScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.doctorQuestions,
-        builder: (context, state) => BlocProvider(
-          create: (_) => GetIt.I<DoctorQuestionsCubit>(),
-          child: const DoctorQuestionsScreen(),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.doctorLeaveDays,
-        builder: (context, state) => BlocProvider(
-          create: (_) => GetIt.I<LeaveDaysCubit>(),
-          child: const DoctorLeaveDaysScreen(),
-        ),
-      ),
       ShellRoute(
         builder: (context, state, child) => AppShellScreen(child: child),
         routes: [
@@ -169,6 +148,27 @@ GoRouter createRouter(
             builder: (context, state) => BlocProvider(
               create: (_) => GetIt.I<ReportsCubit>(),
               child: const DoctorReportsScreen(),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.doctorLeaveDays,
+            builder: (context, state) => BlocProvider(
+              create: (_) => GetIt.I<LeaveDaysCubit>(),
+              child: const DoctorLeaveDaysScreen(),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.diagnosisTemplates,
+            builder: (context, state) => BlocProvider(
+              create: (_) => GetIt.I<DiagnosisTemplateListCubit>(),
+              child: const DiagnosisTemplatesScreen(),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.doctorQuestions,
+            builder: (context, state) => BlocProvider(
+              create: (_) => GetIt.I<DoctorQuestionsCubit>(),
+              child: const DoctorQuestionsScreen(),
             ),
           ),
           GoRoute(

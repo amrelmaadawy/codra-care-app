@@ -35,12 +35,12 @@ class AppBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final clampedIndex = currentIndex.clamp(0, items.length - 1);
+    final isAnySelected = currentIndex >= 0 && currentIndex < items.length;
 
     return SafeArea(
       top: false,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
         child: Container(
           height: AppSizes.bottomNavHeight + 4,
           decoration: BoxDecoration(
@@ -73,7 +73,7 @@ class AppBottomNavBar extends StatelessWidget {
             child: Row(
               children: List.generate(items.length, (index) {
                 final item = items[index];
-                final isSelected = index == clampedIndex;
+                final isSelected = isAnySelected && index == currentIndex;
 
                 return _NavBarItem(
                   item: item,

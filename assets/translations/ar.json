@@ -57,7 +57,15 @@
     "reception": "الاستقبال",
     "appointments": "المواعيد",
     "financial": "المالية",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "menu": "القائمة",
+    "leave_days": "أيام الإجازة",
+    "diagnosis_templates": "نماذج التشخيص",
+    "doctor_questions": "أسئلة الاستقبال",
+    "management": "الإدارة",
+    "main": "الرئيسية",
+    "patients_section": "المرضى",
+    "account": "الحساب"
   },
   "doctor_dashboard": {
     "title": "لوحة التحكم",

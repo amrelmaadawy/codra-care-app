@@ -6,6 +6,8 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
+import '../../../../core/widgets/app_shell_scope.dart';
 
 class DoctorLeaveDaysAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int upcomingCount;
@@ -24,14 +26,24 @@ class DoctorLeaveDaysAppBar extends StatelessWidget implements PreferredSizeWidg
       'EEEE، d MMMM',
       context.locale.languageCode,
     ).format(DateTime.now());
+    final isMobile = ResponsiveUtils.isMobile(context);
 
     return AppBar(
+      automaticallyImplyLeading: false,
       toolbarHeight: preferredSize.height,
       backgroundColor: context.surfaceColor,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
-      titleSpacing: AppSpacing.sm,
+      leading: isMobile
+          ? IconButton(
+              icon: const Icon(AppIcons.menu),
+              color: context.textColor,
+              onPressed: () => AppShellScope.of(context)?.openDrawer(),
+              tooltip: 'shell.menu'.tr(),
+            )
+          : null,
+      titleSpacing: isMobile ? 0 : AppSpacing.md,
       iconTheme: IconThemeData(color: context.textColor),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -15,10 +15,12 @@ import '../../../auth/presentation/cubits/auth_state.dart';
 
 class AppShellAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String currentTitle;
+  final VoidCallback? onMenuPressed;
 
   const AppShellAppBar({
     super.key,
     required this.currentTitle,
+    this.onMenuPressed,
   });
 
   @override
@@ -36,7 +38,15 @@ class AppShellAppBar extends StatelessWidget implements PreferredSizeWidget {
           backgroundColor: context.surfaceColor,
           elevation: 0,
           scrolledUnderElevation: 0,
-          titleSpacing: AppSpacing.lg,
+          leading: onMenuPressed != null
+              ? IconButton(
+                  icon: const Icon(AppIcons.menu),
+                  color: context.textColor,
+                  onPressed: onMenuPressed,
+                  tooltip: 'shell.menu'.tr(),
+                )
+              : null,
+          titleSpacing: onMenuPressed != null ? 0 : AppSpacing.lg,
           title: Row(
             children: [
               Image.asset(

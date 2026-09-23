@@ -3,107 +3,76 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/app_icons.dart';
 import '../../../../core/di/permission_service.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/utils/responsive_utils.dart';
+import '../../../../core/widgets/app_shell_scope.dart';
 import '../../../auth/presentation/cubits/auth_cubit.dart';
+import '../widgets/app_drawer.dart';
 import '../widgets/app_shell_app_bar.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/nav_rail.dart';
+import '../widgets/shell_nav_items.dart';
 
-class AppShellScreen extends StatelessWidget {
+class AppShellScreen extends StatefulWidget {
   final Widget child;
 
   const AppShellScreen({super.key, required this.child});
 
-  List<ShellNavItem> _getNavItems(PermissionService permissions) {
-    if (permissions.isDoctor) {
-      return const [
-        ShellNavItem(
-          route: AppRoutes.doctorDashboard,
-          labelKey: 'shell.dashboard',
-          icon: AppIcons.dashboard,
-          activeIcon: AppIcons.dashboardActive,
-        ),
-        ShellNavItem(
-          route: AppRoutes.queue,
-          labelKey: 'shell.queue',
-          icon: AppIcons.queue,
-          activeIcon: AppIcons.queueActive,
-        ),
-        ShellNavItem(
-          route: AppRoutes.patients,
-          labelKey: 'shell.patients',
-          icon: AppIcons.patients,
-          activeIcon: AppIcons.patientsActive,
-        ),
-        ShellNavItem(
-          route: AppRoutes.prescriptions,
-          labelKey: 'shell.prescriptions',
-          icon: AppIcons.prescriptions,
-          activeIcon: AppIcons.prescriptionsActive,
-        ),
-        ShellNavItem(
-          route: AppRoutes.profile,
-          labelKey: 'shell.profile',
-          icon: AppIcons.profile,
-          activeIcon: AppIcons.profileActive,
-        ),
-      ];
-    }
+  @override
+  State<AppShellScreen> createState() => _AppShellScreenState();
+}
 
-    return const [
-      ShellNavItem(
-        route: AppRoutes.reception,
-        labelKey: 'shell.reception',
-        icon: AppIcons.reception,
-        activeIcon: AppIcons.receptionActive,
-      ),
-      ShellNavItem(
-        route: AppRoutes.appointments,
-        labelKey: 'shell.appointments',
-        icon: AppIcons.appointments,
-        activeIcon: AppIcons.appointmentsActive,
-      ),
-      ShellNavItem(
-        route: AppRoutes.patients,
-        labelKey: 'shell.patients',
-        icon: AppIcons.patients,
-        activeIcon: AppIcons.patientsActive,
-      ),
-      ShellNavItem(
-        route: AppRoutes.financial,
-        labelKey: 'shell.financial',
-        icon: AppIcons.financial,
-        activeIcon: AppIcons.financialActive,
-      ),
-      ShellNavItem(
-        route: AppRoutes.settings,
-        labelKey: 'shell.settings',
-        icon: AppIcons.settings,
-        activeIcon: AppIcons.settingsActive,
-      ),
-    ];
-  }
+class _AppShellScreenState extends State<AppShellScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int _calculateSelectedIndex(BuildContext context, List<ShellNavItem> items) {
     final location = GoRouterState.of(context).uri.toString();
     for (int i = 0; i < items.length; i++) {
-      if (location.startsWith(items[i].route)) {
+      if (items[i].route.isNotEmpty && location.startsWith(items[i].route)) {
         return i;
       }
     }
-    return 0;
+    return -1;
+  }
+
+  String _getCurrentTitle(String location) {
+    if (location.startsWith(AppRoutes.profile)) return 'shell.profile'.tr();
+    if (location.startsWith(AppRoutes.reports)) return 'shell.reports'.tr();
+    if (location.startsWith(AppRoutes.doctorLeaveDays)) return 'shell.leave_days'.tr();
+    if (location.startsWith(AppRoutes.diagnosisTemplates)) return 'shell.diagnosis_templates'.tr();
+    if (location.startsWith(AppRoutes.doctorQuestions)) return 'shell.doctor_questions'.tr();
+    if (location.startsWith(AppRoutes.doctorDashboard)) return 'shell.dashboard'.tr();
+    if (location.startsWith(AppRoutes.queue)) return 'shell.queue'.tr();
+    if (location.startsWith(AppRoutes.patients)) return 'shell.patients'.tr();
+    if (location.startsWith(AppRoutes.prescriptions)) return 'shell.prescriptions'.tr();
+    if (location.startsWith(AppRoutes.reception)) return 'shell.reception'.tr();
+    if (location.startsWith(AppRoutes.appointments)) return 'shell.appointments'.tr();
+    if (location.startsWith(AppRoutes.financial)) return 'shell.financial'.tr();
+    if (location.startsWith(AppRoutes.settings)) return 'shell.settings'.tr();
+    return 'app_name'.tr();
+  }
+
+  bool _hasOwnAppBar(String location) {
+    return location == AppRoutes.doctorDashboard ||
+        location.startsWith(AppRoutes.queue) ||
+        location.startsWith(AppRoutes.patients) ||
+        location.startsWith(AppRoutes.prescriptions) ||
+        location.startsWith(AppRoutes.reports) ||
+        location.startsWith(AppRoutes.doctorLeaveDays) ||
+        location.startsWith(AppRoutes.diagnosisTemplates) ||
+        location.startsWith(AppRoutes.doctorQuestions);
   }
 
   @override
   Widget build(BuildContext context) {
     final permissions = GetIt.I<PermissionService>();
-    final items = _getNavItems(permissions);
-    final selectedIndex = _calculateSelectedIndex(context, items);
     final isMobile = ResponsiveUtils.isMobile(context);
+    final items = ShellNavItems.getMobileItems(permissions);
+    final railItems = ShellNavItems.getRailItems(permissions);
+    final activeItems = isMobile ? items : railItems;
+    final selectedIndex = _calculateSelectedIndex(context, activeItems);
 
     void onSelect(int index) {
       if (index >= 0 && index < items.length) {
@@ -111,54 +80,67 @@ class AppShellScreen extends StatelessWidget {
       }
     }
 
+    void onRailSelect(int index) {
+      if (index >= 0 && index < railItems.length) {
+        context.go(railItems[index].route);
+      }
+    }
+
     void onLogout() {
       context.read<AuthCubit>().logout();
     }
 
-    final currentTitle = items[selectedIndex].labelKey.tr();
-    final selectedRoute = items[selectedIndex].route;
-    final hasOwnAppBar = selectedRoute == AppRoutes.doctorDashboard ||
-        selectedRoute == AppRoutes.queue ||
-        selectedRoute == AppRoutes.patients ||
-        selectedRoute == AppRoutes.prescriptions;
+    final location = GoRouterState.of(context).uri.toString();
+    final currentTitle = _getCurrentTitle(location);
+    final hasOwnAppBar = _hasOwnAppBar(location);
 
     if (isMobile) {
-      return Scaffold(
+      return AppShellScope(
+        openDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+        child: Scaffold(
+          key: _scaffoldKey,
+          drawer: const AppDrawer(),
+          appBar: hasOwnAppBar
+              ? null
+              : AppShellAppBar(
+                  currentTitle: currentTitle,
+                  onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                ),
+          body: widget.child,
+          bottomNavigationBar: AppBottomNavBar(
+            items: items,
+            currentIndex: selectedIndex,
+            onSelect: onSelect,
+          ),
+        ),
+      );
+    }
+
+    return AppShellScope(
+      openDrawer: () => _scaffoldKey.currentState?.openDrawer(),
+      child: Scaffold(
+        key: _scaffoldKey,
         appBar: hasOwnAppBar
             ? null
             : AppShellAppBar(
                 currentTitle: currentTitle,
               ),
-        body: child,
-        bottomNavigationBar: AppBottomNavBar(
-          items: items,
-          currentIndex: selectedIndex,
-          onSelect: onSelect,
+        body: Row(
+          children: [
+            AppNavRail(
+              items: railItems,
+              currentIndex: selectedIndex,
+              onSelect: onRailSelect,
+              onLogout: onLogout,
+            ),
+            Expanded(
+              child: Container(
+                color: context.backgroundColor,
+                child: widget.child,
+              ),
+            ),
+          ],
         ),
-      );
-    }
-
-    return Scaffold(
-      appBar: hasOwnAppBar
-          ? null
-          : AppShellAppBar(
-              currentTitle: currentTitle,
-            ),
-      body: Row(
-        children: [
-          AppNavRail(
-            items: items,
-            currentIndex: selectedIndex,
-            onSelect: onSelect,
-            onLogout: onLogout,
-          ),
-          Expanded(
-            child: Container(
-              color: context.backgroundColor,
-              child: child,
-            ),
-          ),
-        ],
       ),
     );
   }

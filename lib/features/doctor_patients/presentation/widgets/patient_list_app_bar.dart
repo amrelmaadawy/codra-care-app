@@ -1,10 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_assets.dart';
+import '../../../../core/constants/app_icons.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../../../core/utils/responsive_utils.dart';
+import '../../../../core/widgets/app_shell_scope.dart';
 
 class PatientListAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int totalCount;
@@ -23,6 +26,7 @@ class PatientListAppBar extends StatelessWidget implements PreferredSizeWidget {
       'EEEE، d MMMM',
       context.locale.languageCode,
     ).format(DateTime.now());
+    final isMobile = ResponsiveUtils.isMobile(context);
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -30,7 +34,15 @@ class PatientListAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: context.surfaceColor,
       elevation: 0,
       scrolledUnderElevation: 0,
-      titleSpacing: AppSpacing.lg,
+      leading: isMobile
+          ? IconButton(
+              icon: const Icon(AppIcons.menu),
+              color: context.textColor,
+              onPressed: () => AppShellScope.of(context)?.openDrawer(),
+              tooltip: 'shell.menu'.tr(),
+            )
+          : null,
+      titleSpacing: isMobile ? 0 : AppSpacing.lg,
       title: Row(
         children: [
           Image.asset(

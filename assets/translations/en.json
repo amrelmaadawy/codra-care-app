@@ -57,7 +57,15 @@
     "reception": "Reception",
     "appointments": "Appointments",
     "financial": "Financial",
-    "settings": "Settings"
+    "settings": "Settings",
+    "menu": "Menu",
+    "leave_days": "Leave Days",
+    "diagnosis_templates": "Diagnosis Templates",
+    "doctor_questions": "Reception Questions",
+    "management": "Management",
+    "main": "Main",
+    "patients_section": "Patients",
+    "account": "Account"
   },
   "doctor_dashboard": {
     "title": "Dashboard",

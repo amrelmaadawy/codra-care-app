@@ -6,7 +6,6 @@ import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../domain/entities/doctor_dashboard_entity.dart';
-import '../widgets/dashboard_quick_actions.dart';
 import '../widgets/dashboard_stat_card.dart';
 import '../widgets/doctor_dashboard_app_bar.dart';
 
@@ -33,8 +32,6 @@ class DoctorDashboardView extends StatelessWidget {
           padding: AppSpacing.pagePadding,
           children: [
             _buildStatsGrid(context),
-            const SizedBox(height: AppSpacing.lg),
-            const DashboardQuickActions(),
             const SizedBox(height: AppSpacing.xl),
           ],
         ),

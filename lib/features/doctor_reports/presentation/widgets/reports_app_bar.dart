@@ -1,11 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_icons.dart';
-import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_extensions.dart';
+
+import '../../../../core/utils/responsive_utils.dart';
+import '../../../../core/widgets/app_shell_scope.dart';
 
 class ReportsAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int selectedYear;
@@ -20,76 +22,66 @@ class ReportsAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 12);
+  Size get preferredSize => const Size.fromHeight(64.0);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: context.surfaceColor,
-        border: Border(
-          bottom: BorderSide(
-            color: context.dividerColor.withValues(alpha: 0.6),
+    final isMobile = ResponsiveUtils.isMobile(context);
+
+    return AppBar(
+      automaticallyImplyLeading: false,
+      toolbarHeight: preferredSize.height,
+      backgroundColor: context.surfaceColor,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      leading: isMobile
+          ? IconButton(
+              icon: const Icon(AppIcons.menu),
+              color: context.textColor,
+              onPressed: () => AppShellScope.of(context)?.openDrawer(),
+              tooltip: 'shell.menu'.tr(),
+            )
+          : null,
+      titleSpacing: isMobile ? 0 : AppSpacing.lg,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'doctor_reports.title'.tr(),
+            style: AppTypography.titleMedium.copyWith(
+              color: context.textColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
+          Text(
+            'doctor_reports.subtitle'.tr(),
+            style: AppTypography.bodySmall.copyWith(
+              color: context.textSecondaryColor,
+              fontSize: 11,
+            ),
+          ),
+        ],
       ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.xs,
+      actions: [
+        _buildYearSelector(context),
+        const SizedBox(width: AppSpacing.xs),
+        IconButton(
+          icon: Icon(
+            Icons.refresh_rounded,
+            color: context.primaryColor,
+            size: 22,
           ),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: context.primaryColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                child: Icon(
-                  AppIcons.reports,
-                  color: context.primaryColor,
-                  size: AppSizes.iconMd,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'doctor_reports.title'.tr(),
-                      style: AppTypography.titleMedium.copyWith(
-                        color: context.textColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'doctor_reports.subtitle'.tr(),
-                      style: AppTypography.bodySmall.copyWith(
-                        color: context.textSecondaryColor,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _buildYearSelector(context),
-              const SizedBox(width: AppSpacing.xs),
-              IconButton(
-                icon: Icon(
-                  Icons.refresh_rounded,
-                  color: context.primaryColor,
-                  size: 22,
-                ),
-                tooltip: 'common.refresh'.tr(),
-                onPressed: onRefresh,
-              ),
-            ],
-          ),
+          tooltip: 'common.refresh'.tr(),
+          onPressed: onRefresh,
+        ),
+        const SizedBox(width: AppSpacing.sm),
+      ],
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Container(
+          color: context.dividerColor.withValues(alpha: 0.6),
+          height: 1,
         ),
       ),
     );
