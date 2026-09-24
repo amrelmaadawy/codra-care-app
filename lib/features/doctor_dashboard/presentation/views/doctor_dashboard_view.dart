@@ -5,6 +5,7 @@ import '../../../../core/constants/app_icons.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../doctor_chat/presentation/widgets/doctor_chat_fab.dart';
 import '../../domain/entities/doctor_dashboard_entity.dart';
 import '../widgets/dashboard_stat_card.dart';
 import '../widgets/doctor_dashboard_app_bar.dart';
@@ -36,6 +37,7 @@ class DoctorDashboardView extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: const DoctorChatFab(),
     );
   }
 

@@ -59,4 +59,12 @@ abstract final class AppIcons {
   static const IconData lock = Icons.lock_outline;
   static const IconData email = Icons.email_outlined;
   static const IconData phone = Icons.phone_outlined;
+
+  // Chat specifics
+  static const IconData chat = Icons.chat_bubble_outline_rounded;
+  static const IconData chatActive = Icons.chat_bubble_rounded;
+  static const IconData send = Icons.send_rounded;
+  static const IconData doubleCheck = Icons.done_all_rounded;
+  static const IconData singleCheck = Icons.check_rounded;
+  static const IconData receptionChat = Icons.support_agent_rounded;
 }

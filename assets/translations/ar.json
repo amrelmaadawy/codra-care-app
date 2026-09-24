@@ -507,5 +507,29 @@
     "choose_source": "اختر مصدر الصورة",
     "camera": "الكاميرا",
     "gallery": "المعرض"
+  },
+  "chat": {
+    "title": "محادثة الاستقبال",
+    "subtitle": "التواصل الداخلي الفوري",
+    "reception": "الاستقبال",
+    "doctor": "أنت",
+    "online": "متصل",
+    "offline": "غير متصل",
+    "type_message": "اكتب رسالتك هنا...",
+    "send": "إرسال",
+    "empty_title": "لا توجد رسائل سابقة",
+    "empty_subtitle": "ابدأ المحادثة مع موظفي الاستقبال للتنسيق الداخلي السريع",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "unread_messages": "رسائل غير مقروءة",
+    "char_count": "متبقي {count} حرف",
+    "max_char_reached": "الحد الأقصى 2000 حرف",
+    "error_empty_message": "لا يمكن إرسال رسالة فارغة",
+    "error_numbers_only": "لا يمكن أن تتكون الرسالة من أرقام فقط",
+    "error_send_failed": "فشل إرسال الرسالة",
+    "status_sending": "جاري الإرسال...",
+    "status_failed": "فشل الإرسال",
+    "status_sent": "تم الإرسال",
+    "retry": "إعادة المحاولة"
   }
 }

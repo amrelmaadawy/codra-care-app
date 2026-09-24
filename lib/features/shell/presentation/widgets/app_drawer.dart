@@ -50,6 +50,12 @@ class AppDrawer extends StatelessWidget {
                       isSelected: location.startsWith(AppRoutes.queue),
                       onTap: () => _navigateTo(context, AppRoutes.queue),
                     ),
+                    DrawerItemTile(
+                      icon: AppIcons.chat,
+                      labelKey: 'chat.title',
+                      isSelected: location.startsWith(AppRoutes.doctorChat),
+                      onTap: () => _navigateTo(context, AppRoutes.doctorChat),
+                    ),
                     const SizedBox(height: AppSpacing.xs),
                     const DrawerSectionHeader(titleKey: 'shell.patients_section'),
                     DrawerItemTile(

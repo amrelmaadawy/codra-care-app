@@ -52,6 +52,13 @@ abstract final class DoctorEndpoints {
   static const String profile = '/doctor/profile';
   static const String profilePassword = '/doctor/profile/password';
   static const String profilePhoto = '/doctor/profile/photo';
+
+  // Doctor Internal Chat
+  static const String chatInit = '/doctor/chat/init';
+  static const String chatPoll = '/doctor/chat/poll';
+  static const String chatSend = '/doctor/chat/send';
+  static const String chatRead = '/doctor/chat/read';
+  static const String chatUnreadCount = '/doctor/chat/unread-count';
 }
 
 

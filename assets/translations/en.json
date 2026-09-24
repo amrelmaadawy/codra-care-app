@@ -507,5 +507,29 @@
     "choose_source": "Choose Image Source",
     "camera": "Camera",
     "gallery": "Gallery"
+  },
+  "chat": {
+    "title": "Reception Chat",
+    "subtitle": "Internal Instant Messaging",
+    "reception": "Reception",
+    "doctor": "You",
+    "online": "Online",
+    "offline": "Offline",
+    "type_message": "Type your message here...",
+    "send": "Send",
+    "empty_title": "No messages yet",
+    "empty_subtitle": "Start chatting with reception staff for quick internal coordination",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "unread_messages": "Unread messages",
+    "char_count": "{count} characters left",
+    "max_char_reached": "Maximum 2000 characters",
+    "error_empty_message": "Cannot send an empty message",
+    "error_numbers_only": "Message cannot contain only numbers",
+    "error_send_failed": "Failed to send message",
+    "status_sending": "Sending...",
+    "status_failed": "Failed to send",
+    "status_sent": "Sent",
+    "retry": "Retry"
   }
 }

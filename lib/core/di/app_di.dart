@@ -10,6 +10,7 @@ import '../../features/doctor_reports/doctor_reports_di.dart';
 import '../../features/examination/examination_di.dart';
 import '../../features/prescription/prescription_di.dart';
 import '../../features/profile/profile_di.dart';
+import '../../features/doctor_chat/doctor_chat_di.dart';
 import '../../features/shell/shell_di.dart';
 import '../network/api_client.dart';
 import 'permission_service.dart';
@@ -34,5 +35,6 @@ Future<void> setupDi() async {
   setupDoctorLeaveDaysDi();
   setupDoctorReportsDi();
   setupProfileDi();
+  setupDoctorChatDi();
 }
 
