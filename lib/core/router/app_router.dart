@@ -8,6 +8,7 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/diagnosis_templates/presentation/cubit/diagnosis_template_list_cubit.dart';
 import '../../features/diagnosis_templates/presentation/screens/diagnosis_templates_screen.dart';
 import '../../features/doctor_chat/presentation/screens/doctor_chat_screen.dart';
+import '../../features/doctor_notifications/presentation/screens/doctor_notifications_screen.dart';
 import '../../features/doctor_dashboard/presentation/screens/doctor_dashboard_screen.dart';
 import '../../features/doctor_leave_days/presentation/cubit/leave_days_cubit.dart';
 import '../../features/doctor_leave_days/presentation/screens/doctor_leave_days_screen.dart';
@@ -117,6 +118,10 @@ GoRouter createRouter(
       GoRoute(
         path: AppRoutes.doctorChat,
         builder: (context, state) => const DoctorChatScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.doctorNotifications,
+        builder: (context, state) => const DoctorNotificationsScreen(),
       ),
       ShellRoute(
         builder: (context, state, child) => AppShellScreen(child: child),

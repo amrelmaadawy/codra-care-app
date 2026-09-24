@@ -531,5 +531,16 @@
     "status_failed": "Failed to send",
     "status_sent": "Sent",
     "retry": "Retry"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Patient alerts, cases & system updates",
+    "mark_all": "Mark all as read",
+    "empty_title": "No Notifications",
+    "empty_subtitle": "New patient alerts, urgent cases, and reception messages will appear here",
+    "urgent_case": "Urgent Case",
+    "new_patient": "New Patient",
+    "chat_message": "New Message",
+    "doctor_leave": "Leave Day"
   }
 }

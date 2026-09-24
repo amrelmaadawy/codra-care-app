@@ -18,6 +18,7 @@ abstract final class AppRoutes {
   static const String reports = '/shell/reports';
   static const String profile = '/shell/profile';
   static const String doctorChat = '/doctor-chat';
+  static const String doctorNotifications = '/doctor-notifications';
 
   // Reception/Admin shell routes
   static const String reception = '/shell/reception';
