@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/utils/safe_tr_extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -16,7 +18,6 @@ import '../widgets/queue_cancel_dialog.dart';
 import '../widgets/queue_empty_state.dart';
 import '../widgets/queue_patient_card.dart';
 import '../widgets/queue_summary_strip.dart';
-import '../../../examination/presentation/screens/examination_screen.dart';
 
 class DoctorQueueView extends StatelessWidget {
   const DoctorQueueView({super.key});
@@ -95,10 +96,8 @@ class DoctorQueueView extends StatelessWidget {
                     onExamine: () async {
                       final visitId = await cubit.startExamination(item.id);
                       if (visitId != null && context.mounted) {
-                        final completed = await Navigator.of(context).push<bool>(
-                          MaterialPageRoute(
-                            builder: (_) => ExaminationScreen(visitId: visitId),
-                          ),
+                        final completed = await context.push<bool>(
+                          AppRoutes.examinationPath(visitId),
                         );
                         if (completed == true) {
                           cubit.silentRefresh();

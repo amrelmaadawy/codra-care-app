@@ -71,6 +71,9 @@
     "title": "لوحة التحكم",
     "welcome": "مرحباً د.",
     "welcome_prefix": "مرحباً،",
+    "greeting_morning": "صباح الخير،",
+    "greeting_afternoon": "مساء الخير،",
+    "greeting_evening": "مساء الخير،",
     "online_status": "نشط اليوم",
     "subtitle": "ملخص نشاط عيادتك لليوم",
     "today_queue": "قائمة انتظار اليوم",
@@ -140,6 +143,7 @@
   },
   "examination": {
     "title": "شاشة الفحص",
+    "saving_in_progress": "جارٍ حفظ البيانات، يرجى الانتظار...",
     "patient_info": "بيانات المريض",
     "vital_signs": "العلامات الحيوية",
     "chief_complaint": "الشكوى الرئيسية",

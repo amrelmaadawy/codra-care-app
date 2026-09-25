@@ -37,20 +37,26 @@ class _AppShellScreenState extends State<AppShellScreen> {
     return -1;
   }
 
+  static const Map<String, String> _routeTitles = {
+    AppRoutes.profile: 'shell.profile',
+    AppRoutes.reports: 'shell.reports',
+    AppRoutes.doctorLeaveDays: 'shell.leave_days',
+    AppRoutes.diagnosisTemplates: 'shell.diagnosis_templates',
+    AppRoutes.doctorQuestions: 'shell.doctor_questions',
+    AppRoutes.doctorDashboard: 'shell.dashboard',
+    AppRoutes.queue: 'shell.queue',
+    AppRoutes.patients: 'shell.patients',
+    AppRoutes.prescriptions: 'shell.prescriptions',
+    AppRoutes.reception: 'shell.reception',
+    AppRoutes.appointments: 'shell.appointments',
+    AppRoutes.financial: 'shell.financial',
+    AppRoutes.settings: 'shell.settings',
+  };
+
   String _getCurrentTitle(String location) {
-    if (location.startsWith(AppRoutes.profile)) return 'shell.profile'.tr();
-    if (location.startsWith(AppRoutes.reports)) return 'shell.reports'.tr();
-    if (location.startsWith(AppRoutes.doctorLeaveDays)) return 'shell.leave_days'.tr();
-    if (location.startsWith(AppRoutes.diagnosisTemplates)) return 'shell.diagnosis_templates'.tr();
-    if (location.startsWith(AppRoutes.doctorQuestions)) return 'shell.doctor_questions'.tr();
-    if (location.startsWith(AppRoutes.doctorDashboard)) return 'shell.dashboard'.tr();
-    if (location.startsWith(AppRoutes.queue)) return 'shell.queue'.tr();
-    if (location.startsWith(AppRoutes.patients)) return 'shell.patients'.tr();
-    if (location.startsWith(AppRoutes.prescriptions)) return 'shell.prescriptions'.tr();
-    if (location.startsWith(AppRoutes.reception)) return 'shell.reception'.tr();
-    if (location.startsWith(AppRoutes.appointments)) return 'shell.appointments'.tr();
-    if (location.startsWith(AppRoutes.financial)) return 'shell.financial'.tr();
-    if (location.startsWith(AppRoutes.settings)) return 'shell.settings'.tr();
+    for (final entry in _routeTitles.entries) {
+      if (location.startsWith(entry.key)) return entry.value.tr();
+    }
     return 'app_name'.tr();
   }
 

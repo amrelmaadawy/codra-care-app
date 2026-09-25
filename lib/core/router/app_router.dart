@@ -19,6 +19,7 @@ import '../../features/doctor_patients/presentation/cubit/patient_list_cubit.dar
 import '../../features/doctor_patients/presentation/screens/doctor_patient_detail_screen.dart';
 import '../../features/doctor_patients/presentation/screens/doctor_patient_list_screen.dart';
 import '../../features/doctor_queue/presentation/screens/doctor_queue_screen.dart';
+import '../../features/examination/presentation/screens/examination_screen.dart';
 import '../../features/prescription/presentation/cubit/prescription_detail_cubit.dart';
 import '../../features/prescription/presentation/cubit/prescription_form_cubit.dart';
 import '../../features/prescription/presentation/cubit/prescription_list_cubit.dart';
@@ -123,6 +124,13 @@ GoRouter createRouter(
         path: AppRoutes.doctorNotifications,
         builder: (context, state) => const DoctorNotificationsScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.examination,
+        builder: (context, state) {
+          final visitId = int.tryParse(state.pathParameters['visitId'] ?? '') ?? 0;
+          return ExaminationScreen(visitId: visitId);
+        },
+      ),
       ShellRoute(
         builder: (context, state, child) => AppShellScreen(child: child),
         routes: [
@@ -157,7 +165,7 @@ GoRouter createRouter(
           GoRoute(
             path: AppRoutes.reports,
             builder: (context, state) => BlocProvider(
-              create: (_) => GetIt.I<ReportsCubit>(),
+              create: (_) => GetIt.I<ReportsCubit>()..loadReports(),
               child: const DoctorReportsScreen(),
             ),
           ),

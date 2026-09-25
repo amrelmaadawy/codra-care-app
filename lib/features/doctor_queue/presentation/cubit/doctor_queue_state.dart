@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../../core/error/failures.dart';
 import '../../domain/entities/doctor_queue_entity.dart';
 import '../../domain/entities/queue_patient_entity.dart';
 
@@ -84,10 +85,11 @@ final class DoctorQueueLoaded extends DoctorQueueState {
 }
 
 final class DoctorQueueError extends DoctorQueueState {
-  final String message;
+  final Failure failure;
+  String get message => failure.message;
 
-  const DoctorQueueError(this.message);
+  const DoctorQueueError(this.failure);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

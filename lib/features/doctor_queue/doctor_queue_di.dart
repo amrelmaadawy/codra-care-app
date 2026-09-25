@@ -6,6 +6,7 @@ import 'domain/use_cases/call_patient_use_case.dart';
 import 'domain/use_cases/cancel_patient_use_case.dart';
 import 'domain/use_cases/complete_patient_use_case.dart';
 import 'domain/use_cases/get_doctor_queue_use_case.dart';
+import 'domain/use_cases/start_queue_examination_use_case.dart';
 import 'presentation/cubit/doctor_queue_cubit.dart';
 
 void setupDoctorQueueDi() {
@@ -26,6 +27,7 @@ void setupDoctorQueueDi() {
   sl.registerLazySingleton(() => CallPatientUseCase(sl()));
   sl.registerLazySingleton(() => CompletePatientUseCase(sl()));
   sl.registerLazySingleton(() => CancelPatientUseCase(sl()));
+  sl.registerLazySingleton(() => StartQueueExaminationUseCase(sl()));
 
   // Cubits
   sl.registerFactory(

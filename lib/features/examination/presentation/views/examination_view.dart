@@ -41,6 +41,13 @@ class _ExaminationViewState extends State<ExaminationView> {
     return BlocConsumer<ExaminationCubit, ExaminationState>(
       listener: (context, state) {
         if (state is! ExaminationLoaded) return;
+        final v = state.visit;
+        if (_complaint.isEmpty && v.chiefComplaint != null) _complaint = v.chiefComplaint!;
+        if (_diagnosis.isEmpty && v.diagnosis != null) _diagnosis = v.diagnosis!;
+        if (_notes.isEmpty && v.notes != null) _notes = v.notes!;
+        if (_followupDays == null && v.followupDays != null) _followupDays = v.followupDays;
+        if (_followupNotes == null && v.followupNotes != null) _followupNotes = v.followupNotes;
+
         if (state.errorMessage != null) _snack(context, state.errorMessage!, isError: true);
         if (state.successMessage != null) _snack(context, state.successMessage!);
         if (state.isCompleted) {
@@ -77,20 +84,33 @@ class _ExaminationViewState extends State<ExaminationView> {
         final loaded = state as ExaminationLoaded;
         final visit = loaded.visit;
 
-        return Scaffold(
-          appBar: ExamAppBar(
-            patient: visit.patient,
-            ticketNumber: visit.visitNumber,
-            isSaving: loaded.isAnySectionSaving,
-            isSaved: loaded.isAnySectionSaved,
-            pastVisitsCount: visit.pastVisitsCount,
-            onBackTap: () => Navigator.of(context).pop(),
-            onHistoryTap: () => ExamPreviousVisitsSheet.show(
-              context,
-              previousVisits: visit.previousVisits,
-              onCopy: (prevId) => context.read<ExaminationCubit>().copyPreviousVisit(prevId),
+        return PopScope(
+          canPop: !loaded.isAnySectionSaving,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop && loaded.isAnySectionSaving) {
+              _snack(context, 'examination.saving_in_progress'.tr(), isError: true);
+            }
+          },
+          child: Scaffold(
+            appBar: ExamAppBar(
+              patient: visit.patient,
+              ticketNumber: visit.visitNumber,
+              isSaving: loaded.isAnySectionSaving,
+              isSaved: loaded.isAnySectionSaved,
+              pastVisitsCount: visit.pastVisitsCount,
+              onBackTap: () {
+                if (!loaded.isAnySectionSaving) {
+                  Navigator.of(context).pop();
+                } else {
+                  _snack(context, 'examination.saving_in_progress'.tr(), isError: true);
+                }
+              },
+              onHistoryTap: () => ExamPreviousVisitsSheet.show(
+                context,
+                previousVisits: visit.previousVisits,
+                onCopy: (prevId) => context.read<ExaminationCubit>().copyPreviousVisit(prevId),
+              ),
             ),
-          ),
           body: SingleChildScrollView(
             padding: AppSpacing.pagePadding,
             child: Column(
@@ -192,7 +212,8 @@ class _ExaminationViewState extends State<ExaminationView> {
               ],
             ),
           ),
-        );
+        ),
+      );
       },
     );
   }

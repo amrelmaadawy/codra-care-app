@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
-import '../../../../core/error/exceptions.dart';
+import '../../../../core/error/failure_mapper.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/doctor_queue_entity.dart';
 import '../../domain/repositories/doctor_queue_repository.dart';
@@ -51,31 +50,16 @@ class DoctorQueueRepositoryImpl implements DoctorQueueRepository {
     }
   }
 
-  Failure _mapExceptionToFailure(dynamic exception) {
-    if (exception is DioException && exception.error != null) {
-      return _mapExceptionToFailure(exception.error);
+  @override
+  Future<Either<Failure, int>> startExamination(int waitingListId) async {
+    try {
+      final visitId = await _remoteDataSource.startExamination(waitingListId);
+      return Right(visitId);
+    } catch (e) {
+      return Left(_mapExceptionToFailure(e));
     }
-    if (exception is UnauthorizedException) {
-      return const UnauthorizedFailure();
-    }
-    if (exception is NetworkException) {
-      return const NetworkFailure();
-    }
-    if (exception is NotFoundException) {
-      return const NotFoundFailure();
-    }
-    if (exception is ServerException) {
-      if (exception.fieldErrors != null && exception.fieldErrors!.isNotEmpty) {
-        return ValidationFailure(
-          message: exception.message,
-          fieldErrors: exception.fieldErrors,
-        );
-      }
-      return ServerFailure(
-        message: exception.message,
-        statusCode: exception.statusCode,
-      );
-    }
-    return const UnexpectedFailure();
   }
+
+  Failure _mapExceptionToFailure(dynamic exception) =>
+      FailureMapper.mapExceptionToFailure(exception);
 }

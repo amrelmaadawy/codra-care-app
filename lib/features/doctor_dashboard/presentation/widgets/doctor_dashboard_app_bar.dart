@@ -26,12 +26,16 @@ class DoctorDashboardAppBar extends StatelessWidget implements PreferredSizeWidg
   @override
   Size get preferredSize => const Size.fromHeight(64.0);
 
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'doctor_dashboard.greeting_morning'.tr();
+    if (hour < 17) return 'doctor_dashboard.greeting_afternoon'.tr();
+    return 'doctor_dashboard.greeting_evening'.tr();
+  }
+
   String _formatName(String name) {
     final clean = name.trim();
-    if (clean.startsWith('د.') || clean.startsWith('د/') || clean.startsWith('Dr.')) {
-      return clean;
-    }
-    return '${'doctor_dashboard.welcome_prefix'.tr()} $clean';
+    return '${_getGreeting()} $clean';
   }
 
   @override
@@ -90,7 +94,6 @@ class DoctorDashboardAppBar extends StatelessWidget implements PreferredSizeWidg
                   subtitle,
                   style: AppTypography.labelSmall.copyWith(
                     color: context.textMutedColor,
-                    fontSize: 11,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

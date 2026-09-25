@@ -9,6 +9,7 @@ abstract class DoctorQueueRemoteDataSource {
   Future<void> callPatient(int id);
   Future<void> completePatient(int id);
   Future<void> cancelPatient(int id);
+  Future<int> startExamination(int waitingListId);
 }
 
 class DoctorQueueRemoteDataSourceImpl implements DoctorQueueRemoteDataSource {
@@ -51,6 +52,25 @@ class DoctorQueueRemoteDataSourceImpl implements DoctorQueueRemoteDataSource {
   @override
   Future<void> cancelPatient(int id) async {
     await _postAction(DoctorEndpoints.cancelQueue(id));
+  }
+
+  @override
+  Future<int> startExamination(int waitingListId) async {
+    final response = await _apiClient.dio.post(DoctorEndpoints.startExamination(waitingListId));
+    final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
+      response.data as Map<String, dynamic>,
+      (data) => data as Map<String, dynamic>,
+    );
+
+    if (!apiResponse.success || apiResponse.data == null) {
+      throw ServerException(
+        message: apiResponse.message.isNotEmpty ? apiResponse.message : 'errors.unexpected',
+        statusCode: response.statusCode ?? 500,
+        fieldErrors: apiResponse.errors,
+      );
+    }
+
+    return (apiResponse.data!['visit_id'] as num).toInt();
   }
 
   Future<void> _postAction(String endpoint) async {

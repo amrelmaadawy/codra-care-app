@@ -107,4 +107,11 @@ abstract final class AppTypography {
     fontWeight: FontWeight.w400,
     height: 1.4,
   );
+
+  static const TextStyle labelXSmall = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+  );
 }

@@ -4,7 +4,7 @@ import '../../domain/use_cases/call_patient_use_case.dart';
 import '../../domain/use_cases/cancel_patient_use_case.dart';
 import '../../domain/use_cases/complete_patient_use_case.dart';
 import '../../domain/use_cases/get_doctor_queue_use_case.dart';
-import '../../../examination/domain/use_cases/start_examination_use_case.dart';
+import '../../domain/use_cases/start_queue_examination_use_case.dart';
 import 'doctor_queue_state.dart';
 
 class DoctorQueueCubit extends Cubit<DoctorQueueState> {
@@ -12,10 +12,12 @@ class DoctorQueueCubit extends Cubit<DoctorQueueState> {
   final CallPatientUseCase callPatientUseCase;
   final CompletePatientUseCase completePatientUseCase;
   final CancelPatientUseCase cancelPatientUseCase;
-  final StartExaminationUseCase? startExaminationUseCase;
+  final StartQueueExaminationUseCase? startExaminationUseCase;
 
   Timer? _pollingTimer;
   static const Duration _pollingInterval = Duration(seconds: 30);
+  int _consecutiveFailures = 0;
+  int get consecutiveFailures => _consecutiveFailures;
 
   DoctorQueueCubit({
     required this.getQueueUseCase,
@@ -44,7 +46,7 @@ class DoctorQueueCubit extends Cubit<DoctorQueueState> {
     if (isClosed) return;
 
     result.fold(
-      (failure) => emit(DoctorQueueError(failure.message)),
+      (failure) => emit(DoctorQueueError(failure)),
       (queue) {
         emit(DoctorQueueLoaded(queue: queue));
         startPolling();
@@ -66,8 +68,11 @@ class DoctorQueueCubit extends Cubit<DoctorQueueState> {
     if (isClosed) return;
 
     result.fold(
-      (_) {},
+      (_) {
+        _consecutiveFailures++;
+      },
       (freshQueue) {
+        _consecutiveFailures = 0;
         if (state is DoctorQueueLoaded && !isClosed) {
           final current = state as DoctorQueueLoaded;
           emit(current.copyWith(queue: freshQueue, clearMessages: true));

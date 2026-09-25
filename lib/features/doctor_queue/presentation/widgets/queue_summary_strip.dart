@@ -74,10 +74,9 @@ class QueueSummaryStrip extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   titleKey.tr(),
-                  style: AppTypography.labelSmall.copyWith(
+                  style: AppTypography.labelXSmall.copyWith(
                     color: isSelected ? color : context.textMutedColor,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    fontSize: 10,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

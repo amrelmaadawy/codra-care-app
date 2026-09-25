@@ -6,6 +6,8 @@ abstract final class AppRoutes {
   // Doctor shell routes
   static const String doctorDashboard = '/shell/dashboard';
   static const String queue = '/shell/queue';
+  static const String examination = '/examination/:visitId';
+  static String examinationPath(int visitId) => '/examination/$visitId';
   static const String patients = '/shell/patients';
   static const String patientDetail = '/patients/:id';
   static const String prescriptions = '/shell/prescriptions';

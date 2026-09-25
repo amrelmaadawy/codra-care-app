@@ -7,4 +7,5 @@ abstract interface class DoctorQueueRepository {
   Future<Either<Failure, void>> callPatient(int id);
   Future<Either<Failure, void>> completePatient(int id);
   Future<Either<Failure, void>> cancelPatient(int id);
+  Future<Either<Failure, int>> startExamination(int waitingListId);
 }

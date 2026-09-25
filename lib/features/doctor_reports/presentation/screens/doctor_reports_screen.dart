@@ -14,21 +14,8 @@ import '../widgets/reports_shimmer.dart';
 import '../widgets/reports_stats_row.dart';
 import '../widgets/reports_visit_list.dart';
 
-class DoctorReportsScreen extends StatefulWidget {
+class DoctorReportsScreen extends StatelessWidget {
   const DoctorReportsScreen({super.key});
-
-  @override
-  State<DoctorReportsScreen> createState() => _DoctorReportsScreenState();
-}
-
-class _DoctorReportsScreenState extends State<DoctorReportsScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ReportsCubit>().loadReports();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

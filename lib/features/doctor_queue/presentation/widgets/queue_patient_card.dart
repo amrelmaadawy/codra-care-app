@@ -44,24 +44,17 @@ class QueuePatientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final stripeColor = _getStripeColor(context);
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.white,
+        color: context.surfaceColor,
         borderRadius: AppRadius.cardRadius,
         border: Border.all(
-          color: isDark ? AppColors.dividerDark : const Color(0xFFE2E8F0),
+          color: context.dividerColor.withValues(alpha: 0.6),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.035),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: context.primaryShadow,
       ),
       child: ClipRRect(
         borderRadius: AppRadius.cardRadius,
@@ -122,10 +115,9 @@ class QueuePatientCard extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 item.ticketNumber,
-                style: AppTypography.labelMedium.copyWith(
+                style: AppTypography.labelSmall.copyWith(
                   color: context.primaryColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: 11,
                 ),
               ),
             ],

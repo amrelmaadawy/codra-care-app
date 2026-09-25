@@ -71,6 +71,9 @@
     "title": "Dashboard",
     "welcome": "Welcome Dr.",
     "welcome_prefix": "Welcome,",
+    "greeting_morning": "Good morning,",
+    "greeting_afternoon": "Good afternoon,",
+    "greeting_evening": "Good evening,",
     "online_status": "Active Today",
     "subtitle": "Here is your clinic activity summary for today",
     "today_queue": "Today's Queue",
@@ -140,6 +143,7 @@
   },
   "examination": {
     "title": "Examination",
+    "saving_in_progress": "Saving in progress, please wait...",
     "patient_info": "Patient Information",
     "vital_signs": "Vital Signs",
     "chief_complaint": "Chief Complaint",

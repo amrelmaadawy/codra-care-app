@@ -97,7 +97,7 @@ void main() {
       act: (cubit) => cubit.loadQueue(),
       expect: () => [
         const DoctorQueueLoading(),
-        const DoctorQueueError('Server error'),
+        const DoctorQueueError(ServerFailure(message: 'Server error')),
       ],
     );
   });

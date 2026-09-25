@@ -16,6 +16,7 @@ class DoctorDashboardModel extends DoctorDashboardEntity {
     required super.patientsToday,
     required super.patientsMonth,
     required super.patientsTotal,
+    super.unreadNotificationsCount = 0,
   });
 
   factory DoctorDashboardModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +35,7 @@ class DoctorDashboardModel extends DoctorDashboardEntity {
       patientsToday: (json['patients_today'] as num?)?.toInt() ?? 0,
       patientsMonth: (json['patients_month'] as num?)?.toInt() ?? 0,
       patientsTotal: (json['patients_total'] as num?)?.toInt() ?? 0,
+      unreadNotificationsCount: (json['unread_notifications_count'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -53,6 +55,7 @@ class DoctorDashboardModel extends DoctorDashboardEntity {
       'patients_today': patientsToday,
       'patients_month': patientsMonth,
       'patients_total': patientsTotal,
+      'unread_notifications_count': unreadNotificationsCount,
     };
   }
 }

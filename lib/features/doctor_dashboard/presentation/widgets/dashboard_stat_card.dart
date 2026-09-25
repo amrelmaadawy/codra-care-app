@@ -62,16 +62,29 @@ class DashboardStatCard extends StatelessWidget {
                       size: AppSizes.iconMd,
                     ),
                   ),
-                  Flexible(
-                    child: Text(
-                      value,
-                      style: AppTypography.headlineMedium.copyWith(
-                        color: context.textColor,
-                        fontWeight: FontWeight.bold,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          value,
+                          style: AppTypography.headlineMedium.copyWith(
+                            color: context.textColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                      if (onTap != null) ...[
+                        const SizedBox(width: AppSpacing.xs),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 11,
+                          color: context.textMutedColor.withValues(alpha: 0.6),
+                        ),
+                      ],
+                    ],
                   ),
                 ],
               ),
@@ -93,9 +106,8 @@ class DashboardStatCard extends StatelessWidget {
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       subtitle!,
-                      style: AppTypography.bodySmall.copyWith(
+                      style: AppTypography.caption.copyWith(
                         color: iconColor,
-                        fontSize: 11,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

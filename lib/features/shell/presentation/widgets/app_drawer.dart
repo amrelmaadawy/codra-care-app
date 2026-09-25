@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_icons.dart';
+import '../../../../core/di/permission_service.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/theme_extensions.dart';
@@ -22,6 +24,8 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
+    final permissions = GetIt.I<PermissionService>();
+    final isDoctor = permissions.isDoctor;
 
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
@@ -38,24 +42,39 @@ class AppDrawer extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
                   children: [
                     const DrawerSectionHeader(titleKey: 'shell.main'),
-                    DrawerItemTile(
-                      icon: AppIcons.dashboard,
-                      labelKey: 'shell.dashboard',
-                      isSelected: location == AppRoutes.doctorDashboard,
-                      onTap: () => _navigateTo(context, AppRoutes.doctorDashboard),
-                    ),
-                    DrawerItemTile(
-                      icon: AppIcons.queue,
-                      labelKey: 'shell.queue',
-                      isSelected: location.startsWith(AppRoutes.queue),
-                      onTap: () => _navigateTo(context, AppRoutes.queue),
-                    ),
-                    DrawerItemTile(
-                      icon: AppIcons.chat,
-                      labelKey: 'chat.title',
-                      isSelected: location.startsWith(AppRoutes.doctorChat),
-                      onTap: () => _navigateTo(context, AppRoutes.doctorChat),
-                    ),
+                    if (isDoctor) ...[
+                      DrawerItemTile(
+                        icon: AppIcons.dashboard,
+                        labelKey: 'shell.dashboard',
+                        isSelected: location == AppRoutes.doctorDashboard,
+                        onTap: () => _navigateTo(context, AppRoutes.doctorDashboard),
+                      ),
+                      DrawerItemTile(
+                        icon: AppIcons.queue,
+                        labelKey: 'shell.queue',
+                        isSelected: location.startsWith(AppRoutes.queue),
+                        onTap: () => _navigateTo(context, AppRoutes.queue),
+                      ),
+                      DrawerItemTile(
+                        icon: AppIcons.chat,
+                        labelKey: 'chat.title',
+                        isSelected: location.startsWith(AppRoutes.doctorChat),
+                        onTap: () => _navigateTo(context, AppRoutes.doctorChat),
+                      ),
+                    ] else ...[
+                      DrawerItemTile(
+                        icon: AppIcons.reception,
+                        labelKey: 'shell.reception',
+                        isSelected: location.startsWith(AppRoutes.reception),
+                        onTap: () => _navigateTo(context, AppRoutes.reception),
+                      ),
+                      DrawerItemTile(
+                        icon: AppIcons.appointments,
+                        labelKey: 'shell.appointments',
+                        isSelected: location.startsWith(AppRoutes.appointments),
+                        onTap: () => _navigateTo(context, AppRoutes.appointments),
+                      ),
+                    ],
                     const SizedBox(height: AppSpacing.xs),
                     const DrawerSectionHeader(titleKey: 'shell.patients_section'),
                     DrawerItemTile(
@@ -72,30 +91,45 @@ class AppDrawer extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     const DrawerSectionHeader(titleKey: 'shell.management'),
-                    DrawerItemTile(
-                      icon: AppIcons.reports,
-                      labelKey: 'shell.reports',
-                      isSelected: location.startsWith(AppRoutes.reports),
-                      onTap: () => _navigateTo(context, AppRoutes.reports),
-                    ),
-                    DrawerItemTile(
-                      icon: AppIcons.calendar,
-                      labelKey: 'shell.leave_days',
-                      isSelected: location.startsWith(AppRoutes.doctorLeaveDays),
-                      onTap: () => _navigateTo(context, AppRoutes.doctorLeaveDays),
-                    ),
-                    DrawerItemTile(
-                      icon: AppIcons.diagnosisTemplates,
-                      labelKey: 'shell.diagnosis_templates',
-                      isSelected: location.startsWith(AppRoutes.diagnosisTemplates),
-                      onTap: () => _navigateTo(context, AppRoutes.diagnosisTemplates),
-                    ),
-                    DrawerItemTile(
-                      icon: AppIcons.doctorQuestions,
-                      labelKey: 'shell.doctor_questions',
-                      isSelected: location.startsWith(AppRoutes.doctorQuestions),
-                      onTap: () => _navigateTo(context, AppRoutes.doctorQuestions),
-                    ),
+                    if (isDoctor) ...[
+                      DrawerItemTile(
+                        icon: AppIcons.reports,
+                        labelKey: 'shell.reports',
+                        isSelected: location.startsWith(AppRoutes.reports),
+                        onTap: () => _navigateTo(context, AppRoutes.reports),
+                      ),
+                      DrawerItemTile(
+                        icon: AppIcons.calendar,
+                        labelKey: 'shell.leave_days',
+                        isSelected: location.startsWith(AppRoutes.doctorLeaveDays),
+                        onTap: () => _navigateTo(context, AppRoutes.doctorLeaveDays),
+                      ),
+                      DrawerItemTile(
+                        icon: AppIcons.diagnosisTemplates,
+                        labelKey: 'shell.diagnosis_templates',
+                        isSelected: location.startsWith(AppRoutes.diagnosisTemplates),
+                        onTap: () => _navigateTo(context, AppRoutes.diagnosisTemplates),
+                      ),
+                      DrawerItemTile(
+                        icon: AppIcons.doctorQuestions,
+                        labelKey: 'shell.doctor_questions',
+                        isSelected: location.startsWith(AppRoutes.doctorQuestions),
+                        onTap: () => _navigateTo(context, AppRoutes.doctorQuestions),
+                      ),
+                    ] else ...[
+                      DrawerItemTile(
+                        icon: AppIcons.financial,
+                        labelKey: 'shell.financial',
+                        isSelected: location.startsWith(AppRoutes.financial),
+                        onTap: () => _navigateTo(context, AppRoutes.financial),
+                      ),
+                      DrawerItemTile(
+                        icon: AppIcons.settings,
+                        labelKey: 'shell.settings',
+                        isSelected: location.startsWith(AppRoutes.settings),
+                        onTap: () => _navigateTo(context, AppRoutes.settings),
+                      ),
+                    ],
                     const SizedBox(height: AppSpacing.xs),
                     const DrawerSectionHeader(titleKey: 'shell.account'),
                     DrawerItemTile(

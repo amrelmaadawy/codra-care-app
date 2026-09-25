@@ -4,7 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../doctor_chat/presentation/widgets/doctor_chat_fab.dart';
 import '../../domain/entities/doctor_dashboard_entity.dart';
 import '../widgets/dashboard_stat_card.dart';
@@ -26,6 +29,7 @@ class DoctorDashboardView extends StatelessWidget {
       appBar: DoctorDashboardAppBar(
         doctorName: data.doctorName,
         specialization: data.specialization,
+        unreadNotificationsCount: data.unreadNotificationsCount,
       ),
       body: RefreshIndicator(
         onRefresh: onRefresh,
@@ -33,11 +37,100 @@ class DoctorDashboardView extends StatelessWidget {
           padding: AppSpacing.pagePadding,
           children: [
             _buildStatsGrid(context),
+            const SizedBox(height: AppSpacing.lg),
+            _buildQuickActions(context),
             const SizedBox(height: AppSpacing.xl),
           ],
         ),
       ),
       floatingActionButton: const DoctorChatFab(),
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context) {
+    final actions = [
+      _QuickActionItem(
+        label: 'doctor_dashboard.new_prescription'.tr(),
+        icon: AppIcons.prescriptions,
+        color: AppColors.emerald,
+        onTap: () => context.push(AppRoutes.prescriptionNew),
+      ),
+      _QuickActionItem(
+        label: 'doctor_dashboard.patient_records'.tr(),
+        icon: AppIcons.patients,
+        color: AppColors.info,
+        onTap: () => context.go(AppRoutes.patients),
+      ),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'doctor_dashboard.quick_actions'.tr(),
+          style: AppTypography.titleSmall.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.textColor,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Row(
+          children: actions
+              .map(
+                (act) => Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Material(
+                      color: context.surfaceColor,
+                      borderRadius: AppRadius.cardRadius,
+                      child: InkWell(
+                        onTap: act.onTap,
+                        borderRadius: AppRadius.cardRadius,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.md,
+                            horizontal: AppSpacing.md,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: AppRadius.cardRadius,
+                            border: Border.all(
+                              color: context.dividerColor.withValues(alpha: 0.5),
+                            ),
+                            boxShadow: context.primaryShadow,
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: act.color.withValues(alpha: 0.12),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(act.icon, color: act.color, size: 20),
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Expanded(
+                                child: Text(
+                                  act.label,
+                                  style: AppTypography.labelMedium.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: context.textColor,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ],
     );
   }
 
@@ -92,6 +185,22 @@ class DoctorDashboardView extends StatelessWidget {
         icon: AppIcons.vitals,
         color: AppColors.accent,
         bgColor: AppColors.accent.withValues(alpha: 0.12),
+      ),
+      _StatItem(
+        title: 'doctor_dashboard.patients_today'.tr(),
+        value: '${data.patientsToday}',
+        icon: AppIcons.patients,
+        color: AppColors.statusWaiting,
+        bgColor: AppColors.statusWaiting.withValues(alpha: 0.12),
+        onTap: () => context.go(AppRoutes.patients),
+      ),
+      _StatItem(
+        title: 'doctor_dashboard.patients_month'.tr(),
+        value: '${data.patientsMonth}',
+        icon: AppIcons.patients,
+        color: AppColors.statusInConsultation,
+        bgColor: AppColors.statusInConsultation.withValues(alpha: 0.12),
+        onTap: () => context.go(AppRoutes.patients),
       ),
       if (data.revenueMonth != null)
         _StatItem(
@@ -151,5 +260,19 @@ class _StatItem {
     required this.color,
     required this.bgColor,
     this.onTap,
+  });
+}
+
+class _QuickActionItem {
+  final String label;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _QuickActionItem({
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.onTap,
   });
 }

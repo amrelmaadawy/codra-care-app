@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
+@immutable
 class DoctorDashboardEntity extends Equatable {
   final int doctorId;
   final String doctorName;
@@ -15,6 +17,7 @@ class DoctorDashboardEntity extends Equatable {
   final int patientsToday;
   final int patientsMonth;
   final int patientsTotal;
+  final int unreadNotificationsCount;
 
   const DoctorDashboardEntity({
     required this.doctorId,
@@ -31,6 +34,7 @@ class DoctorDashboardEntity extends Equatable {
     required this.patientsToday,
     required this.patientsMonth,
     required this.patientsTotal,
+    this.unreadNotificationsCount = 0,
   });
 
   @override
@@ -49,5 +53,6 @@ class DoctorDashboardEntity extends Equatable {
     patientsToday,
     patientsMonth,
     patientsTotal,
+    unreadNotificationsCount,
   ];
 }

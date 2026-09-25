@@ -4,34 +4,13 @@ import 'package:get_it/get_it.dart';
 import '../cubit/notifications_cubit.dart';
 import '../views/doctor_notifications_view.dart';
 
-class DoctorNotificationsScreen extends StatefulWidget {
+class DoctorNotificationsScreen extends StatelessWidget {
   const DoctorNotificationsScreen({super.key});
 
   @override
-  State<DoctorNotificationsScreen> createState() =>
-      _DoctorNotificationsScreenState();
-}
-
-class _DoctorNotificationsScreenState
-    extends State<DoctorNotificationsScreen> {
-  late final NotificationsCubit _cubit;
-
-  @override
-  void initState() {
-    super.initState();
-    _cubit = GetIt.I<NotificationsCubit>()..loadNotifications();
-  }
-
-  @override
-  void dispose() {
-    _cubit.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _cubit,
+    return BlocProvider(
+      create: (_) => GetIt.I<NotificationsCubit>()..loadNotifications(),
       child: const DoctorNotificationsView(),
     );
   }
