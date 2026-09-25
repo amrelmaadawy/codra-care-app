@@ -26,6 +26,7 @@ abstract final class AppRoutes {
   static const String reception = '/shell/reception';
   static const String appointments = '/shell/appointments';
   static const String appointmentNew = '/appointments/new';
+  static const String walkIn = '/reception/walk-in';
   static const String financial = '/shell/financial';
   static const String settings = '/shell/settings';
 }

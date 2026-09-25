@@ -8,6 +8,7 @@ void main() {
       final dirs = [
         'lib/features/reception_appointments',
         'lib/features/reception_booking',
+        'lib/features/reception_dashboard',
       ];
 
       final violations = <String>[];

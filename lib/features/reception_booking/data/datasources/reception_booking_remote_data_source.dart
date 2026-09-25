@@ -2,9 +2,11 @@ import 'package:dio/dio.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/endpoints/reception_endpoints.dart';
 import '../../domain/entities/create_appointment_params.dart';
+import '../../domain/entities/walk_in_params.dart';
 import '../models/booking_appointment_result_model.dart';
 import '../models/booking_form_context_model.dart';
 import '../models/booking_patient_model.dart';
+import '../models/walk_in_result_model.dart';
 
 abstract class ReceptionBookingRemoteDataSource {
   Future<BookingFormContextModel> getFormContext({int? doctorId, String? date});
@@ -14,6 +16,8 @@ abstract class ReceptionBookingRemoteDataSource {
   Future<BookingAppointmentResultModel> createAppointment(
     CreateAppointmentParams params,
   );
+
+  Future<WalkInResultModel> createWalkIn(WalkInParams params);
 }
 
 class ReceptionBookingRemoteDataSourceImpl
@@ -89,6 +93,39 @@ class ReceptionBookingRemoteDataSourceImpl
     } on DioException catch (e) {
       final data = e.response?.data;
       String message = 'فشل في إنشاء الموعد';
+      if (data is Map<String, dynamic>) {
+        if (data['message'] != null) {
+          message = data['message'] as String;
+        } else if (data['errors'] != null && data['errors'] is Map) {
+          final firstKey = (data['errors'] as Map).keys.first;
+          final errList = (data['errors'] as Map)[firstKey];
+          if (errList is List && errList.isNotEmpty) {
+            message = errList.first.toString();
+          }
+        }
+      }
+      throw ServerException(
+        message: message,
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    } catch (e) {
+      throw ServerException(message: e.toString(), statusCode: 500);
+    }
+  }
+
+  @override
+  Future<WalkInResultModel> createWalkIn(WalkInParams params) async {
+    try {
+      final response = await _dio.post(
+        ReceptionEndpoints.walkIn,
+        data: params.toJson(),
+      );
+
+      final data = response.data['data'] as Map<String, dynamic>;
+      return WalkInResultModel.fromJson(data);
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      String message = 'فشل في تسجيل الحالة الفورية';
       if (data is Map<String, dynamic>) {
         if (data['message'] != null) {
           message = data['message'] as String;

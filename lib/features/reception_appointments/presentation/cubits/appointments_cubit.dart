@@ -2,24 +2,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/appointment_enums.dart';
 import '../../domain/entities/appointment_filters.dart';
 import '../../domain/usecases/cancel_appointment_use_case.dart';
+import '../../domain/usecases/check_in_appointment_use_case.dart';
 import '../../domain/usecases/get_appointments_use_case.dart';
 import '../../domain/usecases/get_calendar_events_use_case.dart';
 import 'appointments_calendar_handler.dart';
 import 'appointments_cancellation_handler.dart';
+import 'appointments_check_in_handler.dart';
 import 'appointments_state.dart';
 
 class AppointmentsCubit extends Cubit<AppointmentsState> {
   final GetAppointmentsUseCase _getAppointmentsUseCase;
   final AppointmentsCancellationHandler _cancellationHandler;
+  final AppointmentsCheckInHandler _checkInHandler;
   final AppointmentsCalendarHandler _calendarHandler;
 
   AppointmentsCubit({
     required GetAppointmentsUseCase getAppointmentsUseCase,
     required GetCalendarEventsUseCase getCalendarEventsUseCase,
     required CancelAppointmentUseCase cancelAppointmentUseCase,
+    required CheckInAppointmentUseCase checkInAppointmentUseCase,
   }) : _getAppointmentsUseCase = getAppointmentsUseCase,
        _cancellationHandler = AppointmentsCancellationHandler(
          cancelAppointmentUseCase,
+       ),
+       _checkInHandler = AppointmentsCheckInHandler(
+         checkInAppointmentUseCase,
        ),
        _calendarHandler = AppointmentsCalendarHandler(
          getAppointmentsUseCase: getAppointmentsUseCase,
@@ -127,6 +134,31 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
         reason: reason,
         onStateChanged: emit,
       );
+    }
+  }
+
+  void setCheckInMode(bool isCheckIn) {
+    final curr = state;
+    if (curr is AppointmentsLoaded) {
+      emit(curr.copyWith(isCheckInMode: isCheckIn));
+    }
+  }
+
+  Future<void> checkInAppointment({
+    required int appointmentId,
+    String priority = 'normal',
+    String? clientRequestId,
+  }) async {
+    final curr = state;
+    if (curr is AppointmentsLoaded) {
+      await _checkInHandler.checkIn(
+        currentState: curr,
+        appointmentId: appointmentId,
+        priority: priority,
+        clientRequestId: clientRequestId,
+        onStateChanged: emit,
+      );
+      await refresh();
     }
   }
 

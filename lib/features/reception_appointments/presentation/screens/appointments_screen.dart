@@ -6,14 +6,26 @@ import '../views/appointments_view.dart';
 
 class AppointmentsScreen extends StatelessWidget {
   final String? initialDate;
+  final bool isCheckInMode;
 
-  const AppointmentsScreen({super.key, this.initialDate});
+  const AppointmentsScreen({
+    super.key,
+    this.initialDate,
+    this.isCheckInMode = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          getIt<AppointmentsCubit>()..loadInitial(initialDate: initialDate),
+      create: (context) {
+        final cubit = getIt<AppointmentsCubit>();
+        cubit.loadInitial(initialDate: initialDate).then((_) {
+          if (isCheckInMode) {
+            cubit.setCheckInMode(true);
+          }
+        });
+        return cubit;
+      },
       child: const AppointmentsView(),
     );
   }

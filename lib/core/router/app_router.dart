@@ -15,6 +15,7 @@ import '../../features/prescription/presentation/cubit/prescription_form_cubit.d
 import '../../features/prescription/presentation/screens/prescription_detail_screen.dart';
 import '../../features/prescription/presentation/screens/prescription_form_screen.dart';
 import '../../features/reception_booking/presentation/screens/appointment_form_screen.dart';
+import '../../features/reception_booking/presentation/screens/walk_in_screen.dart';
 import '../../features/shell/presentation/screens/app_shell_screen.dart';
 import '../di/permission_service.dart';
 import '../widgets/app_loading_widget.dart';
@@ -120,6 +121,10 @@ GoRouter createRouter(
         builder: (context, state) => AppointmentFormScreen(
           initialDate: state.uri.queryParameters['date'],
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.walkIn,
+        builder: (context, state) => const WalkInScreen(),
       ),
       ShellRoute(
         builder: (context, state, child) => AppShellScreen(child: child),

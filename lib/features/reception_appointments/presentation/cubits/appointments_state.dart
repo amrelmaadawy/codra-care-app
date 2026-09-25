@@ -30,6 +30,10 @@ final class AppointmentsLoaded extends AppointmentsState {
   final int? cancellingId;
   final String? cancelError;
   final String? cancelSuccessMessage;
+  final int? checkingInId;
+  final String? checkInError;
+  final String? checkInSuccessMessage;
+  final bool isCheckInMode;
   final String? refreshWarning;
 
   const AppointmentsLoaded({
@@ -42,6 +46,10 @@ final class AppointmentsLoaded extends AppointmentsState {
     this.cancellingId,
     this.cancelError,
     this.cancelSuccessMessage,
+    this.checkingInId,
+    this.checkInError,
+    this.checkInSuccessMessage,
+    this.isCheckInMode = false,
     this.refreshWarning,
   });
 
@@ -62,6 +70,13 @@ final class AppointmentsLoaded extends AppointmentsState {
     bool clearCancelError = false,
     String? cancelSuccessMessage,
     bool clearCancelSuccess = false,
+    int? checkingInId,
+    bool clearCheckingIn = false,
+    String? checkInError,
+    bool clearCheckInError = false,
+    String? checkInSuccessMessage,
+    bool clearCheckInSuccess = false,
+    bool? isCheckInMode,
     String? refreshWarning,
     bool clearWarning = false,
   }) {
@@ -79,6 +94,14 @@ final class AppointmentsLoaded extends AppointmentsState {
       cancelSuccessMessage: clearCancelSuccess
           ? null
           : (cancelSuccessMessage ?? this.cancelSuccessMessage),
+      checkingInId: clearCheckingIn
+          ? null
+          : (checkingInId ?? this.checkingInId),
+      checkInError: clearCheckInError ? null : (checkInError ?? this.checkInError),
+      checkInSuccessMessage: clearCheckInSuccess
+          ? null
+          : (checkInSuccessMessage ?? this.checkInSuccessMessage),
+      isCheckInMode: isCheckInMode ?? this.isCheckInMode,
       refreshWarning: clearWarning
           ? null
           : (refreshWarning ?? this.refreshWarning),
@@ -96,6 +119,10 @@ final class AppointmentsLoaded extends AppointmentsState {
     cancellingId,
     cancelError,
     cancelSuccessMessage,
+    checkingInId,
+    checkInError,
+    checkInSuccessMessage,
+    isCheckInMode,
     refreshWarning,
   ];
 }

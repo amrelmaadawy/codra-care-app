@@ -3,9 +3,11 @@ import 'data/datasources/reception_booking_remote_data_source.dart';
 import 'data/repositories/reception_booking_repository_impl.dart';
 import 'domain/repositories/reception_booking_repository.dart';
 import 'domain/usecases/create_appointment_use_case.dart';
+import 'domain/usecases/create_walk_in_use_case.dart';
 import 'domain/usecases/get_booking_form_context_use_case.dart';
 import 'domain/usecases/search_patients_use_case.dart';
 import 'presentation/cubits/appointment_form_cubit.dart';
+import 'presentation/cubits/walk_in_cubit.dart';
 
 void setupReceptionBookingDi([GetIt? locator]) {
   final sl = locator ?? GetIt.instance;
@@ -26,6 +28,7 @@ void setupReceptionBookingDi([GetIt? locator]) {
   );
   sl.registerLazySingleton(() => SearchPatientsUseCase(repository: sl()));
   sl.registerLazySingleton(() => CreateAppointmentUseCase(repository: sl()));
+  sl.registerLazySingleton(() => CreateWalkInUseCase(sl()));
 
   // Cubits
   sl.registerFactory(
@@ -33,6 +36,13 @@ void setupReceptionBookingDi([GetIt? locator]) {
       getContextUseCase: sl(),
       searchPatientsUseCase: sl(),
       createAppointmentUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => WalkInCubit(
+      getContextUseCase: sl(),
+      searchPatientsUseCase: sl(),
+      createWalkInUseCase: sl(),
     ),
   );
 }

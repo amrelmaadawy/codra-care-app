@@ -104,6 +104,7 @@ List<RouteBase> buildAppShellRoutes(PermissionService permissionService) {
       path: AppRoutes.appointments,
       builder: (_, state) => AppointmentsScreen(
         initialDate: state.uri.queryParameters['date'],
+        isCheckInMode: state.uri.queryParameters['mode'] == 'check_in',
       ),
     ),
     GoRoute(

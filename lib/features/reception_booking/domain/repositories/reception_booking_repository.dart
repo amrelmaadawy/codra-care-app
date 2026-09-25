@@ -4,6 +4,8 @@ import '../entities/booking_appointment_result_entity.dart';
 import '../entities/booking_form_context_entity.dart';
 import '../entities/booking_patient_entity.dart';
 import '../entities/create_appointment_params.dart';
+import '../entities/walk_in_params.dart';
+import '../entities/walk_in_result_entity.dart';
 
 abstract class ReceptionBookingRepository {
   Future<Either<Failure, BookingFormContextEntity>> getFormContext({
@@ -17,5 +19,9 @@ abstract class ReceptionBookingRepository {
 
   Future<Either<Failure, BookingAppointmentResultEntity>> createAppointment(
     CreateAppointmentParams params,
+  );
+
+  Future<Either<Failure, WalkInResultEntity>> createWalkIn(
+    WalkInParams params,
   );
 }

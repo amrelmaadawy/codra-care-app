@@ -10,6 +10,7 @@ import '../../domain/entities/appointment_entity.dart';
 import '../cubits/appointments_cubit.dart';
 import '../cubits/appointments_state.dart';
 import '../widgets/appointment_cancel_dialog.dart';
+import '../widgets/appointment_check_in_sheet.dart';
 import '../widgets/appointment_filter_sheet.dart';
 import '../widgets/appointment_list_shimmer.dart';
 import '../widgets/appointments_app_bar.dart';
@@ -59,6 +60,19 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     );
   }
 
+  void _showCheckInSheet(AppointmentEntity appt) {
+    final cubit = context.read<AppointmentsCubit>();
+    AppointmentCheckInSheet.show(
+      context: context,
+      appointment: appt,
+      isSubmitting: false,
+      onConfirm: (priority) {
+        Navigator.of(context).pop();
+        cubit.checkInAppointment(appointmentId: appt.id, priority: priority);
+      },
+    );
+  }
+
   void _showFilters(AppointmentsLoaded state) {
     final cubit = context.read<AppointmentsCubit>();
     AppointmentFilterSheet.show(
@@ -87,6 +101,10 @@ class _AppointmentsViewState extends State<AppointmentsView> {
             AppSnackBar.showSuccess(context, state.cancelSuccessMessage!.tr());
           }
           if (state.cancelError != null) AppSnackBar.showError(context, state.cancelError!);
+          if (state.checkInSuccessMessage != null) {
+            AppSnackBar.showSuccess(context, state.checkInSuccessMessage!.tr());
+          }
+          if (state.checkInError != null) AppSnackBar.showError(context, state.checkInError!);
           if (state.refreshWarning != null) AppSnackBar.showWarning(context, state.refreshWarning!);
         }
       },
@@ -154,6 +172,8 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                 isPaginating: state.isPaginating,
                 scrollController: _scrollController,
                 onCancelAppointment: _showCancelDialog,
+                onCheckInAppointment: _showCheckInSheet,
+                checkingInId: state.checkingInId,
                 onNewAppointment: _openNewAppointment,
               ),
             ),

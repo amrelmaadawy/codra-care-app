@@ -5,6 +5,7 @@ import '../../domain/entities/appointment_filters.dart';
 import '../models/appointment_calendar_day_model.dart';
 import '../models/appointment_model.dart';
 import '../models/appointments_page_model.dart';
+import '../models/check_in_result_model.dart';
 
 abstract class AppointmentRemoteDataSource {
   Future<AppointmentsPageModel> getAppointments({
@@ -22,6 +23,12 @@ abstract class AppointmentRemoteDataSource {
   Future<AppointmentModel> cancelAppointment({
     required int appointmentId,
     required String reason,
+  });
+
+  Future<CheckInResultModel> checkInAppointment({
+    required int appointmentId,
+    String priority = 'normal',
+    String? clientRequestId,
   });
 }
 
@@ -98,5 +105,23 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
 
     final data = response.data['data'] as Map<String, dynamic>;
     return AppointmentModel.fromJson(data);
+  }
+
+  @override
+  Future<CheckInResultModel> checkInAppointment({
+    required int appointmentId,
+    String priority = 'normal',
+    String? clientRequestId,
+  }) async {
+    final response = await apiClient.dio.post(
+      ReceptionEndpoints.checkInAppointment(appointmentId),
+      data: {
+        'priority': priority,
+        'client_request_id': ?clientRequestId,
+      },
+    );
+
+    final data = response.data['data'] as Map<String, dynamic>;
+    return CheckInResultModel.fromJson(data);
   }
 }

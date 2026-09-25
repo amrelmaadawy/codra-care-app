@@ -9,4 +9,11 @@ abstract final class ReceptionEndpoints {
       '/reception/appointments/patients/search';
   static String cancelAppointment(int id) =>
       '/reception/appointments/$id/cancel';
+  static String checkInAppointment(int id) =>
+      '/reception/check-in/$id';
+  static const String upcomingDays = '/reception/upcoming-days';
+  static const String availableSlots = '/reception/available-slots';
+  static String doctorQuestions(int doctorId) =>
+      '/reception/doctors/$doctorId/questions';
+  static const String walkIn = '/reception/walk-in';
 }

@@ -333,6 +333,7 @@ lib/
 - `POST /api/mobile/reception/check-in/{appointmentId}`
 
 ---
+//next stage
 
 ### 2.4 — Queue Management (طابور الاستقبال)
 **Screen**: `ReceptionQueueScreen`

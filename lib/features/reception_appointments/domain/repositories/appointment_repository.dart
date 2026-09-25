@@ -5,6 +5,7 @@ import '../entities/appointment_entity.dart';
 import '../entities/appointment_enums.dart';
 import '../entities/appointment_filters.dart';
 import '../entities/appointments_page_entity.dart';
+import '../entities/check_in_result_entity.dart';
 
 abstract class AppointmentRepository {
   Future<Either<Failure, AppointmentsPageEntity>> getAppointments({
@@ -23,5 +24,11 @@ abstract class AppointmentRepository {
   Future<Either<Failure, AppointmentEntity>> cancelAppointment({
     required int appointmentId,
     required String reason,
+  });
+
+  Future<Either<Failure, CheckInResultEntity>> checkInAppointment({
+    required int appointmentId,
+    String priority = 'normal',
+    String? clientRequestId,
   });
 }

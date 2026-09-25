@@ -10,6 +10,7 @@ import 'package:medical_erp/features/reception_appointments/domain/entities/appo
 import 'package:medical_erp/features/reception_appointments/domain/entities/appointment_service_entity.dart';
 import 'package:medical_erp/features/reception_appointments/domain/entities/appointments_page_entity.dart';
 import 'package:medical_erp/features/reception_appointments/domain/usecases/cancel_appointment_use_case.dart';
+import 'package:medical_erp/features/reception_appointments/domain/usecases/check_in_appointment_use_case.dart';
 import 'package:medical_erp/features/reception_appointments/domain/usecases/get_appointments_use_case.dart';
 import 'package:medical_erp/features/reception_appointments/domain/usecases/get_calendar_events_use_case.dart';
 import 'package:medical_erp/features/reception_appointments/presentation/cubits/appointments_cubit.dart';
@@ -25,11 +26,15 @@ class MockGetCalendarEventsUseCase extends Mock
 class MockCancelAppointmentUseCase extends Mock
     implements CancelAppointmentUseCase {}
 
+class MockCheckInAppointmentUseCase extends Mock
+    implements CheckInAppointmentUseCase {}
+
 void main() {
   late AppointmentsCubit cubit;
   late MockGetAppointmentsUseCase mockGetAppointmentsUseCase;
   late MockGetCalendarEventsUseCase mockGetCalendarEventsUseCase;
   late MockCancelAppointmentUseCase mockCancelAppointmentUseCase;
+  late MockCheckInAppointmentUseCase mockCheckInAppointmentUseCase;
 
   setUpAll(() {
     registerFallbackValue(const AppointmentFilters(date: '2026-09-25'));
@@ -39,11 +44,13 @@ void main() {
     mockGetAppointmentsUseCase = MockGetAppointmentsUseCase();
     mockGetCalendarEventsUseCase = MockGetCalendarEventsUseCase();
     mockCancelAppointmentUseCase = MockCancelAppointmentUseCase();
+    mockCheckInAppointmentUseCase = MockCheckInAppointmentUseCase();
 
     cubit = AppointmentsCubit(
       getAppointmentsUseCase: mockGetAppointmentsUseCase,
       getCalendarEventsUseCase: mockGetCalendarEventsUseCase,
       cancelAppointmentUseCase: mockCancelAppointmentUseCase,
+      checkInAppointmentUseCase: mockCheckInAppointmentUseCase,
     );
   });
 

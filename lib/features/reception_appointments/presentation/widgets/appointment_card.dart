@@ -7,13 +7,22 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/appointment_entity.dart';
 import '../../domain/entities/appointment_enums.dart';
+import 'appointment_card_check_in_button.dart';
 import 'appointment_status_chip.dart';
 
 class AppointmentCard extends StatelessWidget {
   final AppointmentEntity appointment;
   final VoidCallback? onCancel;
+  final VoidCallback? onCheckIn;
+  final bool isCheckingIn;
 
-  const AppointmentCard({super.key, required this.appointment, this.onCancel});
+  const AppointmentCard({
+    super.key,
+    required this.appointment,
+    this.onCancel,
+    this.onCheckIn,
+    this.isCheckingIn = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -72,31 +81,21 @@ class AppointmentCard extends StatelessWidget {
         if (appointment.canCancel && onCancel != null) ...[
           const SizedBox(width: AppSpacing.xs),
           PopupMenuButton<String>(
-            icon: Icon(
-              Icons.more_vert,
-              size: 20,
-              color: context.textMutedColor,
-            ),
+            icon: Icon(Icons.more_vert, size: 20, color: context.textMutedColor),
             padding: EdgeInsets.zero,
             onSelected: (val) {
               if (val == 'cancel') onCancel!();
             },
-            itemBuilder: (ctx) => [
+            itemBuilder: (_) => [
               PopupMenuItem(
                 value: 'cancel',
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.cancel_outlined,
-                      size: 18,
-                      color: AppColors.error,
-                    ),
+                    const Icon(Icons.cancel_outlined, size: 18, color: AppColors.error),
                     const SizedBox(width: AppSpacing.sm),
                     Text(
                       'reception_appointments.cancel_appointment'.tr(),
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: AppColors.error,
-                      ),
+                      style: AppTypography.bodyMedium.copyWith(color: AppColors.error),
                     ),
                   ],
                 ),
@@ -111,18 +110,12 @@ class AppointmentCard extends StatelessWidget {
   Widget _buildDoctorAndService(BuildContext context) {
     return Row(
       children: [
-        Icon(
-          Icons.medical_services_outlined,
-          size: 16,
-          color: context.textMutedColor,
-        ),
+        Icon(Icons.medical_services_outlined, size: 16, color: context.textMutedColor),
         const SizedBox(width: AppSpacing.xs),
         Expanded(
           child: Text(
             '${appointment.doctor.name} • ${appointment.service?.name ?? ''}',
-            style: AppTypography.bodySmall.copyWith(
-              color: context.textMutedColor,
-            ),
+            style: AppTypography.bodySmall.copyWith(color: context.textMutedColor),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -136,8 +129,8 @@ class AppointmentCard extends StatelessWidget {
     final timeOrQueueText = appointment.startTime != null
         ? '${appointment.startTime ?? ''} - ${appointment.endTime ?? ''}'
         : (appointment.queuePosition != null
-              ? '${'reception_appointments.queue_num'.tr()} #${appointment.queuePosition}'
-              : 'reception_appointments.type_queue'.tr());
+            ? '${'reception_appointments.queue_num'.tr()} #${appointment.queuePosition}'
+            : 'reception_appointments.type_queue'.tr());
 
     return Row(
       children: [
@@ -183,6 +176,13 @@ class AppointmentCard extends StatelessWidget {
           ),
         ],
         const Spacer(),
+        if (onCheckIn != null) ...[
+          AppointmentCardCheckInButton(
+            isCheckingIn: isCheckingIn,
+            onPressed: onCheckIn!,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+        ],
         Text(
           '${appointment.servicePrice.toStringAsFixed(0)} ${'reception_appointments.currency'.tr()}',
           style: AppTypography.titleSmall.copyWith(

@@ -6,6 +6,7 @@ import '../../domain/entities/appointment_entity.dart';
 import '../../domain/entities/appointment_enums.dart';
 import '../../domain/entities/appointment_filters.dart';
 import '../../domain/entities/appointments_page_entity.dart';
+import '../../domain/entities/check_in_result_entity.dart';
 import '../../domain/repositories/appointment_repository.dart';
 import '../datasources/appointment_remote_data_source.dart';
 
@@ -60,6 +61,24 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
       final model = await _remoteDataSource.cancelAppointment(
         appointmentId: appointmentId,
         reason: reason,
+      );
+      return Right(model);
+    } catch (e) {
+      return Left(_mapException(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CheckInResultEntity>> checkInAppointment({
+    required int appointmentId,
+    String priority = 'normal',
+    String? clientRequestId,
+  }) async {
+    try {
+      final model = await _remoteDataSource.checkInAppointment(
+        appointmentId: appointmentId,
+        priority: priority,
+        clientRequestId: clientRequestId,
       );
       return Right(model);
     } catch (e) {

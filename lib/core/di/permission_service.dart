@@ -40,7 +40,25 @@ class PermissionService {
         'queue.view',
       ]);
 
+  bool get canAddWalkIn =>
+      isReceptionist ||
+      isClinicAdmin ||
+      hasAny([
+        'reception.appointments.create',
+        'appointments.create',
+        'reception.booking.walk_in',
+      ]);
+
+  bool get canCheckIn =>
+      isReceptionist ||
+      isClinicAdmin ||
+      hasAny([
+        'reception.appointments.check_in',
+        'appointments.check_in',
+      ]);
+
   String get accountType => _accountType;
   String get role => _role;
   List<String> get permissions => _permissions;
 }
+

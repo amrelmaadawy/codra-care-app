@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/utils/responsive_utils.dart';
 import '../../../../core/widgets/app_error_widget.dart';
 import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/app_shimmer_box.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../cubits/reception_dashboard_cubit.dart';
 import '../cubits/reception_dashboard_state.dart';
-import '../widgets/active_queue_section.dart';
-import '../widgets/appointments_today_grid.dart';
-import '../widgets/quick_stats_section.dart';
 import '../widgets/reception_dashboard_app_bar.dart';
+import '../widgets/reception_dashboard_content.dart';
 import '../widgets/reception_dashboard_shimmer.dart';
 
 class ReceptionDashboardView extends StatefulWidget {
@@ -100,7 +97,6 @@ class _ReceptionDashboardViewState extends State<ReceptionDashboardView>
     BuildContext context,
     ReceptionDashboardLoaded state,
   ) {
-    final isMobile = ResponsiveUtils.isMobile(context);
     final cubit = context.read<ReceptionDashboardCubit>();
 
     return Column(
@@ -119,73 +115,11 @@ class _ReceptionDashboardViewState extends State<ReceptionDashboardView>
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: AppSpacing.pagePadding,
-              child: isMobile
-                  ? _buildMobileLayout(state, cubit)
-                  : _buildTabletLayout(state, cubit),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMobileLayout(
-    ReceptionDashboardLoaded state,
-    ReceptionDashboardCubit cubit,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppointmentsTodayGrid(stats: state.data.appointmentsToday),
-        const SizedBox(height: AppSpacing.lg),
-        QuickStatsSection(
-          totalPatientsToday: state.data.totalPatientsToday,
-          pendingFollowUps: state.data.pendingFollowUpsCount,
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        ActiveQueueSection(
-          queueItems: state.data.activeQueue,
-          doctors: state.data.doctors,
-          activeWaitingCount: state.data.activeWaitingCount,
-          selectedDoctorId: state.selectedDoctorId,
-          isQueueRefreshing: state.isQueueRefreshing,
-          onDoctorSelected: cubit.selectDoctor,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTabletLayout(
-    ReceptionDashboardLoaded state,
-    ReceptionDashboardCubit cubit,
-  ) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 5,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppointmentsTodayGrid(stats: state.data.appointmentsToday),
-              const SizedBox(height: AppSpacing.lg),
-              QuickStatsSection(
-                totalPatientsToday: state.data.totalPatientsToday,
-                pendingFollowUps: state.data.pendingFollowUpsCount,
+              child: ReceptionDashboardContent(
+                state: state,
+                cubit: cubit,
               ),
-            ],
-          ),
-        ),
-        const SizedBox(width: AppSpacing.lg),
-        Expanded(
-          flex: 6,
-          child: ActiveQueueSection(
-            queueItems: state.data.activeQueue,
-            doctors: state.data.doctors,
-            activeWaitingCount: state.data.activeWaitingCount,
-            selectedDoctorId: state.selectedDoctorId,
-            isQueueRefreshing: state.isQueueRefreshing,
-            onDoctorSelected: cubit.selectDoctor,
+            ),
           ),
         ),
       ],

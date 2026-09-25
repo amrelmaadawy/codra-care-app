@@ -3,6 +3,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/app_shimmer_box.dart';
 import '../../domain/entities/appointment_entity.dart';
+import '../../domain/entities/appointment_enums.dart';
 import 'appointment_card.dart';
 import 'appointment_empty_view.dart';
 
@@ -11,6 +12,8 @@ class AppointmentsListContent extends StatelessWidget {
   final bool isPaginating;
   final ScrollController scrollController;
   final ValueChanged<AppointmentEntity> onCancelAppointment;
+  final ValueChanged<AppointmentEntity>? onCheckInAppointment;
+  final int? checkingInId;
   final VoidCallback? onNewAppointment;
 
   const AppointmentsListContent({
@@ -19,6 +22,8 @@ class AppointmentsListContent extends StatelessWidget {
     required this.isPaginating,
     required this.scrollController,
     required this.onCancelAppointment,
+    this.onCheckInAppointment,
+    this.checkingInId,
     this.onNewAppointment,
   });
 
@@ -54,10 +59,15 @@ class AppointmentsListContent extends StatelessWidget {
         }
 
         final appt = items[index];
+        final canCheckIn = appt.status == AppointmentStatus.scheduled;
         return AppointmentCard(
           key: ValueKey(appt.id),
           appointment: appt,
           onCancel: appt.canCancel ? () => onCancelAppointment(appt) : null,
+          onCheckIn: (canCheckIn && onCheckInAppointment != null)
+              ? () => onCheckInAppointment!(appt)
+              : null,
+          isCheckingIn: checkingInId == appt.id,
         );
       },
     );
