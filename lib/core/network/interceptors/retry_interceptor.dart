@@ -24,7 +24,11 @@ class RetryInterceptor extends Interceptor {
         err.type == DioExceptionType.sendTimeout ||
         err.type == DioExceptionType.receiveTimeout;
 
-    if (isNetworkError && currentRetries < maxRetries) {
+    final method = err.requestOptions.method.toUpperCase();
+    final isIdempotent =
+        method == 'GET' || method == 'HEAD' || method == 'OPTIONS';
+
+    if (isNetworkError && isIdempotent && currentRetries < maxRetries) {
       final nextRetry = currentRetries + 1;
       extra[_retryCountKey] = nextRetry;
 

@@ -133,8 +133,28 @@ class ReceptionDoctorFilter extends StatelessWidget {
       title: 'reception_dashboard.filter_doctor'.tr(),
       items: allItems,
       selectedItem: currentSelection,
-      itemLabel: (item) =>
-          item.count != null ? '${item.name} (${item.count})' : item.name,
+      itemLabel: (item) => item.name,
+      itemSubtitle: (item) => item.count != null
+          ? '${item.count} ${item.id == null ? 'reception_dashboard.today_appointments'.tr() : 'reception_dashboard.patient'.tr()}'
+          : null,
+      itemLeading: (item) => Container(
+        width: 38,
+        height: 38,
+        decoration: BoxDecoration(
+          color: (item.id == selectedDoctorId || (item.id == null && selectedDoctorId == null))
+              ? context.primaryColor
+              : context.primaryColor.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        alignment: Alignment.center,
+        child: Icon(
+          item.id == null ? Icons.people_alt_outlined : Icons.medical_services_outlined,
+          color: (item.id == selectedDoctorId || (item.id == null && selectedDoctorId == null))
+              ? Colors.white
+              : context.primaryColor,
+          size: 19,
+        ),
+      ),
       isSearchable: doctors.length > 5,
     );
 

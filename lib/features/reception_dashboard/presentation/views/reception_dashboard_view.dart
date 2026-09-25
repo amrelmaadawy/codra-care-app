@@ -77,7 +77,6 @@ class _ReceptionDashboardViewState extends State<ReceptionDashboardView>
         return Scaffold(
           appBar: ReceptionDashboardAppBar(
             lastUpdated: lastUpdated,
-            onRefresh: () => context.read<ReceptionDashboardCubit>().refresh(),
           ),
           body: _buildBody(context, state),
         );

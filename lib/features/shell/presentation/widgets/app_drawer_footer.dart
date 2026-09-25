@@ -13,6 +13,7 @@ class AppDrawerFooter extends StatelessWidget {
   const AppDrawerFooter({super.key});
 
   void _showLogoutDialog(BuildContext context) {
+    final authCubit = context.read<AuthCubit>();
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -44,7 +45,7 @@ class AppDrawerFooter extends StatelessWidget {
           FilledButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              context.read<AuthCubit>().logout();
+              authCubit.logout();
             },
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.error,
@@ -83,10 +84,7 @@ class AppDrawerFooter extends StatelessWidget {
         color: AppColors.error.withValues(alpha: 0.07),
         borderRadius: BorderRadius.circular(AppRadius.md),
         child: InkWell(
-          onTap: () {
-            Navigator.of(context).pop();
-            _showLogoutDialog(context);
-          },
+          onTap: () => _showLogoutDialog(context),
           borderRadius: BorderRadius.circular(AppRadius.md),
           child: Container(
             height: 44,

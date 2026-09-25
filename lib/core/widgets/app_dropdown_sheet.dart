@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 import '../theme/theme_extensions.dart';
+import 'app_dropdown_header.dart';
 import 'app_dropdown_tile.dart';
 
 class AppDropdownSheet<T> extends StatefulWidget {
@@ -83,15 +84,13 @@ class _AppDropdownSheetState<T> extends State<AppDropdownSheet<T>> {
   void _onSearch(String query) {
     final q = query.trim().toLowerCase();
     setState(() {
-      if (q.isEmpty) {
-        _filteredItems = widget.items;
-      } else {
-        _filteredItems = widget.items.where((item) {
-          final label = widget.itemLabel(item).toLowerCase();
-          final sub = widget.itemSubtitle?.call(item)?.toLowerCase() ?? '';
-          return label.contains(q) || sub.contains(q);
-        }).toList();
-      }
+      _filteredItems = q.isEmpty
+          ? widget.items
+          : widget.items.where((item) {
+              final label = widget.itemLabel(item).toLowerCase();
+              final sub = widget.itemSubtitle?.call(item)?.toLowerCase() ?? '';
+              return label.contains(q) || sub.contains(q);
+            }).toList();
     });
   }
 
@@ -101,9 +100,7 @@ class _AppDropdownSheetState<T> extends State<AppDropdownSheet<T>> {
     final showSearch = widget.isSearchable && widget.items.length > 3;
 
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.sizeOf(context).height * 0.78,
-      ),
+      constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.78),
       decoration: BoxDecoration(
         color: context.surfaceColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -113,70 +110,26 @@ class _AppDropdownSheetState<T> extends State<AppDropdownSheet<T>> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 10),
-            Center(
-              child: Container(
-                width: 38,
-                height: 4.5,
-                decoration: BoxDecoration(
-                  color: context.dividerColor.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(3),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 12, AppSpacing.sm, 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.title,
-                      style: AppTypography.titleMedium.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: context.textPrimaryColor,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: context.primaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${widget.items.length}',
-                      style: AppTypography.labelSmall.copyWith(
-                        color: context.primaryColor,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  IconButton(
-                    icon: const Icon(Icons.close_rounded, size: 20),
-                    color: context.textMutedColor,
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
-              ),
+            AppDropdownHeader(
+              title: widget.title,
+              itemCount: widget.items.length,
+              onClose: () => Navigator.of(context).pop(),
             ),
             if (showSearch)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 6),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isDark ? context.backgroundColor : const Color(0xFFF1F5F9),
+                    color: isDark ? context.backgroundColor : const Color(0xFFF8FAFC),
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: context.dividerColor.withValues(alpha: 0.3)),
+                    border: Border.all(color: context.dividerColor.withValues(alpha: 0.4)),
                   ),
                   child: TextField(
                     controller: _searchController,
-                    style: AppTypography.bodyMedium.copyWith(color: context.textPrimaryColor),
+                    style: AppTypography.bodyMedium.copyWith(color: context.textColor),
                     decoration: InputDecoration(
                       hintText: widget.searchHint ?? 'common.search_hint'.tr(),
-                      hintStyle: AppTypography.bodySmall.copyWith(
-                        color: context.textMutedColor.withValues(alpha: 0.7),
-                      ),
+                      hintStyle: AppTypography.bodySmall.copyWith(color: context.textMutedColor.withValues(alpha: 0.7)),
                       prefixIcon: Icon(Icons.search_rounded, color: context.primaryColor, size: 20),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
@@ -194,7 +147,7 @@ class _AppDropdownSheetState<T> extends State<AppDropdownSheet<T>> {
                   ),
                 ),
               ),
-            const Divider(height: 16, thickness: 0.8),
+            Divider(height: 1, thickness: 1, color: context.dividerColor.withValues(alpha: 0.35)),
             Expanded(
               child: _filteredItems.isEmpty
                   ? Center(
@@ -203,15 +156,12 @@ class _AppDropdownSheetState<T> extends State<AppDropdownSheet<T>> {
                         children: [
                           Icon(Icons.search_off_rounded, size: 40, color: context.textMutedColor),
                           const SizedBox(height: 8),
-                          Text(
-                            'common.no_results'.tr(),
-                            style: AppTypography.bodyMedium.copyWith(color: context.textMutedColor),
-                          ),
+                          Text('common.no_results'.tr(), style: AppTypography.bodyMedium.copyWith(color: context.textMutedColor)),
                         ],
                       ),
                     )
                   : ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 12),
                       itemCount: _filteredItems.length,
                       separatorBuilder: (_, _) => const SizedBox(height: 6),
                       itemBuilder: (context, index) {

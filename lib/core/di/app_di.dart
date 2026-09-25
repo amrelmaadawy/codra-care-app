@@ -1,4 +1,6 @@
 import 'package:get_it/get_it.dart';
+export 'package:get_it/get_it.dart';
+
 import '../../features/auth/auth_di.dart';
 import '../../features/diagnosis_templates/diagnosis_templates_di.dart';
 import '../../features/doctor_dashboard/doctor_dashboard_di.dart';
@@ -13,9 +15,13 @@ import '../../features/profile/profile_di.dart';
 import '../../features/doctor_chat/doctor_chat_di.dart';
 import '../../features/doctor_notifications/doctor_notifications_di.dart';
 import '../../features/reception_dashboard/reception_dashboard_di.dart';
+import '../../features/reception_appointments/reception_appointments_di.dart';
+import '../../features/reception_booking/reception_booking_di.dart';
 import '../../features/shell/shell_di.dart';
 import '../network/api_client.dart';
 import 'permission_service.dart';
+
+final getIt = GetIt.instance;
 
 Future<void> setupDi() async {
   final sl = GetIt.instance;
@@ -40,5 +46,7 @@ Future<void> setupDi() async {
   setupDoctorChatDi();
   setupDoctorNotificationsDi();
   setupReceptionDashboardDi();
+  setupReceptionAppointmentsDi();
+  setupReceptionBookingDi();
 }
 

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -11,12 +12,10 @@ import '../../../../core/widgets/app_shell_scope.dart';
 class ReceptionDashboardAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final DateTime? lastUpdated;
-  final VoidCallback onRefresh;
 
   const ReceptionDashboardAppBar({
     super.key,
     this.lastUpdated,
-    required this.onRefresh,
   });
 
   @override
@@ -64,47 +63,58 @@ class ReceptionDashboardAppBar extends StatelessWidget
             )
           : null,
       titleSpacing: isMobile ? 0 : AppSpacing.lg,
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      title: Row(
         children: [
-          Text(
-            'reception_dashboard.title'.tr(),
-            style: AppTypography.titleMedium.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.textColor,
+          Image.asset(
+            AppAssets.logoDarkTransparent,
+            height: 30,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) => Text(
+              'app_name'.tr(),
+              style: AppTypography.titleLarge.copyWith(
+                color: context.primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 2),
-          Text(
-            lastUpdated != null
-                ? '$todayFormatted • ${_formatLastUpdated(context, lastUpdated!)}'
-                : todayFormatted,
-            style: AppTypography.labelSmall.copyWith(
-              color: context.textMutedColor,
+          const SizedBox(width: AppSpacing.sm),
+          Container(
+            height: 18,
+            width: 1,
+            color: context.dividerColor,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'reception_dashboard.title'.tr(),
+                  style: AppTypography.titleSmall.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.textColor,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  lastUpdated != null
+                      ? '$todayFormatted • ${_formatLastUpdated(context, lastUpdated!)}'
+                      : todayFormatted,
+                  style: AppTypography.labelSmall.copyWith(
+                    color: context.textMutedColor,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
+          const SizedBox(width: AppSpacing.md),
         ],
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
-          child: SizedBox(
-            width: AppSizes.minTouchTarget,
-            height: AppSizes.minTouchTarget,
-            child: IconButton(
-              icon: const Icon(AppIcons.refresh, size: AppSizes.iconMd),
-              color: context.textColor,
-              onPressed: onRefresh,
-              tooltip: 'common.refresh'.tr(),
-            ),
-          ),
-        ),
-      ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(AppSizes.borderWidthThin),
         child: Container(
