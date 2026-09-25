@@ -30,6 +30,16 @@ class PermissionService {
   bool get isClinicAdmin => _accountType == 'clinic_admin';
   bool get isPatient => _accountType == 'patient';
 
+  bool get canAccessReceptionDashboard =>
+      isReceptionist ||
+      isClinicAdmin ||
+      hasAny([
+        'reception.appointments.view',
+        'reception.queue.view',
+        'appointments.view',
+        'queue.view',
+      ]);
+
   String get accountType => _accountType;
   String get role => _role;
   List<String> get permissions => _permissions;

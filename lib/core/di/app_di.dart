@@ -12,6 +12,7 @@ import '../../features/prescription/prescription_di.dart';
 import '../../features/profile/profile_di.dart';
 import '../../features/doctor_chat/doctor_chat_di.dart';
 import '../../features/doctor_notifications/doctor_notifications_di.dart';
+import '../../features/reception_dashboard/reception_dashboard_di.dart';
 import '../../features/shell/shell_di.dart';
 import '../network/api_client.dart';
 import 'permission_service.dart';
@@ -38,5 +39,6 @@ Future<void> setupDi() async {
   setupProfileDi();
   setupDoctorChatDi();
   setupDoctorNotificationsDi();
+  setupReceptionDashboardDi();
 }
 
