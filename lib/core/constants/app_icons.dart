@@ -19,6 +19,8 @@ abstract final class AppIcons {
   static const IconData receptionActive = Icons.desk;
   static const IconData appointments = Icons.calendar_month_outlined;
   static const IconData appointmentsActive = Icons.calendar_month;
+  static const IconData followUps = Icons.event_repeat_outlined;
+  static const IconData followUpsActive = Icons.event_repeat_rounded;
   static const IconData financial = Icons.account_balance_wallet_outlined;
   static const IconData financialActive = Icons.account_balance_wallet;
   static const IconData settings = Icons.settings_outlined;

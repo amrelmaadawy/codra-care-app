@@ -57,6 +57,23 @@ class PermissionService {
         'appointments.check_in',
       ]);
 
+  bool get canAccessInternalChat =>
+      isReceptionist ||
+      isClinicAdmin ||
+      hasAny([
+        'messages.view',
+        'messages.create',
+        'عرض_ارسال_الرسائل',
+      ]);
+
+  bool get canSendInternalChat =>
+      isReceptionist ||
+      isClinicAdmin ||
+      hasAny([
+        'messages.create',
+        'عرض_ارسال_الرسائل',
+      ]);
+
   String get accountType => _accountType;
   String get role => _role;
   List<String> get permissions => _permissions;

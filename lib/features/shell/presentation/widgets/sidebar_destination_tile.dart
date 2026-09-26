@@ -7,6 +7,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/shell_destination.dart';
+import 'sidebar_badge_indicator.dart';
 
 class SidebarDestinationTile extends StatelessWidget {
   final ShellDestination destination;
@@ -62,12 +63,22 @@ class SidebarDestinationTile extends StatelessWidget {
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(AppRadius.sm + 2),
                       ),
-                      child: Icon(
-                        iconData,
-                        size: AppSizes.iconMd + 2,
-                        color: isSelected
-                            ? AppColors.onPrimary
-                            : context.textColor.withValues(alpha: 0.8),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        alignment: Alignment.center,
+                        children: [
+                          Icon(
+                            iconData,
+                            size: AppSizes.iconMd + 2,
+                            color: isSelected
+                                ? AppColors.onPrimary
+                                : context.textColor.withValues(alpha: 0.8),
+                          ),
+                          SidebarBadgeIndicator(
+                            destinationId: destination.id,
+                            isCollapsed: true,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -148,6 +159,9 @@ class SidebarDestinationTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+                  ),
+                  SidebarBadgeIndicator(
+                    destinationId: destination.id,
                   ),
                   if (isSelected)
                     Container(

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 import '../../domain/entities/booking_doctor_entity.dart';
 import '../../domain/entities/booking_patient_entity.dart';
 import '../../domain/entities/booking_service_entity.dart';
@@ -7,19 +8,25 @@ import '../../domain/entities/booking_slot_entity.dart';
 import '../../domain/entities/create_appointment_params.dart';
 import '../../domain/usecases/create_appointment_use_case.dart';
 import '../../domain/usecases/get_booking_form_context_use_case.dart';
+import '../../domain/usecases/get_follow_up_schedule_context_use_case.dart';
+import '../../domain/usecases/schedule_follow_up_use_case.dart';
 import '../../domain/usecases/search_patients_use_case.dart';
 import 'appointment_form_state.dart';
 
 class AppointmentFormCubit extends Cubit<AppointmentFormState> {
-  final GetBookingFormContextUseCase _getContextUseCase;
-  final SearchPatientsUseCase _searchPatientsUseCase;
-  final CreateAppointmentUseCase _createAppointmentUseCase;
+  final GetBookingFormContextUseCase getContextUseCase;
+  final SearchPatientsUseCase searchPatientsUseCase;
+  final CreateAppointmentUseCase createAppointmentUseCase;
+  final GetFollowUpScheduleContextUseCase? getFollowUpScheduleContextUseCase;
+  final ScheduleFollowUpUseCase? scheduleFollowUpUseCase;
   Timer? _searchDebounce;
 
   AppointmentFormCubit({
-    required this._getContextUseCase,
-    required this._searchPatientsUseCase,
-    required this._createAppointmentUseCase,
+    required this.getContextUseCase,
+    required this.searchPatientsUseCase,
+    required this.createAppointmentUseCase,
+    this.getFollowUpScheduleContextUseCase,
+    this.scheduleFollowUpUseCase,
   }) : super(const AppointmentFormState());
 
   @override
@@ -28,22 +35,51 @@ class AppointmentFormCubit extends Cubit<AppointmentFormState> {
     return super.close();
   }
 
-  Future<void> init({String? initialDate}) async {
+  Future<void> init({String? initialDate, String? mode, int? visitId}) async {
+    final followUpUseCase = getFollowUpScheduleContextUseCase;
+    if (mode == 'follow_up' && visitId != null && followUpUseCase != null) {
+      await _initFollowUp(visitId, initialDate, followUpUseCase);
+      return;
+    }
     emit(state.copyWith(isLoadingContext: true, clearError: true));
-    final res = await _getContextUseCase(date: initialDate);
+    final res = await getContextUseCase(date: initialDate);
     res.fold(
-      (f) => emit(
-        state.copyWith(isLoadingContext: false, contextError: f.message),
-      ),
+      (f) => emit(state.copyWith(isLoadingContext: false, contextError: f.message)),
+      (ctx) => emit(state.copyWith(
+        isLoadingContext: false,
+        formContext: ctx,
+        selectedDate: initialDate ?? ctx.serverDate,
+      )),
+    );
+  }
+
+  Future<void> _initFollowUp(
+    int visitId,
+    String? initialDate,
+    GetFollowUpScheduleContextUseCase followUpUseCase,
+  ) async {
+    emit(state.copyWith(isLoadingContext: true, clearError: true));
+    final res = await followUpUseCase(visitId);
+    res.fold(
+      (f) => emit(state.copyWith(isLoadingContext: false, contextError: f.message)),
       (ctx) {
-        final date = initialDate ?? ctx.serverDate;
-        emit(
-          state.copyWith(
-            isLoadingContext: false,
-            formContext: ctx,
-            selectedDate: date,
-          ),
-        );
+        final defId = ctx.defaultServiceId;
+        final service = defId == null
+            ? ctx.services.firstOrNull
+            : ctx.services.where((s) => s.id == defId).firstOrNull ?? ctx.services.firstOrNull;
+        emit(state.copyWith(
+          isLoadingContext: false,
+          isFollowUpMode: true,
+          followUpVisitId: visitId,
+          followUpInstructions: ctx.instructions,
+          isPatientLocked: true,
+          selectedPatient: ctx.patient,
+          selectedDoctor: ctx.doctor,
+          selectedService: service,
+          selectedDate: ctx.dueDate ?? initialDate ?? DateTime.now().toIso8601String().split('T').first,
+          selectedBookingType: 'follow_up',
+          stage: 2,
+        ));
       },
     );
   }
@@ -54,10 +90,9 @@ class AppointmentFormCubit extends Cubit<AppointmentFormState> {
       emit(state.copyWith(searchResults: const [], isSearching: false));
       return;
     }
-
     emit(state.copyWith(isSearching: true));
     _searchDebounce = Timer(const Duration(milliseconds: 350), () async {
-      final res = await _searchPatientsUseCase(query.trim());
+      final res = await searchPatientsUseCase(query.trim());
       res.fold(
         (f) => emit(state.copyWith(isSearching: false)),
         (list) => emit(state.copyWith(isSearching: false, searchResults: list)),
@@ -71,72 +106,39 @@ class AppointmentFormCubit extends Cubit<AppointmentFormState> {
   void setNewPatient(NewPatientParams params) =>
       emit(state.copyWith(newPatient: params, isNewPatient: true));
 
-  void toggleNewPatient(bool isNew) =>
-      emit(state.copyWith(isNewPatient: isNew));
+  void toggleNewPatient(bool isNew) => emit(state.copyWith(isNewPatient: isNew));
 
   Future<void> selectDoctor(BookingDoctorEntity doctor) async {
-    emit(
-      state.copyWith(
-        selectedDoctor: doctor,
-        clearSlot: true,
-        isLoadingSlots: true,
-      ),
-    );
-    final res = await _getContextUseCase(
-      doctorId: doctor.id,
-      date: state.selectedDate,
-    );
+    emit(state.copyWith(selectedDoctor: doctor, clearSlot: true, isLoadingSlots: true));
+    final res = await getContextUseCase(doctorId: doctor.id, date: state.selectedDate);
     res.fold(
-      (f) =>
-          emit(state.copyWith(isLoadingSlots: false, contextError: f.message)),
+      (f) => emit(state.copyWith(isLoadingSlots: false, contextError: f.message)),
       (ctx) {
         final defId = doctor.defaultServiceId;
-        final auto = defId == null
-            ? null
-            : ctx.services.where((s) => s.id == defId).firstOrNull;
-        emit(
-          state.copyWith(
-            isLoadingSlots: false,
-            formContext: ctx,
-            selectedService: auto ?? state.selectedService,
-          ),
-        );
+        final validPrev = state.selectedService != null && ctx.services.any((s) => s.id == state.selectedService!.id);
+        final auto = defId != null ? ctx.services.where((s) => s.id == defId).firstOrNull : null;
+        final chosen = auto ?? (validPrev ? state.selectedService : (ctx.services.isNotEmpty ? ctx.services.first : null));
+        emit(state.copyWith(isLoadingSlots: false, formContext: ctx, selectedService: chosen));
       },
     );
   }
 
   Future<void> selectDate(String date) async {
-    emit(
-      state.copyWith(
-        selectedDate: date,
-        clearSlot: true,
-        isLoadingSlots: state.selectedDoctor != null,
-      ),
-    );
+    emit(state.copyWith(selectedDate: date, clearSlot: true, isLoadingSlots: state.selectedDoctor != null));
     if (state.selectedDoctor == null) return;
-    final res = await _getContextUseCase(
-      doctorId: state.selectedDoctor!.id,
-      date: date,
-    );
+    final res = await getContextUseCase(doctorId: state.selectedDoctor!.id, date: date);
     res.fold(
-      (f) =>
-          emit(state.copyWith(isLoadingSlots: false, contextError: f.message)),
+      (f) => emit(state.copyWith(isLoadingSlots: false, contextError: f.message)),
       (ctx) => emit(state.copyWith(isLoadingSlots: false, formContext: ctx)),
     );
   }
 
-  void selectService(BookingServiceEntity srv) =>
-      emit(state.copyWith(selectedService: srv));
-
-  void selectSlot(BookingSlotEntity slot) =>
-      emit(state.copyWith(selectedSlot: slot));
-
-  void selectBookingType(String type) =>
-      emit(state.copyWith(selectedBookingType: type));
+  void selectService(BookingServiceEntity srv) => emit(state.copyWith(selectedService: srv));
+  void selectSlot(BookingSlotEntity slot) => emit(state.copyWith(selectedSlot: slot));
+  void selectBookingType(String type) => emit(state.copyWith(selectedBookingType: type));
 
   void setQuestionAnswer(String key, dynamic value) {
-    final updated = Map<String, dynamic>.from(state.questionAnswers);
-    updated[key] = value;
+    final updated = Map<String, dynamic>.from(state.questionAnswers)..[key] = value;
     emit(state.copyWith(questionAnswers: updated));
   }
 
@@ -162,19 +164,26 @@ class AppointmentFormCubit extends Cubit<AppointmentFormState> {
   }
 
   Future<void> submit() async {
+    if (state.isSubmitting) return;
+    final scheduleUseCase = scheduleFollowUpUseCase;
+    if (state.isFollowUpMode && scheduleUseCase != null) {
+      final params = state.toFollowUpParams(const Uuid().v4());
+      if (params == null) return;
+      emit(state.copyWith(isSubmitting: true, clearSubmitError: true));
+      final res = await scheduleUseCase(params);
+      res.fold(
+        (f) => emit(state.copyWith(isSubmitting: false, submitError: f.message)),
+        (appt) => emit(state.copyWith(isSubmitting: false, submitSuccess: true, createdAppointment: appt)),
+      );
+      return;
+    }
     final params = state.toCreateParams();
-    if (state.isSubmitting || params == null) return;
+    if (params == null) return;
     emit(state.copyWith(isSubmitting: true, clearSubmitError: true));
-    final res = await _createAppointmentUseCase(params);
+    final res = await createAppointmentUseCase(params);
     res.fold(
       (f) => emit(state.copyWith(isSubmitting: false, submitError: f.message)),
-      (appt) => emit(
-        state.copyWith(
-          isSubmitting: false,
-          submitSuccess: true,
-          createdAppointment: appt,
-        ),
-      ),
+      (appt) => emit(state.copyWith(isSubmitting: false, submitSuccess: true, createdAppointment: appt)),
     );
   }
 }

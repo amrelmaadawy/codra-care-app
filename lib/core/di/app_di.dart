@@ -18,9 +18,12 @@ import '../../features/reception_dashboard/reception_dashboard_di.dart';
 import '../../features/reception_appointments/reception_appointments_di.dart';
 import '../../features/reception_booking/reception_booking_di.dart';
 import '../../features/reception_queue/reception_queue_di.dart';
+import '../../features/reception_follow_ups/reception_follow_ups_di.dart';
+import '../../features/internal_chat/internal_chat_di.dart';
 import 'package:dio/dio.dart';
 import '../../features/shell/shell_di.dart';
 import '../network/api_client.dart';
+import '../services/navigation_badge_service.dart';
 import 'permission_service.dart';
 
 final getIt = GetIt.instance;
@@ -32,6 +35,9 @@ Future<void> setupDi() async {
   sl.registerLazySingleton<ApiClient>(() => ApiClient.instance..initialize());
   sl.registerLazySingleton<Dio>(() => sl<ApiClient>().dio);
   sl.registerLazySingleton<PermissionService>(() => PermissionService());
+  sl.registerLazySingleton<NavigationBadgeService>(
+    () => NavigationBadgeService(),
+  );
 
   // Feature DI modules
   setupAuthDi();
@@ -52,5 +58,7 @@ Future<void> setupDi() async {
   setupReceptionAppointmentsDi();
   setupReceptionBookingDi();
   setupReceptionQueueDi();
+  setupReceptionFollowUpsDi();
+  setupInternalChatDi();
 }
 

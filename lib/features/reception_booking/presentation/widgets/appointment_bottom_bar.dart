@@ -48,9 +48,28 @@ class AppointmentBottomBar extends StatelessWidget {
                       height: 48,
                       child: OutlinedButton.icon(
                         onPressed: state.isSubmitting ? null : cubit.prevStage,
-                        icon: const Icon(Icons.arrow_back_rounded, size: 18),
-                        label: Text('reception_booking.back_action'.tr()),
+                        icon: Icon(
+                          context.locale.languageCode == 'ar'
+                              ? Icons.arrow_forward_ios_rounded
+                              : Icons.arrow_back_ios_rounded,
+                          size: 13,
+                          color: context.textSecondaryColor,
+                        ),
+                        label: Text(
+                          'reception_booking.back_action'.tr(),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: context.textPrimaryColor,
+                          ),
+                        ),
                         style: OutlinedButton.styleFrom(
+                          backgroundColor: context.surfaceVariantColor.withValues(alpha: 0.5),
+                          foregroundColor: context.textPrimaryColor,
+                          side: BorderSide(
+                            color: context.dividerColor.withValues(alpha: 0.6),
+                          ),
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(AppRadius.md),
                           ),

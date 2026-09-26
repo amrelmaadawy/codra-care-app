@@ -5,16 +5,18 @@ import '../../domain/entities/booking_appointment_result_entity.dart';
 import '../../domain/entities/booking_form_context_entity.dart';
 import '../../domain/entities/booking_patient_entity.dart';
 import '../../domain/entities/create_appointment_params.dart';
+import '../../domain/entities/follow_up_schedule_context_entity.dart';
+import '../../domain/entities/schedule_follow_up_params.dart';
 import '../../domain/entities/walk_in_params.dart';
 import '../../domain/entities/walk_in_result_entity.dart';
 import '../../domain/repositories/reception_booking_repository.dart';
 import '../datasources/reception_booking_remote_data_source.dart';
 
 class ReceptionBookingRepositoryImpl implements ReceptionBookingRepository {
-  final ReceptionBookingRemoteDataSource _remoteDataSource;
+  final ReceptionBookingRemoteDataSource remoteDataSource;
 
   const ReceptionBookingRepositoryImpl({
-    required this._remoteDataSource,
+    required this.remoteDataSource,
   });
 
   @override
@@ -23,7 +25,7 @@ class ReceptionBookingRepositoryImpl implements ReceptionBookingRepository {
     String? date,
   }) async {
     try {
-      final result = await _remoteDataSource.getFormContext(
+      final result = await remoteDataSource.getFormContext(
         doctorId: doctorId,
         date: date,
       );
@@ -40,7 +42,7 @@ class ReceptionBookingRepositoryImpl implements ReceptionBookingRepository {
     String query,
   ) async {
     try {
-      final result = await _remoteDataSource.searchPatients(query);
+      final result = await remoteDataSource.searchPatients(query);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
@@ -54,7 +56,7 @@ class ReceptionBookingRepositoryImpl implements ReceptionBookingRepository {
     CreateAppointmentParams params,
   ) async {
     try {
-      final result = await _remoteDataSource.createAppointment(params);
+      final result = await remoteDataSource.createAppointment(params);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
@@ -68,7 +70,34 @@ class ReceptionBookingRepositoryImpl implements ReceptionBookingRepository {
     WalkInParams params,
   ) async {
     try {
-      final result = await _remoteDataSource.createWalkIn(params);
+      final result = await remoteDataSource.createWalkIn(params);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, FollowUpScheduleContextEntity>>
+      getFollowUpScheduleContext(int visitId) async {
+    try {
+      final result = await remoteDataSource.getFollowUpScheduleContext(visitId);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, BookingAppointmentResultEntity>> scheduleFollowUp(
+    ScheduleFollowUpParams params,
+  ) async {
+    try {
+      final result = await remoteDataSource.scheduleFollowUp(params);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

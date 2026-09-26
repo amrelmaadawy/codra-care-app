@@ -6,6 +6,8 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/app_shimmer_box.dart';
 import '../../../../core/widgets/app_snackbar.dart';
+import '../../../../core/theme/app_radius.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../cubits/appointment_form_cubit.dart';
 import '../cubits/appointment_form_state.dart';
 import '../widgets/appointment_bottom_bar.dart';
@@ -41,6 +43,10 @@ class AppointmentFormView extends StatelessWidget {
           bottomNavigationBar: const AppointmentBottomBar(),
           body: Column(
             children: [
+              if (state.isFollowUpMode &&
+                  state.followUpInstructions != null &&
+                  state.followUpInstructions!.isNotEmpty)
+                _buildFollowUpBanner(context, state.followUpInstructions!),
               AppointmentStageIndicator(
                 currentStage: state.stage,
                 onStageTapped: (target) => cubit.goToStage(target),
@@ -55,6 +61,52 @@ class AppointmentFormView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildFollowUpBanner(BuildContext context, String instructions) {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.xs,
+      ),
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      decoration: BoxDecoration(
+        color: AppColors.infoLight.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+        border: Border.all(color: AppColors.info.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.info_outline_rounded,
+            color: AppColors.info,
+            size: 18,
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'reception_booking.follow_up_instructions'.tr(),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.info,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  instructions,
+                  style: TextStyle(fontSize: 12, color: context.textColor),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

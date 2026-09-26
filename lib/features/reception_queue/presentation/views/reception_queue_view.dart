@@ -25,17 +25,19 @@ class ReceptionQueueView extends StatelessWidget {
           prev.actionFeedbackKey != curr.actionFeedbackKey ||
           prev.errorMessage != curr.errorMessage,
       listener: (context, state) {
-        if (state.actionFeedbackKey != null) {
+        final feedback = state.actionFeedbackKey;
+        final error = state.errorMessage;
+        if (feedback != null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(state.actionFeedbackKey!.tr()),
+            content: Text(feedback.tr()),
             backgroundColor: AppColors.emerald,
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 2),
           ));
           context.read<ReceptionQueueCubit>().clearFeedback();
-        } else if (state.errorMessage != null) {
+        } else if (error != null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(state.errorMessage!.tr()),
+            content: Text(error.tr()),
             backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
           ));
@@ -50,25 +52,25 @@ class ReceptionQueueView extends StatelessWidget {
             isRefreshing: state.isSilentRefreshing,
             lastRefreshedAt: state.lastRefreshedAt,
             onSearchChanged: cubit.setSearch,
-            onRefresh: cubit.loadQueue,
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: AppSpacing.sm),
+              if (state.queue.doctors.isNotEmpty) ...[
+                QueueDoctorSelector(
+                  doctors: state.queue.doctors,
+                  selectedDoctorId: state.filter.doctorId,
+                  onDoctorSelected: cubit.setDoctorFilter,
+                  avgWaitMinutes: state.queue.summary.avgWaitMinutes,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+              ],
               QueueSummaryChips(
                 summary: state.queue.summary,
                 activeStatus: state.filter.status,
                 onStatusSelected: cubit.setStatusFilter,
               ),
-              if (state.queue.doctors.isNotEmpty) ...[
-                const SizedBox(height: AppSpacing.xs),
-                QueueDoctorSelector(
-                  doctors: state.queue.doctors,
-                  selectedDoctorId: state.filter.doctorId,
-                  onDoctorSelected: cubit.setDoctorFilter,
-                ),
-              ],
               const SizedBox(height: AppSpacing.xs),
               Expanded(child: _buildBody(context, state, cubit)),
             ],
@@ -83,9 +85,7 @@ class ReceptionQueueView extends StatelessWidget {
     ReceptionQueueState state,
     ReceptionQueueCubit cubit,
   ) {
-    if (state.isLoading) {
-      return const QueueListShimmer();
-    }
+    if (state.isLoading) return const QueueListShimmer();
 
     if (state.isError && state.queue.items.isEmpty) {
       return Center(
@@ -130,6 +130,7 @@ class ReceptionQueueView extends StatelessWidget {
     }
 
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
       itemCount: state.queue.items.length,
       itemBuilder: (context, index) {

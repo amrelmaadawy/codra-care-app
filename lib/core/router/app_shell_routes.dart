@@ -20,6 +20,9 @@ import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/reception_appointments/presentation/screens/appointments_screen.dart';
 import '../../features/reception_dashboard/presentation/screens/reception_dashboard_screen.dart';
 import '../../features/reception_queue/presentation/screens/reception_queue_screen.dart';
+import '../../features/reception_follow_ups/presentation/screens/reception_follow_ups_screen.dart';
+import '../../features/internal_chat/presentation/screens/reception_conversation_screen.dart';
+import '../../features/internal_chat/presentation/screens/reception_internal_chat_screen.dart';
 import '../../features/shell/presentation/screens/placeholder_shell_content.dart';
 import '../constants/app_icons.dart';
 import '../di/permission_service.dart';
@@ -127,11 +130,29 @@ List<RouteBase> buildAppShellRoutes(PermissionService permissionService) {
       builder: (_, _) => const ReceptionQueueScreen(),
     ),
     GoRoute(
+      path: AppRoutes.receptionFollowUps,
+      builder: (_, _) => const ReceptionFollowUpsScreen(),
+    ),
+    GoRoute(
       path: AppRoutes.appointments,
       builder: (_, state) => AppointmentsScreen(
         initialDate: state.uri.queryParameters['date'],
         isCheckInMode: state.uri.queryParameters['mode'] == 'check_in',
       ),
+    ),
+    GoRoute(
+      path: AppRoutes.receptionInternalChat,
+      builder: (_, _) => const ReceptionInternalChatScreen(),
+      routes: [
+        GoRoute(
+          path: ':chatId',
+          builder: (_, state) {
+            final chatId =
+                int.tryParse(state.pathParameters['chatId'] ?? '') ?? 0;
+            return ReceptionConversationScreen(chatId: chatId);
+          },
+        ),
+      ],
     ),
     GoRoute(
       path: AppRoutes.financial,

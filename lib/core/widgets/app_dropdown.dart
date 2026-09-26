@@ -8,6 +8,7 @@ import 'app_dropdown_sheet.dart';
 enum AppDropdownMode { bottomSheet, popupMenu }
 
 class AppDropdown<T> extends FormField<T> {
+  final T? value;
   final List<T> items;
   final String Function(T item) itemLabel;
   final String? Function(T item)? itemSubtitle;
@@ -24,7 +25,8 @@ class AppDropdown<T> extends FormField<T> {
 
   AppDropdown({
     super.key,
-    super.initialValue,
+    this.value,
+    T? initialValue,
     required this.items,
     required this.itemLabel,
     this.itemSubtitle,
@@ -41,6 +43,7 @@ class AppDropdown<T> extends FormField<T> {
     super.validator,
     super.enabled = true,
   }) : super(
+          initialValue: value ?? initialValue,
           builder: (field) {
             final state = field as _AppDropdownState<T>;
             return state.buildField();
@@ -56,6 +59,18 @@ class _AppDropdownState<T> extends FormFieldState<T> {
 
   AppDropdown<T> get _widget => widget as AppDropdown<T>;
 
+  T? get effectiveValue => _widget.value ?? value;
+
+  @override
+  void didUpdateWidget(AppDropdown<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_widget.value != oldWidget.value) {
+      setValue(_widget.value);
+    } else if (widget.initialValue != oldWidget.initialValue) {
+      setValue(widget.initialValue);
+    }
+  }
+
   Future<void> _handleTap(BuildContext context) async {
     if (!_widget.enabled) return;
 
@@ -67,7 +82,7 @@ class _AppDropdownState<T> extends FormFieldState<T> {
         context: context,
         title: _widget.sheetTitle ?? _widget.labelText ?? 'common.select'.tr(),
         items: _widget.items,
-        selectedItem: value,
+        selectedItem: effectiveValue,
         itemLabel: _widget.itemLabel,
         itemSubtitle: _widget.itemSubtitle,
         itemLeading: _widget.itemLeading,
@@ -98,6 +113,7 @@ class _AppDropdownState<T> extends FormFieldState<T> {
       position.dy + box.size.height + 280,
     );
 
+    final currentVal = effectiveValue;
     return showMenu<T>(
       context: context,
       position: rect,
@@ -105,7 +121,7 @@ class _AppDropdownState<T> extends FormFieldState<T> {
       color: context.surfaceColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       items: _widget.items.map((item) {
-        final isSelected = value == item;
+        final isSelected = currentVal == item;
         return PopupMenuItem<T>(
           value: item,
           child: Row(
@@ -133,9 +149,10 @@ class _AppDropdownState<T> extends FormFieldState<T> {
   }
 
   Widget buildField() {
-    final hasValue = value != null;
+    final val = effectiveValue;
+    final hasValue = val != null;
     final displayText = hasValue
-        ? _widget.itemLabel(value as T)
+        ? _widget.itemLabel(val as T)
         : (_widget.hintText ?? 'common.select'.tr());
 
     return AppDropdownField(

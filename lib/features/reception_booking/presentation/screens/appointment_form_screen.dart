@@ -6,14 +6,25 @@ import '../views/appointment_form_view.dart';
 
 class AppointmentFormScreen extends StatelessWidget {
   final String? initialDate;
+  final String? mode;
+  final int? visitId;
 
-  const AppointmentFormScreen({super.key, this.initialDate});
+  const AppointmentFormScreen({
+    super.key,
+    this.initialDate,
+    this.mode,
+    this.visitId,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          getIt<AppointmentFormCubit>()..init(initialDate: initialDate),
+      create: (context) => getIt<AppointmentFormCubit>()
+        ..init(
+          initialDate: initialDate,
+          mode: mode,
+          visitId: visitId,
+        ),
       child: const AppointmentFormView(),
     );
   }

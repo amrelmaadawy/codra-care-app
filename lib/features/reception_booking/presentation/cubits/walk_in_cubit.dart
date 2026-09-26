@@ -74,13 +74,21 @@ class WalkInCubit extends Cubit<WalkInState> {
       (f) => emit(state.copyWith(isLoadingContext: false, contextError: f.message)),
       (ctx) {
         final defId = doctor.defaultServiceId;
-        final auto = defId == null
-            ? null
-            : ctx.services.where((s) => s.id == defId).firstOrNull;
+        BookingServiceEntity? chosenService;
+        if (defId != null) {
+          chosenService = ctx.services.where((s) => s.id == defId).firstOrNull;
+        }
+        if (chosenService == null && state.selectedService != null) {
+          chosenService = ctx.services
+              .where((s) => s.id == state.selectedService!.id)
+              .firstOrNull;
+        }
+        chosenService ??= ctx.services.isNotEmpty ? ctx.services.first : null;
+
         emit(state.copyWith(
           isLoadingContext: false,
           formContext: ctx,
-          selectedService: auto ?? state.selectedService,
+          selectedService: chosenService,
         ));
       },
     );

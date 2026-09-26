@@ -25,9 +25,15 @@ abstract final class AppRoutes {
   // Reception/Admin shell routes
   static const String reception = '/shell/reception';
   static const String receptionQueue = '/shell/reception/queue';
+  static const String receptionFollowUps = '/shell/reception/follow-ups';
   static const String appointments = '/shell/appointments';
   static const String appointmentNew = '/appointments/new';
   static const String walkIn = '/reception/walk-in';
   static const String financial = '/shell/financial';
   static const String settings = '/shell/settings';
+  static const String receptionInternalChat = '/shell/reception/internal-chat';
+  static const String receptionInternalChatDetail =
+      '/shell/reception/internal-chat/:chatId';
+  static String receptionInternalChatDetailPath(int chatId) =>
+      '/shell/reception/internal-chat/$chatId';
 }

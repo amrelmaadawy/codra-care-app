@@ -6,12 +6,19 @@ import '../../domain/entities/booking_patient_entity.dart';
 import '../../domain/entities/booking_service_entity.dart';
 import '../../domain/entities/booking_slot_entity.dart';
 import '../../domain/entities/create_appointment_params.dart';
+import '../../domain/entities/schedule_follow_up_params.dart';
 
 class AppointmentFormState extends Equatable {
-  final int stage; // 1, 2, 3
+  final int stage;
   final BookingFormContextEntity? formContext;
   final bool isLoadingContext;
   final String? contextError;
+
+  // Follow-up mode
+  final bool isFollowUpMode;
+  final int? followUpVisitId;
+  final String? followUpInstructions;
+  final bool isPatientLocked;
 
   // Stage 1: Patient
   final bool isNewPatient;
@@ -43,6 +50,10 @@ class AppointmentFormState extends Equatable {
     this.formContext,
     this.isLoadingContext = false,
     this.contextError,
+    this.isFollowUpMode = false,
+    this.followUpVisitId,
+    this.followUpInstructions,
+    this.isPatientLocked = false,
     this.isNewPatient = false,
     this.selectedPatient,
     this.newPatient,
@@ -67,15 +78,8 @@ class AppointmentFormState extends Equatable {
       (!isNewPatient && selectedPatient != null);
 
   bool get isStage2Valid {
-    if (selectedDoctor == null ||
-        selectedService == null ||
-        selectedDate == null) {
-      return false;
-    }
-    if (selectedDoctor!.isTimed && selectedSlot == null) {
-      return false;
-    }
-    return true;
+    if (selectedDoctor == null || selectedService == null || selectedDate == null) return false;
+    return !(selectedDoctor!.isTimed && selectedSlot == null);
   }
 
   AppointmentFormState copyWith({
@@ -84,6 +88,10 @@ class AppointmentFormState extends Equatable {
     bool? isLoadingContext,
     String? contextError,
     bool clearError = false,
+    bool? isFollowUpMode,
+    int? followUpVisitId,
+    String? followUpInstructions,
+    bool? isPatientLocked,
     bool? isNewPatient,
     BookingPatientEntity? selectedPatient,
     bool clearSelectedPatient = false,
@@ -113,6 +121,11 @@ class AppointmentFormState extends Equatable {
       formContext: formContext ?? this.formContext,
       isLoadingContext: isLoadingContext ?? this.isLoadingContext,
       contextError: clearError ? null : (contextError ?? this.contextError),
+      isFollowUpMode: isFollowUpMode ?? this.isFollowUpMode,
+      followUpVisitId: followUpVisitId ?? this.followUpVisitId,
+      followUpInstructions:
+          followUpInstructions ?? this.followUpInstructions,
+      isPatientLocked: isPatientLocked ?? this.isPatientLocked,
       isNewPatient: isNewPatient ?? this.isNewPatient,
       selectedPatient: clearSelectedPatient
           ? null
@@ -120,12 +133,10 @@ class AppointmentFormState extends Equatable {
       newPatient: clearNewPatient ? null : (newPatient ?? this.newPatient),
       searchResults: searchResults ?? this.searchResults,
       isSearching: isSearching ?? this.isSearching,
-      selectedDoctor: clearDoctor
-          ? null
-          : (selectedDoctor ?? this.selectedDoctor),
-      selectedService: clearService
-          ? null
-          : (selectedService ?? this.selectedService),
+      selectedDoctor:
+          clearDoctor ? null : (selectedDoctor ?? this.selectedDoctor),
+      selectedService:
+          clearService ? null : (selectedService ?? this.selectedService),
       selectedDate: selectedDate ?? this.selectedDate,
       selectedSlot: clearSlot ? null : (selectedSlot ?? this.selectedSlot),
       selectedBookingType: selectedBookingType ?? this.selectedBookingType,
@@ -154,28 +165,31 @@ class AppointmentFormState extends Equatable {
     );
   }
 
+  ScheduleFollowUpParams? toFollowUpParams(String clientRequestId) {
+    if (followUpVisitId == null ||
+        selectedDoctor == null ||
+        selectedService == null ||
+        selectedDate == null) {
+      return null;
+    }
+    return ScheduleFollowUpParams(
+      visitId: followUpVisitId!,
+      doctorId: selectedDoctor!.id,
+      serviceId: selectedService!.id,
+      appointmentDate: selectedDate!,
+      appointmentTime: selectedSlot?.value,
+      notes: notes,
+      clientRequestId: clientRequestId,
+    );
+  }
+
   @override
   List<Object?> get props => [
-    stage,
-    formContext,
-    isLoadingContext,
-    contextError,
-    isNewPatient,
-    selectedPatient,
-    newPatient,
-    searchResults,
-    isSearching,
-    selectedDoctor,
-    selectedService,
-    selectedDate,
-    selectedSlot,
-    selectedBookingType,
-    isLoadingSlots,
-    questionAnswers,
-    notes,
-    isSubmitting,
-    submitSuccess,
-    createdAppointment,
-    submitError,
-  ];
+        stage, formContext, isLoadingContext, contextError, isFollowUpMode,
+        followUpVisitId, followUpInstructions, isPatientLocked, isNewPatient,
+        selectedPatient, newPatient, searchResults, isSearching, selectedDoctor,
+        selectedService, selectedDate, selectedSlot, selectedBookingType,
+        isLoadingSlots, questionAnswers, notes, isSubmitting, submitSuccess,
+        createdAppointment, submitError,
+      ];
 }

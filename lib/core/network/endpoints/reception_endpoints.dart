@@ -22,4 +22,22 @@ abstract final class ReceptionEndpoints {
   static String queueCallDoctor(int id) => '/reception/queue/$id/call-doctor';
   static String queueComplete(int id) => '/reception/queue/$id/complete';
   static String queueCancel(int id) => '/reception/queue/$id/cancel';
+  static const String followUps = '/reception/follow-ups';
+  static String followUpScheduleContext(int visitId) =>
+      '/reception/follow-ups/$visitId/schedule-context';
+  static String scheduleFollowUp(int visitId) =>
+      '/reception/follow-ups/$visitId/schedule';
+
+  // Reception Internal Chat
+  static const String internalChats = '/reception/internal-chat/chats';
+  static String internalChatDetail(int chatId) =>
+      '/reception/internal-chat/chats/$chatId';
+  static String internalChatPoll(int chatId) =>
+      '/reception/internal-chat/chats/$chatId/poll';
+  static String internalChatSend(int chatId) =>
+      '/reception/internal-chat/chats/$chatId/send';
+  static String internalChatRead(int chatId) =>
+      '/reception/internal-chat/chats/$chatId/read';
+  static const String internalChatUnreadCount =
+      '/reception/internal-chat/unread-count';
 }

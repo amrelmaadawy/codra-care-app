@@ -5,6 +5,7 @@ enum ShellNavSection {
   main(sortOrder: 0, labelKey: 'shell.main'),
   dailyWork(sortOrder: 10, labelKey: 'shell.daily_work'),
   patients(sortOrder: 20, labelKey: 'shell.patients_section'),
+  communication(sortOrder: 25, labelKey: 'shell.communication'),
   finance(sortOrder: 30, labelKey: 'shell.finance'),
   management(sortOrder: 40, labelKey: 'shell.management'),
   account(sortOrder: 50, labelKey: 'shell.account');

@@ -120,6 +120,8 @@ GoRouter createRouter(
         path: AppRoutes.appointmentNew,
         builder: (context, state) => AppointmentFormScreen(
           initialDate: state.uri.queryParameters['date'],
+          mode: state.uri.queryParameters['mode'],
+          visitId: int.tryParse(state.uri.queryParameters['visitId'] ?? ''),
         ),
       ),
       GoRoute(

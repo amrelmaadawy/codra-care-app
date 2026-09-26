@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_icons.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -39,6 +41,7 @@ class QuickStatsSection extends StatelessWidget {
                 count: totalPatientsToday,
                 icon: AppIcons.patients,
                 iconColor: context.primaryColor,
+                onTap: () => context.push(AppRoutes.receptionQueue),
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
@@ -46,8 +49,9 @@ class QuickStatsSection extends StatelessWidget {
               child: _QuickStatCard(
                 label: 'reception_dashboard.pending_follow_ups'.tr(),
                 count: pendingFollowUps,
-                icon: AppIcons.clock,
+                icon: AppIcons.followUps,
                 iconColor: AppColors.accent,
+                onTap: () => context.push(AppRoutes.receptionFollowUps),
               ),
             ),
           ],
@@ -62,28 +66,33 @@ class _QuickStatCard extends StatelessWidget {
   final int count;
   final IconData icon;
   final Color iconColor;
+  final VoidCallback? onTap;
 
   const _QuickStatCard({
     required this.label,
     required this.count,
     required this.icon,
     required this.iconColor,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
       label: '$label: $count',
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: context.surfaceColor,
-          borderRadius: AppRadius.cardRadius,
-          border: Border.all(
-            color: context.dividerColor.withValues(alpha: 0.6),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadius.cardRadius,
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: context.surfaceColor,
+            borderRadius: AppRadius.cardRadius,
+            border: Border.all(
+              color: context.dividerColor.withValues(alpha: 0.6),
+            ),
+            boxShadow: context.cardShadow,
           ),
-          boxShadow: context.cardShadow,
-        ),
         child: Row(
           children: [
             Container(
@@ -122,6 +131,7 @@ class _QuickStatCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

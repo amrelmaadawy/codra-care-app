@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_extensions.dart';
-import '../../../../core/widgets/app_dropdown_sheet.dart';
+import '../../../../core/widgets/app_dropdown.dart';
 import '../../domain/entities/booking_doctor_entity.dart';
 import '../../domain/entities/booking_service_entity.dart';
 import '../cubits/appointment_form_cubit.dart';
@@ -53,13 +53,15 @@ class ScheduleSelectionStep extends StatelessWidget {
               title: 'reception_booking.doctor_selection_title'.tr(),
             ),
             const SizedBox(height: AppSpacing.xs),
-            AppDropdownSheet<BookingDoctorEntity>(
-              title: 'reception_booking.select_doctor'.tr(),
+            AppDropdown<BookingDoctorEntity>(
+              value: state.selectedDoctor,
               items: doctors,
-              selectedItem: state.selectedDoctor,
               itemLabel: (doc) => '${doc.name} (${doc.specialization})',
-              onSelected: cubit.selectDoctor,
+              hintText: 'reception_booking.choose_doctor_hint'.tr(),
+              sheetTitle: 'reception_booking.select_doctor'.tr(),
               searchHint: 'reception_booking.choose_doctor_hint'.tr(),
+              prefixIcon: Icons.person_pin_rounded,
+              onChanged: cubit.selectDoctor,
             ),
             const SizedBox(height: AppSpacing.md),
             _buildSectionHeader(
@@ -68,17 +70,33 @@ class ScheduleSelectionStep extends StatelessWidget {
               title: 'reception_booking.service_selection_title'.tr(),
             ),
             const SizedBox(height: AppSpacing.xs),
-            AppDropdownSheet<BookingServiceEntity>(
-              title: 'reception_booking.select_service'.tr(),
+            AppDropdown<BookingServiceEntity>(
+              value: state.selectedService,
               items: services,
-              selectedItem: state.selectedService,
+              enabled: state.selectedDoctor != null && services.isNotEmpty,
               itemLabel: (srv) =>
                   '${srv.name} — ${srv.price.toStringAsFixed(0)} ${'reception_booking.currency'.tr()}',
-              onSelected: cubit.selectService,
-              searchHint: state.selectedDoctor == null
+              hintText: state.selectedDoctor == null
                   ? 'reception_booking.select_doctor_first'.tr()
-                  : 'reception_booking.choose_service_hint'.tr(),
+                  : (services.isEmpty
+                      ? 'reception_booking.no_services_for_doctor'.tr()
+                      : 'reception_booking.choose_service_hint'.tr()),
+              sheetTitle: 'reception_booking.select_service'.tr(),
+              searchHint: 'reception_booking.choose_service_hint'.tr(),
+              prefixIcon: Icons.medical_services_rounded,
+              onChanged: cubit.selectService,
             ),
+            if (state.selectedDoctor != null && state.selectedService == null) ...[
+              const SizedBox(height: 6),
+              Text(
+                'reception_booking.please_select_service_hint'.tr(),
+                style: AppTypography.bodySmall.copyWith(
+                  color: context.primaryColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
             const SizedBox(height: AppSpacing.md),
             _buildSectionHeader(
               context,

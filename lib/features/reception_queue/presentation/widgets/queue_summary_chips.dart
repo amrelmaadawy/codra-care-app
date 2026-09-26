@@ -21,77 +21,49 @@ class QueueSummaryChips extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       child: Row(
         children: [
-          _buildChip(
+          _buildSegment(
             context: context,
             label: 'reception_queue.summary_all'.tr(),
             count: summary.total,
             statusKey: null,
-            baseColor: context.primaryColor,
+            accentColor: context.primaryColor,
           ),
           const SizedBox(width: AppSpacing.xs),
-          _buildChip(
+          _buildSegment(
             context: context,
             label: 'reception_queue.summary_waiting'.tr(),
             count: summary.waiting,
             statusKey: 'waiting',
-            baseColor: AppColors.statusWaiting,
+            accentColor: AppColors.statusWaiting,
           ),
           const SizedBox(width: AppSpacing.xs),
-          _buildChip(
+          _buildSegment(
             context: context,
             label: 'reception_queue.summary_with_doctor'.tr(),
             count: summary.withDoctor,
             statusKey: 'with_doctor',
-            baseColor: AppColors.statusInConsultation,
+            accentColor: AppColors.statusInConsultation,
           ),
           const SizedBox(width: AppSpacing.xs),
-          _buildChip(
+          _buildSegment(
             context: context,
             label: 'reception_queue.summary_completed'.tr(),
             count: summary.completed,
             statusKey: 'completed',
-            baseColor: AppColors.statusCompleted,
+            accentColor: AppColors.statusCompleted,
           ),
-          const SizedBox(width: AppSpacing.xs),
-          _buildChip(
-            context: context,
-            label: 'reception_queue.summary_cancelled'.tr(),
-            count: summary.cancelled,
-            statusKey: 'cancelled',
-            baseColor: AppColors.statusCancelled,
-          ),
-          if (summary.avgWaitMinutes > 0) ...[
-            const SizedBox(width: AppSpacing.sm),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm,
-                vertical: 6,
-              ),
-              decoration: BoxDecoration(
-                color: context.surfaceVariantColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.access_time_rounded,
-                    size: 14,
-                    color: context.textSecondaryColor,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${summary.avgWaitMinutes} ${'reception_queue.min'.tr()}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: context.textSecondaryColor,
-                    ),
-                  ),
-                ],
-              ),
+          if (summary.cancelled > 0) ...[
+            const SizedBox(width: AppSpacing.xs),
+            _buildSegment(
+              context: context,
+              label: 'reception_queue.summary_cancelled'.tr(),
+              count: summary.cancelled,
+              statusKey: 'cancelled',
+              accentColor: AppColors.statusCancelled,
             ),
           ],
         ],
@@ -99,26 +71,31 @@ class QueueSummaryChips extends StatelessWidget {
     );
   }
 
-  Widget _buildChip({
+  Widget _buildSegment({
     required BuildContext context,
     required String label,
     required int count,
     required String? statusKey,
-    required Color baseColor,
+    required Color accentColor,
   }) {
     final isSelected = activeStatus == statusKey;
 
     return InkWell(
       onTap: () => onStatusSelected(isSelected && statusKey != null ? null : statusKey),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(10),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(
-          color: isSelected ? baseColor.withValues(alpha: 0.15) : context.surfaceColor,
-          borderRadius: BorderRadius.circular(20),
+          color: isSelected
+              ? accentColor.withValues(alpha: 0.12)
+              : context.surfaceVariantColor.withValues(alpha: 0.35),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? baseColor : context.dividerColor.withValues(alpha: 0.6),
+            color: isSelected
+                ? accentColor
+                : context.dividerColor.withValues(alpha: 0.3),
             width: isSelected ? 1.5 : 1,
           ),
         ),
@@ -128,24 +105,24 @@ class QueueSummaryChips extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.5,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: isSelected ? baseColor : context.textPrimaryColor,
+                color: isSelected ? accentColor : context.textPrimaryColor,
               ),
             ),
             const SizedBox(width: 6),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
               decoration: BoxDecoration(
-                color: isSelected ? baseColor : baseColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10),
+                color: isSelected ? accentColor : context.surfaceColor,
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 '$count',
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: isSelected ? Colors.white : baseColor,
+                  color: isSelected ? Colors.white : context.textSecondaryColor,
                 ),
               ),
             ),

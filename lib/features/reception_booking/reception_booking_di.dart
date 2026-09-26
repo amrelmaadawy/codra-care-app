@@ -7,6 +7,8 @@ import 'domain/repositories/reception_booking_repository.dart';
 import 'domain/usecases/create_appointment_use_case.dart';
 import 'domain/usecases/create_walk_in_use_case.dart';
 import 'domain/usecases/get_booking_form_context_use_case.dart';
+import 'domain/usecases/get_follow_up_schedule_context_use_case.dart';
+import 'domain/usecases/schedule_follow_up_use_case.dart';
 import 'domain/usecases/search_patients_use_case.dart';
 import 'presentation/cubits/appointment_form_cubit.dart';
 import 'presentation/cubits/walk_in_cubit.dart';
@@ -33,6 +35,8 @@ void setupReceptionBookingDi([GetIt? locator]) {
   sl.registerLazySingleton(() => SearchPatientsUseCase(repository: sl()));
   sl.registerLazySingleton(() => CreateAppointmentUseCase(repository: sl()));
   sl.registerLazySingleton(() => CreateWalkInUseCase(sl()));
+  sl.registerLazySingleton(() => GetFollowUpScheduleContextUseCase(sl()));
+  sl.registerLazySingleton(() => ScheduleFollowUpUseCase(sl()));
 
   // Cubits
   sl.registerFactory(
@@ -40,6 +44,8 @@ void setupReceptionBookingDi([GetIt? locator]) {
       getContextUseCase: sl(),
       searchPatientsUseCase: sl(),
       createAppointmentUseCase: sl(),
+      getFollowUpScheduleContextUseCase: sl(),
+      scheduleFollowUpUseCase: sl(),
     ),
   );
   sl.registerFactory(
