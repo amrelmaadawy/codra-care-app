@@ -28,12 +28,10 @@ class WalkInReviewStep extends StatelessWidget {
             _buildQueueNotice(context),
             const SizedBox(height: AppSpacing.lg),
             if (questions.isNotEmpty) ...[
-              Text(
-                'reception_booking.questions_title'.tr(),
-                style: AppTypography.titleSmall.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.textColor,
-                ),
+              _buildSectionTitle(
+                context,
+                icon: Icons.help_outline_rounded,
+                title: 'reception_booking.questions_title'.tr(),
               ),
               const SizedBox(height: AppSpacing.sm),
               ...questions.map(
@@ -43,11 +41,14 @@ class WalkInReviewStep extends StatelessWidget {
                     decoration: InputDecoration(
                       labelText: '${q.text}${q.required ? ' *' : ''}',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                        borderSide: BorderSide(color: context.primaryColor, width: 1.5),
                       ),
                     ),
-                    onChanged: (val) =>
-                        cubit.setQuestionAnswer('${q.index}', val),
+                    onChanged: (val) => cubit.setQuestionAnswer('${q.index}', val),
                   ),
                 ),
               ),
@@ -58,20 +59,20 @@ class WalkInReviewStep extends StatelessWidget {
               onVitalChanged: cubit.setVitalSign,
             ),
             const SizedBox(height: AppSpacing.md),
-            Text(
-              'reception_booking.notes_label'.tr(),
-              style: AppTypography.titleSmall.copyWith(
-                fontWeight: FontWeight.bold,
-                color: context.textColor,
-              ),
+            _buildSectionTitle(
+              context,
+              icon: Icons.notes_rounded,
+              title: 'reception_booking.notes_label'.tr(),
             ),
             const SizedBox(height: AppSpacing.xs),
             TextField(
               maxLines: 2,
               decoration: InputDecoration(
                 hintText: 'reception_booking.notes_hint'.tr(),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                  borderSide: BorderSide(color: context.primaryColor, width: 1.5),
                 ),
               ),
               onChanged: cubit.setNotes,
@@ -82,17 +83,34 @@ class WalkInReviewStep extends StatelessWidget {
     );
   }
 
+  Widget _buildSectionTitle(BuildContext context, {required IconData icon, required String title}) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: context.primaryColor),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          title,
+          style: AppTypography.titleSmall.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.textColor,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildQueueNotice(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: context.primaryColor.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-        border: Border.all(color: context.primaryColor.withValues(alpha: 0.2)),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: context.primaryColor.withValues(alpha: 0.25)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.info_outline, color: context.primaryColor, size: 20),
+          Icon(Icons.info_outline_rounded, color: context.primaryColor, size: 20),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
@@ -100,6 +118,7 @@ class WalkInReviewStep extends StatelessWidget {
               style: AppTypography.bodySmall.copyWith(
                 color: context.primaryColor,
                 fontWeight: FontWeight.w600,
+                height: 1.4,
               ),
             ),
           ),

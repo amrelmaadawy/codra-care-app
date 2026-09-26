@@ -19,13 +19,13 @@ class AppointmentStageIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final steps = [
-      (1, 'reception_booking.step_patient'.tr(), Icons.person_outline),
+      (1, 'reception_booking.step_patient'.tr(), Icons.person_rounded),
       (
         2,
         'reception_booking.step_schedule'.tr(),
-        Icons.calendar_today_outlined,
+        Icons.calendar_today_rounded,
       ),
-      (3, 'reception_booking.step_review'.tr(), Icons.check_circle_outline),
+      (3, 'reception_booking.step_review'.tr(), Icons.fact_check_rounded),
     ];
 
     return Container(
@@ -35,7 +35,11 @@ class AppointmentStageIndicator extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: context.surfaceColor,
-        border: Border(bottom: BorderSide(color: context.dividerColor)),
+        border: Border(
+          bottom: BorderSide(
+            color: context.dividerColor.withValues(alpha: 0.5),
+          ),
+        ),
       ),
       child: Row(
         children: [
@@ -50,12 +54,15 @@ class AppointmentStageIndicator extends StatelessWidget {
             ),
             if (i < steps.length - 1)
               Container(
-                width: 20,
+                width: 18,
                 height: 2,
                 margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                color: currentStage > steps[i].$1
-                    ? context.primaryColor
-                    : context.dividerColor,
+                decoration: BoxDecoration(
+                  color: currentStage > steps[i].$1
+                      ? AppColors.emerald
+                      : context.dividerColor.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(1),
+                ),
               ),
           ],
         ],
@@ -72,51 +79,61 @@ class AppointmentStageIndicator extends StatelessWidget {
     final isCompleted = currentStage > index;
     final isActive = currentStage == index;
 
-    final Color color = isActive
-        ? context.primaryColor
-        : (isCompleted ? AppColors.emerald : context.textMutedColor);
+    final Color bgColor;
+    final Color contentColor;
+    final Border border;
+    final List<BoxShadow>? shadow;
+
+    if (isActive) {
+      bgColor = context.primaryColor;
+      contentColor = Colors.white;
+      border = Border.all(color: context.primaryColor, width: 1.5);
+      shadow = [
+        BoxShadow(
+          color: context.primaryColor.withValues(alpha: 0.25),
+          blurRadius: 6,
+          offset: const Offset(0, 2),
+        ),
+      ];
+    } else if (isCompleted) {
+      bgColor = AppColors.emerald.withValues(alpha: 0.12);
+      contentColor = AppColors.emerald;
+      border = Border.all(color: AppColors.emerald.withValues(alpha: 0.3));
+      shadow = null;
+    } else {
+      bgColor = context.surfaceVariantColor.withValues(alpha: 0.4);
+      contentColor = context.textMutedColor;
+      border = Border.all(color: context.dividerColor.withValues(alpha: 0.5));
+      shadow = null;
+    }
 
     return InkWell(
       onTap: onStageTapped != null ? () => onStageTapped!(index) : null,
-      borderRadius: BorderRadius.circular(AppRadius.sm),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          border: border,
+          boxShadow: shadow,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isActive
-                    ? context.primaryColor
-                    : (isCompleted
-                          ? AppColors.emerald.withValues(alpha: 0.15)
-                          : context.surfaceVariantColor),
-                border: Border.all(color: color, width: isActive ? 2 : 1),
-              ),
-              child: Center(
-                child: isCompleted
-                    ? const Icon(
-                        Icons.check,
-                        size: 16,
-                        color: AppColors.emerald,
-                      )
-                    : Icon(
-                        icon,
-                        size: 14,
-                        color: isActive ? Colors.white : context.textMutedColor,
-                      ),
-              ),
+            Icon(
+              isCompleted ? Icons.check_circle_rounded : icon,
+              size: 18,
+              color: contentColor,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 3),
             Text(
               label,
               style: AppTypography.bodySmall.copyWith(
                 fontSize: 11,
-                fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
-                color: color,
+                fontWeight: isActive ? FontWeight.bold : FontWeight.w600,
+                color: contentColor,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

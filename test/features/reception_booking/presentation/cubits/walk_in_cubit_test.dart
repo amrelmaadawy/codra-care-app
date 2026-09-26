@@ -36,8 +36,6 @@ void main() {
         patientId: 1,
         doctorId: 1,
         serviceId: 1,
-        bookingType: 'first_visit',
-        priority: 'normal',
       ),
     );
   });
@@ -159,7 +157,7 @@ void main() {
           .thenAnswer((_) async => const Right(tWalkInResult));
       return cubit;
     },
-    seed: () => WalkInState(
+    seed: () => const WalkInState(
       clientRequestId: 'test-uuid',
       stage: 3,
       selectedPatient: tPatient,
@@ -184,7 +182,7 @@ void main() {
       );
       return cubit;
     },
-    seed: () => WalkInState(
+    seed: () => const WalkInState(
       clientRequestId: 'test-uuid',
       stage: 3,
       selectedPatient: tPatient,

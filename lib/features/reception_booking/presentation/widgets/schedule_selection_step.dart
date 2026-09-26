@@ -1,12 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../../../core/widgets/app_dropdown_sheet.dart';
+import '../../domain/entities/booking_doctor_entity.dart';
+import '../../domain/entities/booking_service_entity.dart';
 import '../cubits/appointment_form_cubit.dart';
 import '../cubits/appointment_form_state.dart';
+import 'booking_date_picker_card.dart';
 import 'time_slots_grid.dart';
 
 class ScheduleSelectionStep extends StatelessWidget {
@@ -41,157 +44,114 @@ class ScheduleSelectionStep extends StatelessWidget {
         final services = state.formContext?.services ?? [];
         final types = state.formContext?.bookingTypes ?? [];
 
-        return ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'reception_booking.select_doctor_label'.tr(),
-              style: AppTypography.titleSmall.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+            _buildSectionHeader(
+              context,
+              icon: Icons.person_pin_rounded,
+              title: 'reception_booking.doctor_selection_title'.tr(),
             ),
             const SizedBox(height: AppSpacing.xs),
-            DropdownButtonFormField<int>(
-              initialValue: state.selectedDoctor?.id,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.medical_services_outlined),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-              ),
-              items: doctors.map((d) {
-                return DropdownMenuItem(
-                  value: d.id,
-                  child: Text('${d.name} (${d.specialization})'),
-                );
-              }).toList(),
-              onChanged: (id) {
-                if (id != null) {
-                  final doc = doctors.firstWhere((d) => d.id == id);
-                  cubit.selectDoctor(doc);
-                }
-              },
+            AppDropdownSheet<BookingDoctorEntity>(
+              title: 'reception_booking.select_doctor'.tr(),
+              items: doctors,
+              selectedItem: state.selectedDoctor,
+              itemLabel: (doc) => '${doc.name} (${doc.specialization})',
+              onSelected: cubit.selectDoctor,
+              searchHint: 'reception_booking.choose_doctor_hint'.tr(),
             ),
             const SizedBox(height: AppSpacing.md),
-            Text(
-              'reception_booking.select_service_label'.tr(),
-              style: AppTypography.titleSmall.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+            _buildSectionHeader(
+              context,
+              icon: Icons.medical_services_rounded,
+              title: 'reception_booking.service_selection_title'.tr(),
             ),
             const SizedBox(height: AppSpacing.xs),
-            DropdownButtonFormField<int>(
-              initialValue: state.selectedService?.id,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.local_hospital_outlined),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-              ),
-              items: services.map((s) {
-                return DropdownMenuItem(
-                  value: s.id,
-                  child: Text(
-                    '${s.name} - ${s.price.toStringAsFixed(0)} ${'reception_appointments.currency'.tr()}',
-                  ),
-                );
-              }).toList(),
-              onChanged: (id) {
-                if (id != null) {
-                  final srv = services.firstWhere((s) => s.id == id);
-                  cubit.selectService(srv);
-                }
-              },
+            AppDropdownSheet<BookingServiceEntity>(
+              title: 'reception_booking.select_service'.tr(),
+              items: services,
+              selectedItem: state.selectedService,
+              itemLabel: (srv) =>
+                  '${srv.name} — ${srv.price.toStringAsFixed(0)} ${'reception_booking.currency'.tr()}',
+              onSelected: cubit.selectService,
+              searchHint: state.selectedDoctor == null
+                  ? 'reception_booking.select_doctor_first'.tr()
+                  : 'reception_booking.choose_service_hint'.tr(),
             ),
             const SizedBox(height: AppSpacing.md),
-            Text(
-              'reception_booking.booking_type_label'.tr(),
-              style: AppTypography.titleSmall.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+            _buildSectionHeader(
+              context,
+              icon: Icons.category_rounded,
+              title: 'reception_booking.booking_type_label'.tr(),
             ),
             const SizedBox(height: AppSpacing.xs),
             Wrap(
               spacing: AppSpacing.xs,
+              runSpacing: AppSpacing.xs,
               children: types.map((t) {
                 final isSelected = state.selectedBookingType == t.value;
                 return ChoiceChip(
                   label: Text(t.label),
                   selected: isSelected,
+                  selectedColor: context.primaryColor.withValues(alpha: 0.15),
+                  labelStyle: TextStyle(
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    color: isSelected ? context.primaryColor : context.textColor,
+                  ),
                   onSelected: (_) => cubit.selectBookingType(t.value),
                 );
               }).toList(),
             ),
             const SizedBox(height: AppSpacing.md),
-            Text(
-              'reception_booking.appointment_date_label'.tr(),
-              style: AppTypography.titleSmall.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+            _buildSectionHeader(
+              context,
+              icon: Icons.event_available_rounded,
+              title: 'reception_booking.appointment_date_label'.tr(),
             ),
             const SizedBox(height: AppSpacing.xs),
-            InkWell(
+            BookingDatePickerCard(
+              selectedDate: state.selectedDate,
               onTap: () => _pickDate(context, state),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.sm + 4,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: context.dividerColor),
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      state.selectedDate ??
-                          'reception_booking.select_date'.tr(),
-                    ),
-                    Icon(Icons.calendar_month, color: context.primaryColor),
-                  ],
-                ),
-              ),
             ),
-            const SizedBox(height: AppSpacing.md),
             if (state.selectedDoctor != null) ...[
-              Text(
-                'reception_booking.available_slots_label'.tr(),
-                style: AppTypography.titleSmall.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              const SizedBox(height: AppSpacing.md),
+              _buildSectionHeader(
+                context,
+                icon: Icons.access_time_rounded,
+                title: 'reception_booking.available_slots_label'.tr(),
               ),
               const SizedBox(height: AppSpacing.xs),
               TimeSlotsGrid(
                 availability: state.formContext?.availability,
                 isLoading: state.isLoadingSlots,
                 selectedSlot: state.selectedSlot,
-                onSlotSelected: (slot) => cubit.selectSlot(slot),
+                onSlotSelected: cubit.selectSlot,
               ),
             ],
-            const SizedBox(height: AppSpacing.xxl),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => cubit.prevStage(),
-                    child: Text('reception_booking.back_action'.tr()),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: state.isStage2Valid
-                        ? () => cubit.nextStage()
-                        : null,
-                    child: Text('reception_booking.continue_action'.tr()),
-                  ),
-                ),
-              ],
-            ),
           ],
         );
       },
+    );
+  }
+
+  Widget _buildSectionHeader(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: context.primaryColor),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          title,
+          style: AppTypography.titleSmall.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.textColor,
+          ),
+        ),
+      ],
     );
   }
 }

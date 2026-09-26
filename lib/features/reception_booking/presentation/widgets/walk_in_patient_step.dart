@@ -4,12 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/app_shimmer_box.dart';
 import '../cubits/walk_in_cubit.dart';
 import '../cubits/walk_in_state.dart';
 import 'inline_new_patient_form.dart';
 import 'patient_search_card.dart';
+import 'walk_in_patient_tab_selector.dart';
 
 class WalkInPatientStep extends StatefulWidget {
   const WalkInPatientStep({super.key});
@@ -36,21 +38,9 @@ class _WalkInPatientStepState extends State<WalkInPatientStep> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SegmentedButton<bool>(
-              segments: [
-                ButtonSegment(
-                  value: false,
-                  label: Text('reception_booking.tab_existing_patient'.tr()),
-                  icon: const Icon(Icons.person_search),
-                ),
-                ButtonSegment(
-                  value: true,
-                  label: Text('reception_booking.tab_new_patient'.tr()),
-                  icon: const Icon(Icons.person_add_alt_1),
-                ),
-              ],
-              selected: {state.isNewPatient},
-              onSelectionChanged: (val) => cubit.toggleNewPatient(val.first),
+            WalkInPatientTabSelector(
+              isNewPatient: state.isNewPatient,
+              onToggle: cubit.toggleNewPatient,
             ),
             const SizedBox(height: AppSpacing.md),
             if (state.isNewPatient)
@@ -61,51 +51,16 @@ class _WalkInPatientStepState extends State<WalkInPatientStep> {
                 },
               )
             else ...[
-              TextField(
-                controller: _searchCtrl,
-                onChanged: cubit.searchPatients,
-                decoration: InputDecoration(
-                  hintText: 'reception_booking.search_patient_hint'.tr(),
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: _searchCtrl.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            _searchCtrl.clear();
-                            cubit.searchPatients('');
-                          },
-                        )
-                      : null,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                  ),
-                ),
-              ),
+              _buildSearchField(context, cubit),
+              const SizedBox(height: AppSpacing.sm),
+              _buildSearchTip(context),
               const SizedBox(height: AppSpacing.md),
               if (state.isSearching) ...[
-                const AppShimmer(
-                  child: Column(
-                    children: [
-                      AppShimmerBox(
-                        width: double.infinity,
-                        height: 60,
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                      ),
-                      SizedBox(height: 8),
-                      AppShimmerBox(
-                        width: double.infinity,
-                        height: 60,
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildSearchShimmer(),
               ] else if (state.searchResults.isNotEmpty) ...[
                 Text(
                   'reception_booking.search_results'.tr(),
-                  style: AppTypography.titleSmall.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTypography.titleSmall.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 ...state.searchResults.map(
@@ -116,20 +71,88 @@ class _WalkInPatientStepState extends State<WalkInPatientStep> {
                   ),
                 ),
               ] else if (_searchCtrl.text.trim().isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
-                  child: Center(
-                    child: Text(
-                      'reception_booking.no_patients_found'.tr(),
-                      style: AppTypography.bodySmall,
-                    ),
-                  ),
-                ),
+                _buildNoPatientsFound(context),
               ],
             ],
           ],
         );
       },
+    );
+  }
+
+  Widget _buildSearchField(BuildContext context, WalkInCubit cubit) {
+    return TextField(
+      controller: _searchCtrl,
+      onChanged: cubit.searchPatients,
+      decoration: InputDecoration(
+        hintText: 'reception_booking.search_patient_tip'.tr(),
+        prefixIcon: Icon(Icons.search_rounded, color: context.primaryColor),
+        suffixIcon: _searchCtrl.text.isNotEmpty
+            ? IconButton(
+                icon: const Icon(Icons.clear_rounded),
+                onPressed: () {
+                  _searchCtrl.clear();
+                  cubit.searchPatients('');
+                },
+              )
+            : null,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: BorderSide(color: context.primaryColor, width: 1.5),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchTip(BuildContext context) {
+    return Row(
+      children: [
+        Icon(Icons.info_outline_rounded, size: 14, color: context.textMutedColor),
+        const SizedBox(width: 4),
+        Text(
+          'reception_booking.search_patient_tip'.tr(),
+          style: AppTypography.bodySmall.copyWith(fontSize: 11, color: context.textMutedColor),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchShimmer() {
+    return const AppShimmer(
+      child: Column(
+        children: [
+          AppShimmerBox(
+            width: double.infinity,
+            height: 64,
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+          SizedBox(height: 8),
+          AppShimmerBox(
+            width: double.infinity,
+            height: 64,
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoPatientsFound(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      child: Center(
+        child: Column(
+          children: [
+            Icon(Icons.person_off_outlined, size: 36, color: context.textMutedColor),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              'reception_booking.no_patients_found'.tr(),
+              style: AppTypography.bodySmall.copyWith(color: context.textMutedColor),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

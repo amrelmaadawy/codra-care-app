@@ -3,12 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test(
-    'All reception_appointments and reception_booking files must have <= 200 lines',
+    'All reception and shell files must have <= 200 lines',
     () {
       final dirs = [
         'lib/features/reception_appointments',
         'lib/features/reception_booking',
         'lib/features/reception_dashboard',
+        'lib/features/reception_queue',
+        'lib/features/shell',
       ];
 
       final violations = <String>[];

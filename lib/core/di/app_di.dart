@@ -17,6 +17,8 @@ import '../../features/doctor_notifications/doctor_notifications_di.dart';
 import '../../features/reception_dashboard/reception_dashboard_di.dart';
 import '../../features/reception_appointments/reception_appointments_di.dart';
 import '../../features/reception_booking/reception_booking_di.dart';
+import '../../features/reception_queue/reception_queue_di.dart';
+import 'package:dio/dio.dart';
 import '../../features/shell/shell_di.dart';
 import '../network/api_client.dart';
 import 'permission_service.dart';
@@ -28,6 +30,7 @@ Future<void> setupDi() async {
 
   // Core singletons
   sl.registerLazySingleton<ApiClient>(() => ApiClient.instance..initialize());
+  sl.registerLazySingleton<Dio>(() => sl<ApiClient>().dio);
   sl.registerLazySingleton<PermissionService>(() => PermissionService());
 
   // Feature DI modules
@@ -48,5 +51,6 @@ Future<void> setupDi() async {
   setupReceptionDashboardDi();
   setupReceptionAppointmentsDi();
   setupReceptionBookingDi();
+  setupReceptionQueueDi();
 }
 

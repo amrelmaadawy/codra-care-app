@@ -2,7 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/create_appointment_params.dart';
+import 'inline_gender_selector.dart';
 
 class InlineNewPatientForm extends StatefulWidget {
   final NewPatientParams? initialValue;
@@ -66,9 +68,7 @@ class _InlineNewPatientFormState extends State<InlineNewPatientForm> {
         phone: phone,
         gender: _gender,
         age: age,
-        address: _addressCtrl.text.trim().isNotEmpty
-            ? _addressCtrl.text.trim()
-            : null,
+        address: _addressCtrl.text.trim().isNotEmpty ? _addressCtrl.text.trim() : null,
       ),
     );
   }
@@ -80,61 +80,44 @@ class _InlineNewPatientFormState extends State<InlineNewPatientForm> {
       children: [
         TextField(
           controller: _nameCtrl,
-          decoration: InputDecoration(
-            labelText: 'reception_booking.patient_name_label'.tr(),
-            prefixIcon: const Icon(Icons.person_outline),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-            ),
+          decoration: _inputDeco(
+            context,
+            label: 'reception_booking.patient_name_label'.tr(),
+            icon: Icons.person_outline_rounded,
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
         TextField(
           controller: _phoneCtrl,
           keyboardType: TextInputType.phone,
-          decoration: InputDecoration(
-            labelText: 'reception_booking.patient_phone_label'.tr(),
-            prefixIcon: const Icon(Icons.phone_outlined),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-            ),
+          decoration: _inputDeco(
+            context,
+            label: 'reception_booking.patient_phone_label'.tr(),
+            icon: Icons.phone_outlined,
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
         Row(
           children: [
             Expanded(
-              child: SegmentedButton<String>(
-                segments: [
-                  ButtonSegment(
-                    value: 'male',
-                    label: Text('reception_booking.gender_male'.tr()),
-                    icon: const Icon(Icons.male),
-                  ),
-                  ButtonSegment(
-                    value: 'female',
-                    label: Text('reception_booking.gender_female'.tr()),
-                    icon: const Icon(Icons.female),
-                  ),
-                ],
-                selected: {_gender},
-                onSelectionChanged: (val) {
-                  setState(() => _gender = val.first);
+              child: InlineGenderSelector(
+                selectedGender: _gender,
+                onGenderChanged: (val) {
+                  setState(() => _gender = val);
                   _notify();
                 },
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
             SizedBox(
-              width: 90,
+              width: 96,
               child: TextField(
                 controller: _ageCtrl,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'reception_booking.age_label'.tr(),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                  ),
+                decoration: _inputDeco(
+                  context,
+                  label: 'reception_booking.age_label'.tr(),
+                  icon: Icons.cake_outlined,
                 ),
               ),
             ),
@@ -143,15 +126,29 @@ class _InlineNewPatientFormState extends State<InlineNewPatientForm> {
         const SizedBox(height: AppSpacing.sm),
         TextField(
           controller: _addressCtrl,
-          decoration: InputDecoration(
-            labelText: 'reception_booking.address_label'.tr(),
-            prefixIcon: const Icon(Icons.location_on_outlined),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-            ),
+          decoration: _inputDeco(
+            context,
+            label: 'reception_booking.address_label'.tr(),
+            icon: Icons.location_on_outlined,
           ),
         ),
       ],
+    );
+  }
+
+  InputDecoration _inputDeco(
+    BuildContext context, {
+    required String label,
+    required IconData icon,
+  }) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon, size: 20, color: context.primaryColor),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        borderSide: BorderSide(color: context.primaryColor, width: 1.5),
+      ),
     );
   }
 }

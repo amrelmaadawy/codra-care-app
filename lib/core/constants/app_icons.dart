@@ -24,6 +24,8 @@ abstract final class AppIcons {
   static const IconData settings = Icons.settings_outlined;
   static const IconData settingsActive = Icons.settings;
   static const IconData menu = Icons.menu_rounded;
+  static const IconData sidebarCollapse = Icons.menu_open_rounded;
+  static const IconData sidebarExpand = Icons.menu_rounded;
   static const IconData diagnosisTemplates = Icons.assignment_outlined;
   static const IconData doctorQuestions = Icons.quiz_outlined;
 

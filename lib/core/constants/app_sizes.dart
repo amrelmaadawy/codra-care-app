@@ -23,4 +23,9 @@ abstract final class AppSizes {
   static const double borderWidthThin = 1.0;
   static const double borderWidthMedium = 1.5;
   static const double borderWidthThick = 2.0;
+
+  // Sidebar
+  static const double sidebarCollapsedWidth = 72.0;
+  static const double sidebarExtendedWidth = 260.0;
+  static const double sidebarDrawerWidth = 300.0;
 }

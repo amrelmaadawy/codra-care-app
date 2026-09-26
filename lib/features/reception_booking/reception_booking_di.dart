@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import '../../core/network/api_client.dart';
 import 'data/datasources/reception_booking_remote_data_source.dart';
 import 'data/repositories/reception_booking_repository_impl.dart';
 import 'domain/repositories/reception_booking_repository.dart';
@@ -14,7 +16,9 @@ void setupReceptionBookingDi([GetIt? locator]) {
 
   // Data sources
   sl.registerLazySingleton<ReceptionBookingRemoteDataSource>(
-    () => ReceptionBookingRemoteDataSourceImpl(dio: sl()),
+    () => ReceptionBookingRemoteDataSourceImpl(
+      dio: sl.isRegistered<Dio>() ? sl<Dio>() : sl<ApiClient>().dio,
+    ),
   );
 
   // Repositories

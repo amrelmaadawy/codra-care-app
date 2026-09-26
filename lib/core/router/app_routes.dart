@@ -24,6 +24,7 @@ abstract final class AppRoutes {
 
   // Reception/Admin shell routes
   static const String reception = '/shell/reception';
+  static const String receptionQueue = '/shell/reception/queue';
   static const String appointments = '/shell/appointments';
   static const String appointmentNew = '/appointments/new';
   static const String walkIn = '/reception/walk-in';

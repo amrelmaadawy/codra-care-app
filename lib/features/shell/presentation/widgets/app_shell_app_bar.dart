@@ -16,11 +16,13 @@ import '../../../auth/presentation/cubits/auth_state.dart';
 class AppShellAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String currentTitle;
   final VoidCallback? onMenuPressed;
+  final bool showProfile;
 
   const AppShellAppBar({
     super.key,
     required this.currentTitle,
     this.onMenuPressed,
+    this.showProfile = true,
   });
 
   @override
@@ -82,7 +84,7 @@ class AppShellAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
           actions: [
-            if (user != null)
+            if (user != null && showProfile)
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: AppSpacing.lg),
                 child: InkWell(

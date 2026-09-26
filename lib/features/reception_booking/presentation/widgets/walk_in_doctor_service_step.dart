@@ -9,6 +9,7 @@ import '../../../../core/widgets/app_dropdown_sheet.dart';
 import '../../domain/entities/booking_doctor_entity.dart';
 import '../../domain/entities/booking_form_context_entity.dart';
 import '../../domain/entities/booking_service_entity.dart';
+import 'walk_in_priority_selector.dart';
 
 class WalkInDoctorServiceStep extends StatelessWidget {
   final BookingFormContextEntity? formContext;
@@ -42,12 +43,10 @@ class WalkInDoctorServiceStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'reception_booking.doctor_selection_title'.tr(),
-          style: AppTypography.titleSmall.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.textColor,
-          ),
+        _buildSectionHeader(
+          context,
+          icon: Icons.person_pin_rounded,
+          title: 'reception_booking.doctor_selection_title'.tr(),
         ),
         const SizedBox(height: AppSpacing.xs),
         AppDropdownSheet<BookingDoctorEntity>(
@@ -59,12 +58,10 @@ class WalkInDoctorServiceStep extends StatelessWidget {
           searchHint: 'reception_booking.choose_doctor_hint'.tr(),
         ),
         const SizedBox(height: AppSpacing.md),
-        Text(
-          'reception_booking.service_selection_title'.tr(),
-          style: AppTypography.titleSmall.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.textColor,
-          ),
+        _buildSectionHeader(
+          context,
+          icon: Icons.medical_services_rounded,
+          title: 'reception_booking.service_selection_title'.tr(),
         ),
         const SizedBox(height: AppSpacing.xs),
         AppDropdownSheet<BookingServiceEntity>(
@@ -82,23 +79,41 @@ class WalkInDoctorServiceStep extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           _buildServiceSummary(context, selectedService!),
         ],
-        const SizedBox(height: AppSpacing.md),
+        const SizedBox(height: AppSpacing.lg),
+        _buildSectionHeader(
+          context,
+          icon: Icons.offline_bolt_rounded,
+          title: 'reception_booking.priority_title'.tr(),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        WalkInPrioritySelector(
+          selectedPriority: selectedPriority,
+          onPriorityChanged: onPriorityChanged,
+        ),
+        if (selectedPriority == 'urgent') ...[
+          const SizedBox(height: AppSpacing.sm),
+          _buildUrgentAlert(context),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildSectionHeader(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: context.primaryColor),
+        const SizedBox(width: AppSpacing.xs),
         Text(
-          'reception_booking.priority_title'.tr(),
+          title,
           style: AppTypography.titleSmall.copyWith(
             fontWeight: FontWeight.bold,
             color: context.textColor,
           ),
         ),
-        const SizedBox(height: AppSpacing.xs),
-        _buildPriorityChips(context),
-        if (selectedPriority == 'urgent') ...[
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            'reception_booking.urgent_walk_in_warning'.tr(),
-            style: AppTypography.labelSmall.copyWith(color: AppColors.error),
-          ),
-        ],
       ],
     );
   }
@@ -107,9 +122,9 @@ class WalkInDoctorServiceStep extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
       decoration: BoxDecoration(
-        color: context.surfaceVariantColor,
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-        border: Border.all(color: context.dividerColor.withValues(alpha: 0.5)),
+        color: context.surfaceVariantColor.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: context.dividerColor.withValues(alpha: 0.6)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,7 +133,7 @@ class WalkInDoctorServiceStep extends StatelessWidget {
             children: [
               Icon(
                 srv.isPackage ? Icons.all_inclusive : Icons.check_circle_outline,
-                size: 16,
+                size: 18,
                 color: context.primaryColor,
               ),
               const SizedBox(width: AppSpacing.xs),
@@ -128,13 +143,16 @@ class WalkInDoctorServiceStep extends StatelessWidget {
                         (srv.totalSessions ?? 1).toString(),
                       ])
                     : 'reception_booking.standard_consultation'.tr(),
-                style: AppTypography.bodySmall.copyWith(color: context.textColor),
+                style: AppTypography.bodySmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.textColor,
+                ),
               ),
             ],
           ),
           Text(
             '${srv.price.toStringAsFixed(0)} ${'reception_booking.currency'.tr()}',
-            style: AppTypography.titleSmall.copyWith(
+            style: AppTypography.titleMedium.copyWith(
               fontWeight: FontWeight.bold,
               color: context.primaryColor,
             ),
@@ -144,32 +162,29 @@ class WalkInDoctorServiceStep extends StatelessWidget {
     );
   }
 
-  Widget _buildPriorityChips(BuildContext context) {
-    final priorities = [
-      ('normal', 'reception_booking.priority_normal'.tr()),
-      ('urgent', 'reception_booking.priority_urgent'.tr()),
-      ('vip', 'reception_booking.priority_vip'.tr()),
-    ];
-
-    return Row(
-      children: priorities.map((p) {
-        final selected = selectedPriority == p.$1;
-        return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ChoiceChip(
-              label: Text(p.$2),
-              selected: selected,
-              onSelected: (_) => onPriorityChanged(p.$1),
-              selectedColor: context.primaryColor.withValues(alpha: 0.15),
-              labelStyle: TextStyle(
-                color: selected ? context.primaryColor : context.textColor,
-                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+  Widget _buildUrgentAlert(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+      decoration: BoxDecoration(
+        color: AppColors.error.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline_rounded, size: 16, color: AppColors.error),
+          const SizedBox(width: AppSpacing.xs),
+          Expanded(
+            child: Text(
+              'reception_booking.urgent_walk_in_warning'.tr(),
+              style: AppTypography.labelSmall.copyWith(
+                color: AppColors.error,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
-        );
-      }).toList(),
+        ],
+      ),
     );
   }
 }

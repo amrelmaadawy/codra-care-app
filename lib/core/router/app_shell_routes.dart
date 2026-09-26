@@ -19,6 +19,7 @@ import '../../features/profile/presentation/cubits/profile_cubit.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/reception_appointments/presentation/screens/appointments_screen.dart';
 import '../../features/reception_dashboard/presentation/screens/reception_dashboard_screen.dart';
+import '../../features/reception_queue/presentation/screens/reception_queue_screen.dart';
 import '../../features/shell/presentation/screens/placeholder_shell_content.dart';
 import '../constants/app_icons.dart';
 import '../di/permission_service.dart';
@@ -49,17 +50,33 @@ List<RouteBase> buildAppShellRoutes(PermissionService permissionService) {
     ),
     GoRoute(
       path: AppRoutes.prescriptions,
-      builder: (context, state) => BlocProvider(
-        create: (_) => GetIt.I<PrescriptionListCubit>(),
-        child: const PrescriptionsListScreen(),
-      ),
+      builder: (context, state) {
+        if (!permissionService.isDoctor) {
+          return const PlaceholderShellContent(
+            titleKey: 'shell.prescriptions',
+            icon: AppIcons.prescriptions,
+          );
+        }
+        return BlocProvider(
+          create: (_) => GetIt.I<PrescriptionListCubit>(),
+          child: const PrescriptionsListScreen(),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.reports,
-      builder: (context, state) => BlocProvider(
-        create: (_) => GetIt.I<ReportsCubit>()..loadReports(),
-        child: const DoctorReportsScreen(),
-      ),
+      builder: (context, state) {
+        if (!permissionService.isDoctor) {
+          return const PlaceholderShellContent(
+            titleKey: 'shell.reports',
+            icon: AppIcons.reports,
+          );
+        }
+        return BlocProvider(
+          create: (_) => GetIt.I<ReportsCubit>()..loadReports(),
+          child: const DoctorReportsScreen(),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.doctorLeaveDays,
@@ -84,10 +101,15 @@ List<RouteBase> buildAppShellRoutes(PermissionService permissionService) {
     ),
     GoRoute(
       path: AppRoutes.profile,
-      builder: (context, state) => BlocProvider(
-        create: (_) => GetIt.I<ProfileCubit>(),
-        child: const DoctorProfileScreen(),
-      ),
+      builder: (context, state) {
+        if (!permissionService.isDoctor) {
+          return const StaffProfileScreen();
+        }
+        return BlocProvider(
+          create: (_) => GetIt.I<ProfileCubit>(),
+          child: const DoctorProfileScreen(),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.reception,
@@ -99,6 +121,10 @@ List<RouteBase> buildAppShellRoutes(PermissionService permissionService) {
         return null;
       },
       builder: (_, _) => const ReceptionDashboardScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.receptionQueue,
+      builder: (_, _) => const ReceptionQueueScreen(),
     ),
     GoRoute(
       path: AppRoutes.appointments,

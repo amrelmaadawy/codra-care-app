@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -36,32 +38,71 @@ class ActiveQueueSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Flexible(
-              child: Text(
-                'reception_dashboard.active_queue'.tr(),
-                style: AppTypography.titleMedium.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.textColor,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+            Expanded(
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      'reception_dashboard.active_queue'.tr(),
+                      style: AppTypography.titleMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: context.textColor,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: 2.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.primaryColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(AppRadius.full),
+                    ),
+                    child: Text(
+                      '$activeWaitingCount',
+                      style: AppTypography.labelMedium.copyWith(
+                        color: context.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(width: AppSpacing.sm),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm,
-                vertical: 2.0,
-              ),
-              decoration: BoxDecoration(
-                color: context.primaryColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(AppRadius.full),
-              ),
-              child: Text(
-                '$activeWaitingCount',
-                style: AppTypography.labelMedium.copyWith(
-                  color: context.primaryColor,
-                  fontWeight: FontWeight.bold,
+            const SizedBox(width: AppSpacing.xs),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 110),
+              child: InkWell(
+                onTap: () => context.push(AppRoutes.receptionQueue),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'reception_queue.title'.tr(),
+                          style: AppTypography.labelMedium.copyWith(
+                            color: context.primaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 2),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 11,
+                        color: context.primaryColor,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

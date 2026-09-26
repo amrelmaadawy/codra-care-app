@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
+import 'package:medical_erp/core/di/permission_service.dart';
 import 'package:medical_erp/features/reception_dashboard/domain/entities/appointment_today_stats_entity.dart';
 import 'package:medical_erp/features/reception_dashboard/domain/entities/reception_dashboard_capabilities_entity.dart';
 import 'package:medical_erp/features/reception_dashboard/domain/entities/reception_dashboard_entity.dart';
@@ -19,9 +21,23 @@ class MockReceptionDashboardCubit extends MockCubit<ReceptionDashboardState>
 
 void main() {
   late MockReceptionDashboardCubit mockCubit;
+  late PermissionService permissionService;
+
+  final sl = GetIt.instance;
 
   setUp(() {
     mockCubit = MockReceptionDashboardCubit();
+    permissionService = PermissionService();
+    if (sl.isRegistered<PermissionService>()) {
+      sl.unregister<PermissionService>();
+    }
+    sl.registerSingleton<PermissionService>(permissionService);
+  });
+
+  tearDown(() {
+    if (sl.isRegistered<PermissionService>()) {
+      sl.unregister<PermissionService>();
+    }
   });
 
   const tEntity = ReceptionDashboardEntity(
@@ -87,13 +103,6 @@ void main() {
   testWidgets(
     'renders loaded dashboard on narrow 320px width without circular spinners or overflow',
     (tester) async {
-      FlutterErrorDetails? caughtDetails;
-      final originalOnError = FlutterError.onError;
-      FlutterError.onError = (details) {
-        caughtDetails = details;
-      };
-      addTearDown(() => FlutterError.onError = originalOnError);
-
       tester.view.physicalSize = const Size(320, 800);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -101,13 +110,14 @@ void main() {
       await tester.pumpWidget(
         createWidgetUnderTest(const ReceptionDashboardLoaded(data: tEntity)),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
       expect(find.text('أحمد محمود'), findsOneWidget);
       expect(find.text('A-01'), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsNothing);
       expect(find.byType(CupertinoActivityIndicator), findsNothing);
-      expect(caughtDetails, isNull);
+      expect(tester.takeException(), isNull);
     },
   );
 }

@@ -59,7 +59,6 @@ void main() {
     when(
       () => mockRepository.checkInAppointment(
         appointmentId: 10,
-        priority: 'normal',
       ),
     ).thenAnswer((_) async => const Left(tFailure));
 

@@ -1,12 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
-import '../../../../core/widgets/app_shimmer.dart';
-import '../../../../core/widgets/app_shimmer_box.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../cubits/appointment_form_cubit.dart';
 import '../cubits/appointment_form_state.dart';
 import 'booking_summary_card.dart';
@@ -21,93 +19,88 @@ class QuestionsReviewStep extends StatelessWidget {
         final cubit = context.read<AppointmentFormCubit>();
         final questions = state.formContext?.questions ?? [];
 
-        return ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             BookingSummaryCard(state: state),
             const SizedBox(height: AppSpacing.lg),
             if (questions.isNotEmpty) ...[
-              Text(
-                'reception_booking.questions_title'.tr(),
-                style: AppTypography.titleSmall.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              _buildSectionTitle(
+                context,
+                icon: Icons.help_outline_rounded,
+                title: 'reception_booking.questions_title'.tr(),
               ),
               const SizedBox(height: AppSpacing.sm),
-              ...questions.map((q) {
-                return Padding(
+              ...questions.map(
+                (q) => Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: TextField(
                     decoration: InputDecoration(
-                      labelText: q.text,
+                      labelText: '${q.text}${q.required ? ' *' : ''}',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                        borderSide: BorderSide(
+                          color: context.primaryColor,
+                          width: 1.5,
+                        ),
                       ),
                     ),
                     onChanged: (val) =>
                         cubit.setQuestionAnswer('${q.index}', val),
                   ),
-                );
-              }),
-              const SizedBox(height: AppSpacing.sm),
-            ],
-            Text(
-              'reception_booking.notes_label'.tr(),
-              style: AppTypography.titleSmall.copyWith(
-                fontWeight: FontWeight.bold,
+                ),
               ),
+              const SizedBox(height: AppSpacing.md),
+            ],
+            _buildSectionTitle(
+              context,
+              icon: Icons.notes_rounded,
+              title: 'reception_booking.notes_label'.tr(),
             ),
             const SizedBox(height: AppSpacing.xs),
             TextField(
-              maxLines: 3,
+              maxLines: 2,
               decoration: InputDecoration(
                 hintText: 'reception_booking.notes_hint'.tr(),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
-              ),
-              onChanged: (val) => cubit.setNotes(val),
-            ),
-            const SizedBox(height: AppSpacing.xxl),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: state.isSubmitting
-                        ? null
-                        : () => cubit.prevStage(),
-                    child: Text('reception_booking.back_action'.tr()),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                  borderSide: BorderSide(
+                    color: context.primaryColor,
+                    width: 1.5,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: state.isSubmitting
-                      ? Container(
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(AppRadius.sm),
-                          ),
-                          child: const Center(
-                            child: AppShimmer(
-                              child: AppShimmerBox(
-                                width: 100,
-                                height: 18,
-                                borderRadius: BorderRadius.all(Radius.circular(4)),
-                              ),
-                            ),
-                          ),
-                        )
-                      : ElevatedButton(
-                          onPressed: () => cubit.submit(),
-                          child: Text('reception_booking.submit_action'.tr()),
-                        ),
-                ),
-              ],
+              ),
+              onChanged: cubit.setNotes,
             ),
           ],
         );
       },
+    );
+  }
+
+  Widget _buildSectionTitle(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: context.primaryColor),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          title,
+          style: AppTypography.titleSmall.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.textColor,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
-import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/app_shimmer_box.dart';
 import '../cubits/walk_in_cubit.dart';
@@ -21,12 +21,22 @@ class WalkInBottomBar extends StatelessWidget {
 
         return SafeArea(
           child: Container(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
             decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
+              color: context.surfaceColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -3),
+                ),
+              ],
               border: Border(
                 top: BorderSide(
-                  color: Theme.of(context).dividerColor.withValues(alpha: 0.2),
+                  color: context.dividerColor.withValues(alpha: 0.5),
                 ),
               ),
             ),
@@ -35,19 +45,25 @@ class WalkInBottomBar extends StatelessWidget {
                 if (state.stage > 1) ...[
                   Expanded(
                     child: SizedBox(
-                      height: AppSizes.minTouchTarget,
-                      child: OutlinedButton(
+                      height: 48,
+                      child: OutlinedButton.icon(
                         onPressed: state.isSubmitting ? null : cubit.prevStage,
-                        child: Text('reception_booking.back_action'.tr()),
+                        icon: const Icon(Icons.arrow_back_rounded, size: 18),
+                        label: Text('reception_booking.back_action'.tr()),
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.md),
+                  const SizedBox(width: AppSpacing.sm),
                 ],
                 Expanded(
                   flex: state.stage > 1 ? 2 : 1,
                   child: SizedBox(
-                    height: AppSizes.minTouchTarget,
+                    height: 48,
                     child: _buildActionButton(context, state, cubit),
                   ),
                 ),
@@ -65,42 +81,66 @@ class WalkInBottomBar extends StatelessWidget {
     WalkInCubit cubit,
   ) {
     if (state.stage == 1) {
-      return ElevatedButton(
+      return ElevatedButton.icon(
         onPressed: state.isStage1Valid ? cubit.nextStage : null,
-        child: Text('reception_booking.continue_action'.tr()),
+        icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+        label: Text(
+          'reception_booking.continue_action'.tr(),
+          style: AppTypography.labelLarge.copyWith(fontWeight: FontWeight.bold),
+        ),
+        style: _btnStyle(context, isValid: state.isStage1Valid),
       );
     }
 
     if (state.stage == 2) {
-      return ElevatedButton(
+      return ElevatedButton.icon(
         onPressed: state.isStage2Valid ? cubit.nextStage : null,
-        child: Text('reception_booking.continue_action'.tr()),
+        icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+        label: Text(
+          'reception_booking.continue_action'.tr(),
+          style: AppTypography.labelLarge.copyWith(fontWeight: FontWeight.bold),
+        ),
+        style: _btnStyle(context, isValid: state.isStage2Valid),
       );
     }
 
     // Stage 3
     if (state.isSubmitting) {
       return Container(
-        height: AppSizes.minTouchTarget,
+        height: 48,
         decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(AppRadius.sm),
+          color: context.primaryColor.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppRadius.md),
         ),
         child: const Center(
           child: AppShimmer(
             child: AppShimmerBox(
-              width: 140,
+              width: 150,
               height: 20,
-              borderRadius: BorderRadius.all(Radius.circular(4)),
+              borderRadius: BorderRadius.all(Radius.circular(6)),
             ),
           ),
         ),
       );
     }
 
-    return ElevatedButton(
+    return ElevatedButton.icon(
       onPressed: state.isStage3Valid ? cubit.submit : null,
-      child: Text('reception_booking.confirm_walk_in_action'.tr()),
+      icon: const Icon(Icons.bolt_rounded, size: 20),
+      label: Text(
+        'reception_booking.confirm_walk_in_action'.tr(),
+        style: AppTypography.labelLarge.copyWith(fontWeight: FontWeight.bold),
+      ),
+      style: _btnStyle(context, isValid: state.isStage3Valid),
+    );
+  }
+
+  ButtonStyle _btnStyle(BuildContext context, {required bool isValid}) {
+    return ElevatedButton.styleFrom(
+      backgroundColor: isValid ? context.primaryColor : context.dividerColor.withValues(alpha: 0.5),
+      foregroundColor: Colors.white,
+      elevation: isValid ? 2 : 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
     );
   }
 }

@@ -16,4 +16,10 @@ abstract final class ReceptionEndpoints {
   static String doctorQuestions(int doctorId) =>
       '/reception/doctors/$doctorId/questions';
   static const String walkIn = '/reception/walk-in';
+  static const String queue = '/reception/queue';
+  static String queuePresence(int id) => '/reception/queue/$id/presence';
+  static String queueVitals(int id) => '/reception/queue/$id/vitals';
+  static String queueCallDoctor(int id) => '/reception/queue/$id/call-doctor';
+  static String queueComplete(int id) => '/reception/queue/$id/complete';
+  static String queueCancel(int id) => '/reception/queue/$id/cancel';
 }

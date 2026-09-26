@@ -29,9 +29,9 @@ class ReceptionDashboardContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ReceptionQuickActionsCard(onActionCompleted: cubit.refresh),
-        const SizedBox(height: AppSpacing.lg),
         AppointmentsTodayGrid(stats: state.data.appointmentsToday),
+        const SizedBox(height: AppSpacing.lg),
+        ReceptionQuickActionsCard(onActionCompleted: cubit.refresh),
         const SizedBox(height: AppSpacing.lg),
         QuickStatsSection(
           totalPatientsToday: state.data.totalPatientsToday,
@@ -53,8 +53,6 @@ class ReceptionDashboardContent extends StatelessWidget {
   Widget _buildTablet(BuildContext context) {
     return Column(
       children: [
-        ReceptionQuickActionsCard(onActionCompleted: cubit.refresh),
-        const SizedBox(height: AppSpacing.lg),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -64,6 +62,8 @@ class ReceptionDashboardContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppointmentsTodayGrid(stats: state.data.appointmentsToday),
+                  const SizedBox(height: AppSpacing.lg),
+                  ReceptionQuickActionsCard(onActionCompleted: cubit.refresh),
                   const SizedBox(height: AppSpacing.lg),
                   QuickStatsSection(
                     totalPatientsToday: state.data.totalPatientsToday,

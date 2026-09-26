@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/app_shimmer_box.dart';
 import '../../../../core/widgets/app_snackbar.dart';
 import '../cubits/walk_in_cubit.dart';
 import '../cubits/walk_in_state.dart';
+import '../widgets/walk_in_app_bar.dart';
 import '../widgets/walk_in_bottom_bar.dart';
 import '../widgets/walk_in_doctor_service_step.dart';
 import '../widgets/walk_in_patient_step.dart';
@@ -38,14 +38,7 @@ class WalkInView extends StatelessWidget {
         final cubit = context.read<WalkInCubit>();
 
         return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'reception_booking.walk_in_title'.tr(),
-              style: AppTypography.titleMedium.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          appBar: const WalkInAppBar(),
           bottomNavigationBar: const WalkInBottomBar(),
           body: Column(
             children: [
