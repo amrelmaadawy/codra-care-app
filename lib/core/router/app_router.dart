@@ -16,6 +16,8 @@ import '../../features/prescription/presentation/screens/prescription_detail_scr
 import '../../features/prescription/presentation/screens/prescription_form_screen.dart';
 import '../../features/reception_booking/presentation/screens/appointment_form_screen.dart';
 import '../../features/reception_booking/presentation/screens/walk_in_screen.dart';
+import '../../features/reception_payments/presentation/cubits/reception_payment_cubit.dart';
+import '../../features/reception_payments/presentation/widgets/reception_payment_bottom_sheet.dart';
 import '../../features/shell/presentation/screens/app_shell_screen.dart';
 import '../di/permission_service.dart';
 import '../widgets/app_loading_widget.dart';
@@ -127,6 +129,50 @@ GoRouter createRouter(
       GoRoute(
         path: AppRoutes.walkIn,
         builder: (context, state) => const WalkInScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.receptionPayment,
+        pageBuilder: (context, state) {
+          final aptId =
+              int.tryParse(state.pathParameters['appointmentId'] ?? '') ?? 0;
+          return CustomTransitionPage<void>(
+            key: state.pageKey,
+            opaque: false,
+            barrierDismissible: true,
+            barrierColor: Colors.black54,
+            transitionsBuilder: (ctx, anim, _, child) => SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 1),
+                end: Offset.zero,
+              ).animate(CurvedAnimation(
+                parent: anim,
+                curve: Curves.easeOutCubic,
+              )),
+              child: child,
+            ),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Stack(
+                children: [
+                  Positioned.fill(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => Navigator.of(context).maybePop(),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: BlocProvider(
+                      create: (_) => GetIt.I<ReceptionPaymentCubit>(param1: aptId)
+                        ..loadSnapshot(),
+                      child: const ReceptionPaymentBottomSheet(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
       ShellRoute(
         builder: (context, state, child) => AppShellScreen(child: child),

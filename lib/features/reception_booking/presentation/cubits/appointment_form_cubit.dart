@@ -51,6 +51,7 @@ class AppointmentFormCubit extends Cubit<AppointmentFormState> {
         selectedDate: initialDate ?? ctx.serverDate,
       )),
     );
+    searchPatients('');
   }
 
   Future<void> _initFollowUp(
@@ -86,18 +87,21 @@ class AppointmentFormCubit extends Cubit<AppointmentFormState> {
 
   void searchPatients(String query) {
     _searchDebounce?.cancel();
-    if (query.trim().isEmpty) {
-      emit(state.copyWith(searchResults: const [], isSearching: false));
+    final trimmed = query.trim();
+    emit(state.copyWith(isSearching: true));
+    if (trimmed.isEmpty) {
+      _executeSearch('');
       return;
     }
-    emit(state.copyWith(isSearching: true));
-    _searchDebounce = Timer(const Duration(milliseconds: 350), () async {
-      final res = await searchPatientsUseCase(query.trim());
-      res.fold(
-        (f) => emit(state.copyWith(isSearching: false)),
-        (list) => emit(state.copyWith(isSearching: false, searchResults: list)),
-      );
-    });
+    _searchDebounce = Timer(const Duration(milliseconds: 250), () => _executeSearch(trimmed));
+  }
+
+  Future<void> _executeSearch(String query) async {
+    final res = await searchPatientsUseCase(query);
+    res.fold(
+      (f) => emit(state.copyWith(isSearching: false)),
+      (list) => emit(state.copyWith(isSearching: false, searchResults: list)),
+    );
   }
 
   void selectPatient(BookingPatientEntity patient) =>

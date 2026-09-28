@@ -71,6 +71,16 @@ abstract final class AppTheme {
         color: AppColors.dividerLight,
         thickness: 1,
       ),
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.surfaceLight,
+        selectedColor: AppColors.primary.withValues(alpha: 0.12),
+        side: const BorderSide(color: AppColors.dividerLight),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        labelStyle: AppTypography.bodySmall.copyWith(
+          fontWeight: FontWeight.w600,
+          color: AppColors.onSurfaceLight,
+        ),
+      ),
     );
   }
 
@@ -140,6 +150,16 @@ abstract final class AppTheme {
       dividerTheme: const DividerThemeData(
         color: AppColors.dividerDark,
         thickness: 1,
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.surfaceDark,
+        selectedColor: AppColors.primaryLight.withValues(alpha: 0.18),
+        side: const BorderSide(color: AppColors.dividerDark),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        labelStyle: AppTypography.bodySmall.copyWith(
+          fontWeight: FontWeight.w600,
+          color: AppColors.onSurfaceDark,
+        ),
       ),
     );
   }

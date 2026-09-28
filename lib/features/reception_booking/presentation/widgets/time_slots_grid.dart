@@ -132,11 +132,20 @@ class TimeSlotsGrid extends StatelessWidget {
           label: Text(slot.label),
           selected: isSelected,
           onSelected: slot.isBooked ? null : (_) => onSlotSelected(slot),
-          selectedColor: AppColors.primary,
+          selectedColor: context.primaryColor,
+          backgroundColor: context.surfaceColor,
+          side: BorderSide(
+            color: isSelected
+                ? context.primaryColor
+                : context.dividerColor.withValues(alpha: 0.6),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
           labelStyle: TextStyle(
             color: isSelected
                 ? Colors.white
-                : (slot.isBooked ? context.textMutedColor : null),
+                : (slot.isBooked ? context.textMutedColor : context.textColor),
             fontSize: 12,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             decoration: slot.isBooked ? TextDecoration.lineThrough : null,

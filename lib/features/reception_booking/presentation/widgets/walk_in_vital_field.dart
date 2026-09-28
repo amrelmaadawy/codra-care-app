@@ -7,6 +7,7 @@ class WalkInVitalField extends StatelessWidget {
   final String keyName;
   final TextInputType keyboardType;
   final dynamic initialValue;
+  final String? Function(String? value)? validator;
   final void Function(String key, dynamic value) onVitalChanged;
 
   const WalkInVitalField({
@@ -16,6 +17,7 @@ class WalkInVitalField extends StatelessWidget {
     required this.keyName,
     required this.keyboardType,
     this.initialValue,
+    this.validator,
     required this.onVitalChanged,
   });
 
@@ -24,11 +26,14 @@ class WalkInVitalField extends StatelessWidget {
     return TextFormField(
       initialValue: initialValue?.toString() ?? '',
       keyboardType: keyboardType,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: validator,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        errorMaxLines: 2,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.md),
         ),
@@ -38,12 +43,15 @@ class WalkInVitalField extends StatelessWidget {
         ),
       ),
       onChanged: (val) {
-        if (keyboardType == TextInputType.number) {
-          onVitalChanged(keyName, int.tryParse(val.trim()));
+        final trimmed = val.trim();
+        if (trimmed.isEmpty) {
+          onVitalChanged(keyName, null);
+        } else if (keyboardType == TextInputType.number) {
+          onVitalChanged(keyName, int.tryParse(trimmed) ?? trimmed);
         } else if (keyboardType.decimal == true) {
-          onVitalChanged(keyName, double.tryParse(val.trim()));
+          onVitalChanged(keyName, double.tryParse(trimmed) ?? trimmed);
         } else {
-          onVitalChanged(keyName, val.trim());
+          onVitalChanged(keyName, trimmed);
         }
       },
     );

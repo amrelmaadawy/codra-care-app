@@ -115,12 +115,15 @@ void main() {
     'init loads form context successfully',
     build: () {
       when(() => mockGetContext()).thenAnswer((_) async => const Right(tContext));
+      when(() => mockSearch('')).thenAnswer((_) async => const Right([tPatient]));
       return cubit;
     },
     act: (c) => c.init(),
     expect: () => [
       predicate<WalkInState>((s) => s.isLoadingContext && s.contextError == null),
       predicate<WalkInState>((s) => !s.isLoadingContext && s.formContext == tContext),
+      predicate<WalkInState>((s) => s.isSearching),
+      predicate<WalkInState>((s) => !s.isSearching && s.searchResults.isNotEmpty),
     ],
   );
 

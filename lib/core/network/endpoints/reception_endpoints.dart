@@ -40,4 +40,20 @@ abstract final class ReceptionEndpoints {
       '/reception/internal-chat/chats/$chatId/read';
   static const String internalChatUnreadCount =
       '/reception/internal-chat/unread-count';
+
+  // Reception Payments & Financials
+  static String appointmentTransactions(int id) =>
+      '/reception/appointments/$id/transactions';
+  static String appointmentServiceOptions(int id) =>
+      '/reception/appointments/$id/service-options';
+  static String appointmentPayments(int id) =>
+      '/reception/appointments/$id/payments';
+  static String appointmentRefunds(int id) =>
+      '/reception/appointments/$id/refunds';
+  static String appointmentDiscounts(int id) =>
+      '/reception/appointments/$id/discounts';
+  static String appointmentServices(int id) =>
+      '/reception/appointments/$id/services';
+  static String appointmentVoucherPreview(int id, int voucherId) =>
+      '/reception/appointments/$id/voucher/$voucherId/preview';
 }

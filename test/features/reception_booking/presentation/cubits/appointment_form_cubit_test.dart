@@ -97,6 +97,7 @@ void main() {
       when(
         () => mockGetContext(date: any(named: 'date')),
       ).thenAnswer((_) async => const Right(tContext));
+      when(() => mockSearch('')).thenAnswer((_) async => const Right([]));
       return cubit;
     },
     act: (cubit) => cubit.init(initialDate: '2026-09-25'),
@@ -106,6 +107,10 @@ void main() {
           .having((s) => s.isLoadingContext, 'isLoadingContext', false)
           .having((s) => s.selectedDate, 'selectedDate', '2026-09-25')
           .having((s) => s.formContext, 'formContext', tContext),
+      isA<AppointmentFormState>()
+          .having((s) => s.isSearching, 'isSearching', true),
+      isA<AppointmentFormState>()
+          .having((s) => s.isSearching, 'isSearching', false),
     ],
   );
 

@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_radius.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/widgets/app_shimmer.dart';
@@ -21,16 +20,16 @@ class AppointmentCardCheckInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isCheckingIn) {
       return Container(
-        height: 32,
-        width: 105,
+        height: 28,
+        width: 88,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppRadius.sm),
           color: context.primaryColor.withValues(alpha: 0.2),
         ),
         child: const AppShimmer(
           child: AppShimmerBox(
-            width: 105,
-            height: 32,
+            width: 88,
+            height: 28,
             borderRadius: BorderRadius.all(Radius.circular(AppRadius.sm)),
           ),
         ),
@@ -39,19 +38,22 @@ class AppointmentCardCheckInButton extends StatelessWidget {
 
     return OutlinedButton.icon(
       onPressed: onPressed,
-      icon: const Icon(Icons.how_to_reg_rounded, size: 15),
+      icon: const Icon(Icons.how_to_reg_rounded, size: 14),
       label: Text(
         'reception_appointments.check_in_action'.tr(),
-        style: AppTypography.labelSmall.copyWith(fontWeight: FontWeight.bold),
+        style: AppTypography.labelSmall.copyWith(
+          fontWeight: FontWeight.bold,
+          fontSize: 10.5,
+        ),
       ),
       style: OutlinedButton.styleFrom(
         foregroundColor: context.primaryColor,
         side: BorderSide(color: context.primaryColor),
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: 4,
+          horizontal: 8,
+          vertical: 2,
         ),
-        minimumSize: const Size(0, 32),
+        minimumSize: const Size(0, 28),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.sm),
         ),

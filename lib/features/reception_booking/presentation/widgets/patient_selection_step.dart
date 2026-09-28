@@ -59,7 +59,9 @@ class _PatientSelectionStepState extends State<PatientSelectionStep> {
                 _buildSearchShimmer(),
               ] else if (state.searchResults.isNotEmpty) ...[
                 Text(
-                  'reception_booking.search_results'.tr(),
+                  _searchCtrl.text.trim().isEmpty
+                      ? 'reception_booking.patients_list'.tr()
+                      : 'reception_booking.search_results'.tr(),
                   style: AppTypography.titleSmall.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -72,7 +74,7 @@ class _PatientSelectionStepState extends State<PatientSelectionStep> {
                     onSelect: () => cubit.selectPatient(p),
                   ),
                 ),
-              ] else if (_searchCtrl.text.trim().isNotEmpty) ...[
+              ] else ...[
                 _buildNoPatientsFound(context),
               ],
             ],
@@ -85,7 +87,10 @@ class _PatientSelectionStepState extends State<PatientSelectionStep> {
   Widget _buildSearchField(BuildContext context, AppointmentFormCubit cubit) {
     return TextField(
       controller: _searchCtrl,
-      onChanged: cubit.searchPatients,
+      onChanged: (val) {
+        setState(() {});
+        cubit.searchPatients(val);
+      },
       decoration: InputDecoration(
         hintText: 'reception_booking.search_patient_tip'.tr(),
         prefixIcon: Icon(Icons.search_rounded, color: context.primaryColor),
@@ -94,6 +99,7 @@ class _PatientSelectionStepState extends State<PatientSelectionStep> {
                 icon: const Icon(Icons.clear_rounded),
                 onPressed: () {
                   _searchCtrl.clear();
+                  setState(() {});
                   cubit.searchPatients('');
                 },
               )

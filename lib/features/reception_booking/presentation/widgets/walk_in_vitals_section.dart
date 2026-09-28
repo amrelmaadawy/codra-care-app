@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/theme_extensions.dart';
+import '../../../../core/validators/vitals_validator.dart';
 import 'walk_in_vital_field.dart';
 import 'walk_in_vitals_header.dart';
 
@@ -52,6 +53,7 @@ class _WalkInVitalsSectionState extends State<WalkInVitalsSection> {
                           keyName: 'blood_pressure',
                           keyboardType: TextInputType.text,
                           initialValue: widget.vitalSigns['blood_pressure'],
+                          validator: VitalsValidator.validateBloodPressure,
                           onVitalChanged: widget.onVitalChanged,
                         ),
                       ),
@@ -63,6 +65,7 @@ class _WalkInVitalsSectionState extends State<WalkInVitalsSection> {
                           keyName: 'pulse',
                           keyboardType: TextInputType.number,
                           initialValue: widget.vitalSigns['pulse'],
+                          validator: VitalsValidator.validatePulse,
                           onVitalChanged: widget.onVitalChanged,
                         ),
                       ),
@@ -78,6 +81,7 @@ class _WalkInVitalsSectionState extends State<WalkInVitalsSection> {
                           keyName: 'temperature',
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           initialValue: widget.vitalSigns['temperature'],
+                          validator: VitalsValidator.validateTemperature,
                           onVitalChanged: widget.onVitalChanged,
                         ),
                       ),
@@ -89,6 +93,7 @@ class _WalkInVitalsSectionState extends State<WalkInVitalsSection> {
                           keyName: 'oxygen_level',
                           keyboardType: TextInputType.number,
                           initialValue: widget.vitalSigns['oxygen_level'],
+                          validator: VitalsValidator.validateOxygenLevel,
                           onVitalChanged: widget.onVitalChanged,
                         ),
                       ),
@@ -104,6 +109,7 @@ class _WalkInVitalsSectionState extends State<WalkInVitalsSection> {
                           keyName: 'weight_kg',
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           initialValue: widget.vitalSigns['weight_kg'],
+                          validator: VitalsValidator.validateWeight,
                           onVitalChanged: widget.onVitalChanged,
                         ),
                       ),
@@ -115,6 +121,7 @@ class _WalkInVitalsSectionState extends State<WalkInVitalsSection> {
                           keyName: 'height_cm',
                           keyboardType: TextInputType.number,
                           initialValue: widget.vitalSigns['height_cm'],
+                          validator: VitalsValidator.validateHeight,
                           onVitalChanged: widget.onVitalChanged,
                         ),
                       ),
@@ -130,6 +137,7 @@ class _WalkInVitalsSectionState extends State<WalkInVitalsSection> {
                           keyName: 'blood_sugar',
                           keyboardType: TextInputType.number,
                           initialValue: widget.vitalSigns['blood_sugar'],
+                          validator: VitalsValidator.validateBloodSugar,
                           onVitalChanged: widget.onVitalChanged,
                         ),
                       ),
@@ -141,6 +149,7 @@ class _WalkInVitalsSectionState extends State<WalkInVitalsSection> {
                           keyName: 'respiratory_rate',
                           keyboardType: TextInputType.number,
                           initialValue: widget.vitalSigns['respiratory_rate'],
+                          validator: VitalsValidator.validateRespiratoryRate,
                           onVitalChanged: widget.onVitalChanged,
                         ),
                       ),

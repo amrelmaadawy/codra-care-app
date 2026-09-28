@@ -17,82 +17,98 @@ class QueueItemHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
           decoration: BoxDecoration(
-            color: context.primaryColor.withValues(alpha: 0.12),
+            color: context.surfaceVariantColor.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: context.dividerColor.withValues(alpha: 0.35)),
           ),
           child: Text(
             item.ticketNumber,
             style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: context.primaryColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+              color: context.textColor,
+              letterSpacing: 0.4,
             ),
           ),
         ),
         const SizedBox(width: AppSpacing.xs),
         if (item.isUrgent)
-          _buildBadge(
-            label: 'reception_queue.priority_urgent'.tr(),
-            color: AppColors.statusUrgent,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+            decoration: BoxDecoration(
+              color: AppColors.error.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: AppColors.error.withValues(alpha: 0.25)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.error_outline_rounded, size: 12, color: AppColors.error),
+                const SizedBox(width: 3),
+                Text(
+                  'reception_queue.priority_urgent'.tr(),
+                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.error),
+                ),
+              ],
+            ),
           )
         else if (item.isVip)
-          _buildBadge(
-            label: 'reception_queue.priority_vip'.tr(),
-            color: AppColors.accent,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+            decoration: BoxDecoration(
+              color: AppColors.accent.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.star_rounded, size: 12, color: AppColors.accent),
+                const SizedBox(width: 3),
+                Text(
+                  'reception_queue.priority_vip'.tr(),
+                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.accent),
+                ),
+              ],
+            ),
           ),
         const Spacer(),
-        _buildStatusBadge(),
+        _buildStatusBadge(context),
       ],
     );
   }
 
-  Widget _buildStatusBadge() {
-    Color color = AppColors.statusWaiting;
+  Widget _buildStatusBadge(BuildContext context) {
+    Color color = context.primaryColor;
     String label = 'reception_queue.status_waiting'.tr();
 
     if (item.isWithDoctor) {
-      color = AppColors.statusInConsultation;
+      color = AppColors.warning;
       label = 'reception_queue.status_with_doctor'.tr();
     } else if (item.isCompleted) {
-      color = AppColors.statusCompleted;
+      color = AppColors.emerald;
       label = 'reception_queue.status_completed'.tr();
     } else if (item.isCancelled) {
-      color = AppColors.statusCancelled;
+      color = AppColors.error;
       label = 'reception_queue.status_cancelled'.tr();
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withValues(alpha: 0.22)),
       ),
       child: Text(
         label,
         style: TextStyle(
           fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: color,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBadge({required String label, required Color color}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w700,
           color: color,
         ),
       ),
     );
   }
 }
+

@@ -60,24 +60,28 @@ class QueueEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.md),
-            if (isFiltered)
-              OutlinedButton.icon(
-                onPressed: onClearFilters,
-                icon: const Icon(Icons.refresh_rounded, size: 16),
-                label: Text('reception_queue.clear_filters'.tr()),
-                style: OutlinedButton.styleFrom(
-                  visualDensity: VisualDensity.compact,
-                ),
-              )
-            else
-              OutlinedButton.icon(
-                onPressed: onRefresh,
-                icon: const Icon(Icons.refresh_rounded, size: 16),
-                label: Text('reception_queue.refresh'.tr()),
-                style: OutlinedButton.styleFrom(
-                  visualDensity: VisualDensity.compact,
-                ),
+            FilledButton.tonalIcon(
+              onPressed: isFiltered ? onClearFilters : onRefresh,
+              icon: Icon(
+                isFiltered ? Icons.filter_alt_off_rounded : Icons.refresh_rounded,
+                size: 16,
               ),
+              label: Text(
+                isFiltered
+                    ? 'reception_queue.clear_filters'.tr()
+                    : 'reception_queue.refresh'.tr(),
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+              ),
+              style: FilledButton.styleFrom(
+                backgroundColor: context.primaryColor.withValues(alpha: 0.10),
+                foregroundColor: context.primaryColor,
+                side: BorderSide(
+                  color: context.primaryColor.withValues(alpha: 0.25),
+                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 10),
+              ),
+            ),
           ],
         ),
       ),

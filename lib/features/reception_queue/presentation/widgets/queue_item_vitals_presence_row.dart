@@ -33,23 +33,28 @@ class QueueItemVitalsPresenceRow extends StatelessWidget {
             onTap: item.capabilities.canSaveVitals ? onOpenVitals : null,
             borderRadius: BorderRadius.circular(8),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+              height: 34,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 color: hasVitals
-                    ? AppColors.infoLight.withValues(alpha: 0.3)
-                    : context.surfaceVariantColor,
+                    ? context.primaryColor.withValues(alpha: 0.07)
+                    : context.surfaceVariantColor.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: hasVitals
+                      ? context.primaryColor.withValues(alpha: 0.22)
+                      : context.dividerColor.withValues(alpha: 0.35),
+                ),
               ),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.monitor_heart_outlined,
+                    hasVitals ? Icons.monitor_heart_outlined : Icons.add_circle_outline_rounded,
                     size: 14,
-                    color: hasVitals ? AppColors.info : context.textSecondaryColor,
+                    color: context.primaryColor,
                   ),
-                  const SizedBox(width: 5),
-                  Flexible(
+                  const SizedBox(width: 6),
+                  Expanded(
                     child: Text(
                       hasVitals
                           ? '${vitals.bloodPressure ?? ''} ${vitals.temperature != null ? '${vitals.temperature}°C' : ''} ${vitals.bmi != null ? 'BMI: ${vitals.bmi}' : ''}'.trim()
@@ -58,8 +63,8 @@ class QueueItemVitalsPresenceRow extends StatelessWidget {
                               : 'reception_queue.no_vitals'.tr()),
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight: hasVitals ? FontWeight.w600 : FontWeight.w400,
-                        color: hasVitals ? AppColors.info : context.textSecondaryColor,
+                        fontWeight: hasVitals ? FontWeight.w600 : FontWeight.w500,
+                        color: hasVitals ? context.primaryColor : context.textColor.withValues(alpha: 0.85),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -85,14 +90,17 @@ class QueueItemVitalsPresenceRow extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        height: 34,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           color: item.isPresent
-              ? AppColors.success.withValues(alpha: 0.12)
-              : context.surfaceVariantColor,
+              ? AppColors.emerald.withValues(alpha: 0.08)
+              : context.surfaceVariantColor.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: item.isPresent ? AppColors.success : context.dividerColor,
+            color: item.isPresent
+                ? AppColors.emerald.withValues(alpha: 0.3)
+                : context.dividerColor.withValues(alpha: 0.35),
           ),
         ),
         child: Row(
@@ -101,17 +109,17 @@ class QueueItemVitalsPresenceRow extends StatelessWidget {
             Icon(
               item.isPresent ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
               size: 14,
-              color: item.isPresent ? AppColors.success : context.textSecondaryColor,
+              color: item.isPresent ? AppColors.emerald : context.textSecondaryColor,
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 5),
             Text(
               item.isPresent
                   ? 'reception_queue.present'.tr()
                   : 'reception_queue.absent'.tr(),
               style: TextStyle(
                 fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: item.isPresent ? AppColors.success : context.textSecondaryColor,
+                fontWeight: item.isPresent ? FontWeight.w700 : FontWeight.w500,
+                color: item.isPresent ? AppColors.emeraldDark : context.textSecondaryColor,
               ),
             ),
           ],

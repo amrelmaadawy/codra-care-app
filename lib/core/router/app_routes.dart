@@ -36,4 +36,7 @@ abstract final class AppRoutes {
       '/shell/reception/internal-chat/:chatId';
   static String receptionInternalChatDetailPath(int chatId) =>
       '/shell/reception/internal-chat/$chatId';
+  static const String receptionPayment = '/reception/payment/:appointmentId';
+  static String receptionPaymentPath(int appointmentId) =>
+      '/reception/payment/$appointmentId';
 }

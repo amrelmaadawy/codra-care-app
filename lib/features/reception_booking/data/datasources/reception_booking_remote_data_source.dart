@@ -57,7 +57,9 @@ class ReceptionBookingRemoteDataSourceImpl
     try {
       final response = await _dio.get(
         ReceptionEndpoints.appointmentsPatientSearch,
-        queryParameters: {'q': query},
+        queryParameters: {
+          if (query.trim().isNotEmpty) 'q': query.trim(),
+        },
       );
       final rawItems = response.data['data']?['items'] as List<dynamic>? ?? [];
       return rawItems
@@ -148,20 +150,31 @@ class ReceptionBookingRemoteDataSourceImpl
   ServerException _handleDioException(DioException e, String fallback) {
     final data = e.response?.data;
     String message = fallback;
+    Map<String, dynamic>? fieldErrors;
     if (data is Map<String, dynamic>) {
-      if (data['message'] != null) {
-        message = data['message'] as String;
-      } else if (data['errors'] != null && data['errors'] is Map) {
-        final firstKey = (data['errors'] as Map).keys.first;
-        final errList = (data['errors'] as Map)[firstKey];
-        if (errList is List && errList.isNotEmpty) {
-          message = errList.first.toString();
+      if (data['errors'] is Map && (data['errors'] as Map).isNotEmpty) {
+        fieldErrors = Map<String, dynamic>.from(data['errors'] as Map);
+        final errorMessages = <String>[];
+        for (final val in fieldErrors.values) {
+          if (val is List && val.isNotEmpty) {
+            errorMessages.add(val.first.toString());
+          } else if (val is String && val.isNotEmpty) {
+            errorMessages.add(val);
+          }
         }
+        if (errorMessages.isNotEmpty) {
+          message = errorMessages.join('\n');
+        } else if (data['message'] != null) {
+          message = data['message'].toString();
+        }
+      } else if (data['message'] != null) {
+        message = data['message'].toString();
       }
     }
     return ServerException(
       message: message,
       statusCode: e.response?.statusCode ?? 500,
+      fieldErrors: fieldErrors,
     );
   }
 }

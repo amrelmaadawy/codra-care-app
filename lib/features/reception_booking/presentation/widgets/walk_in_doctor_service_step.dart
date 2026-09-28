@@ -187,10 +187,7 @@ class WalkInDoctorServiceStep extends StatelessWidget {
           Expanded(
             child: Text(
               'reception_booking.urgent_walk_in_warning'.tr(),
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.error,
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTypography.labelSmall.copyWith(color: AppColors.error, fontWeight: FontWeight.w600),
             ),
           ),
         ],

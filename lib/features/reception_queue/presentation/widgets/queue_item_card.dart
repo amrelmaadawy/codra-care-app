@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/reception_queue_item_entity.dart';
+import 'queue_item_actions_row.dart';
 import 'queue_item_header.dart';
 import 'queue_item_vitals_presence_row.dart';
 
@@ -16,6 +17,7 @@ class QueueItemCard extends StatelessWidget {
   final VoidCallback onComplete;
   final VoidCallback onCancel;
   final VoidCallback onOpenVitals;
+  final VoidCallback? onOpenPayment;
 
   const QueueItemCard({
     super.key,
@@ -27,6 +29,7 @@ class QueueItemCard extends StatelessWidget {
     required this.onComplete,
     required this.onCancel,
     required this.onOpenVitals,
+    this.onOpenPayment,
   });
 
   @override
@@ -39,8 +42,8 @@ class QueueItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: item.isUrgent
-              ? AppColors.error.withValues(alpha: 0.4)
-              : context.dividerColor.withValues(alpha: 0.7),
+              ? AppColors.error.withValues(alpha: 0.28)
+              : context.dividerColor.withValues(alpha: 0.35),
         ),
         boxShadow: context.cardShadow,
       ),
@@ -50,7 +53,7 @@ class QueueItemCard extends StatelessWidget {
           QueueItemHeader(item: item),
           const SizedBox(height: AppSpacing.xs),
           _buildPatientInfo(context),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: 3),
           _buildDoctorInfo(context),
           const SizedBox(height: AppSpacing.sm),
           QueueItemVitalsPresenceRow(
@@ -61,10 +64,16 @@ class QueueItemCard extends StatelessWidget {
             onOpenVitals: onOpenVitals,
           ),
           if (_hasActions) ...[
-            const SizedBox(height: AppSpacing.sm),
-            const Divider(height: 1),
             const SizedBox(height: AppSpacing.xs),
-            _buildActionButtons(context),
+            Divider(height: 14, thickness: 0.8, color: context.dividerColor.withValues(alpha: 0.25)),
+            QueueItemActionsRow(
+              item: item,
+              isPending: isPending,
+              onCallDoctor: onCallDoctor,
+              onComplete: onComplete,
+              onCancel: onCancel,
+              onOpenPayment: onOpenPayment,
+            ),
           ],
         ],
       ),
@@ -75,7 +84,7 @@ class QueueItemCard extends StatelessWidget {
       item.capabilities.canCallDoctor ||
       item.capabilities.canComplete ||
       item.capabilities.canCancel ||
-      item.capabilities.canSaveVitals;
+      (item.appointmentId != null && onOpenPayment != null);
 
   Widget _buildPatientInfo(BuildContext context) {
     return Row(
@@ -83,29 +92,41 @@ class QueueItemCard extends StatelessWidget {
         Expanded(
           child: Text(
             item.patientName,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w800,
+              color: context.textColor,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         if (item.waitMinutes > 0 && !item.isCompleted && !item.isCancelled)
-          Row(
-            children: [
-              Icon(
-                Icons.hourglass_empty_rounded,
-                size: 13,
-                color: item.waitMinutes > 30 ? AppColors.warning : context.textSecondaryColor,
-              ),
-              const SizedBox(width: 3),
-              Text(
-                '${item.waitMinutes} ${'reception_queue.min'.tr()}',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: (item.waitMinutes > 30 ? AppColors.warning : context.textSecondaryColor).withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.schedule_rounded,
+                  size: 12,
                   color: item.waitMinutes > 30 ? AppColors.warning : context.textSecondaryColor,
                 ),
-              ),
-            ],
+                const SizedBox(width: 3),
+                Text(
+                  '${item.waitMinutes} ${'reception_queue.min'.tr()}',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: item.waitMinutes > 30 ? AppColors.warning : context.textSecondaryColor,
+                  ),
+                ),
+              ],
+            ),
           ),
       ],
     );
@@ -114,73 +135,27 @@ class QueueItemCard extends StatelessWidget {
   Widget _buildDoctorInfo(BuildContext context) {
     return Row(
       children: [
-        Icon(Icons.person_outline_rounded, size: 14, color: context.textSecondaryColor),
+        Icon(Icons.person_outline_rounded, size: 13, color: context.textSecondaryColor),
         const SizedBox(width: 4),
         Text(
           item.doctorName,
-          style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: context.textSecondaryColor),
         ),
         if (item.serviceName != null && item.serviceName!.isNotEmpty) ...[
           const SizedBox(width: 6),
-          Text('•', style: TextStyle(color: context.textSecondaryColor)),
+          Text('•', style: TextStyle(color: context.dividerColor)),
           const SizedBox(width: 6),
-          Text(
-            item.serviceName!,
-            style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
+          Expanded(
+            child: Text(
+              item.serviceName!,
+              style: TextStyle(fontSize: 12, color: context.textSecondaryColor),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ],
     );
   }
-
-  Widget _buildActionButtons(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        if (item.capabilities.canCancel)
-          TextButton(
-            onPressed: isPending ? null : onCancel,
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.error,
-              visualDensity: VisualDensity.compact,
-            ),
-            child: Text(
-              'reception_queue.action_cancel'.tr(),
-              style: const TextStyle(fontSize: 12),
-            ),
-          ),
-        const Spacer(),
-        if (item.capabilities.canCallDoctor)
-          ElevatedButton.icon(
-            onPressed: isPending ? null : onCallDoctor,
-            icon: const Icon(Icons.record_voice_over_rounded, size: 14),
-            label: Text(
-              'reception_queue.action_call_doctor'.tr(),
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: context.primaryColor,
-              foregroundColor: Colors.white,
-              visualDensity: VisualDensity.compact,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-          ),
-        if (item.capabilities.canComplete)
-          ElevatedButton.icon(
-            onPressed: isPending ? null : onComplete,
-            icon: const Icon(Icons.done_all_rounded, size: 14),
-            label: Text(
-              'reception_queue.action_complete'.tr(),
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.emerald,
-              foregroundColor: Colors.white,
-              visualDensity: VisualDensity.compact,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-          ),
-      ],
-    );
-  }
 }
+

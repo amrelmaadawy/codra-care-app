@@ -10,6 +10,7 @@ import '../../domain/entities/booking_service_entity.dart';
 import '../cubits/appointment_form_cubit.dart';
 import '../cubits/appointment_form_state.dart';
 import 'booking_date_picker_card.dart';
+import 'booking_type_selector.dart';
 import 'time_slots_grid.dart';
 
 class ScheduleSelectionStep extends StatelessWidget {
@@ -104,22 +105,10 @@ class ScheduleSelectionStep extends StatelessWidget {
               title: 'reception_booking.booking_type_label'.tr(),
             ),
             const SizedBox(height: AppSpacing.xs),
-            Wrap(
-              spacing: AppSpacing.xs,
-              runSpacing: AppSpacing.xs,
-              children: types.map((t) {
-                final isSelected = state.selectedBookingType == t.value;
-                return ChoiceChip(
-                  label: Text(t.label),
-                  selected: isSelected,
-                  selectedColor: context.primaryColor.withValues(alpha: 0.15),
-                  labelStyle: TextStyle(
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                    color: isSelected ? context.primaryColor : context.textColor,
-                  ),
-                  onSelected: (_) => cubit.selectBookingType(t.value),
-                );
-              }).toList(),
+            BookingTypeSelector(
+              types: types,
+              selectedType: state.selectedBookingType,
+              onTypeSelected: cubit.selectBookingType,
             ),
             const SizedBox(height: AppSpacing.md),
             _buildSectionHeader(

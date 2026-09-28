@@ -6,8 +6,11 @@ import '../../features/diagnosis_templates/presentation/screens/diagnosis_templa
 import '../../features/doctor_dashboard/presentation/screens/doctor_dashboard_screen.dart';
 import '../../features/doctor_leave_days/presentation/cubit/leave_days_cubit.dart';
 import '../../features/doctor_leave_days/presentation/screens/doctor_leave_days_screen.dart';
-import '../../features/doctor_patients/presentation/cubit/patient_list_cubit.dart';
+import '../../features/doctor_patients/presentation/cubit/patient_list_cubit.dart'
+    as doctor_patients;
 import '../../features/doctor_patients/presentation/screens/doctor_patient_list_screen.dart';
+import '../../features/patient_management/presentation/cubits/patient_list_cubit.dart';
+import '../../features/patient_management/presentation/screens/patient_list_screen.dart';
 import '../../features/doctor_questions/presentation/cubit/doctor_questions_cubit.dart';
 import '../../features/doctor_questions/presentation/screens/doctor_questions_screen.dart';
 import '../../features/doctor_queue/presentation/screens/doctor_queue_screen.dart';
@@ -46,10 +49,24 @@ List<RouteBase> buildAppShellRoutes(PermissionService permissionService) {
     ),
     GoRoute(
       path: AppRoutes.patients,
-      builder: (context, state) => BlocProvider(
-        create: (_) => GetIt.I<PatientListCubit>(),
-        child: const DoctorPatientListScreen(),
-      ),
+      builder: (context, state) {
+        if (permissionService.isDoctor) {
+          return BlocProvider(
+            create: (_) => GetIt.I<doctor_patients.PatientListCubit>(),
+            child: const DoctorPatientListScreen(),
+          );
+        }
+        if (permissionService.canViewPatientsList) {
+          return BlocProvider(
+            create: (_) => GetIt.I<PatientListCubit>()..loadInitial(),
+            child: const PatientListScreen(),
+          );
+        }
+        return const PlaceholderShellContent(
+          titleKey: 'shell.patients',
+          icon: AppIcons.patients,
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.prescriptions,

@@ -32,6 +32,10 @@ abstract final class AppPermissions {
   // Financial & Billing
   static const String billingView = 'billing.view';
   static const String billingCreate = 'billing.create';
+  static const String receptionPaymentsView = 'reception.payments.view';
+  static const String receptionPaymentsRefund = 'reception.payments.refund';
+  static const String receptionDiscountsCreate = 'reception.discounts.create';
+  static const String receptionServicesAdd = 'reception.services.add';
 
   // Reports
   static const String reportsView = 'reports.view';

@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/utils/uuid_generator.dart';
+import '../../../../core/validators/vitals_validator.dart';
 import '../../domain/entities/booking_doctor_entity.dart';
 import '../../domain/entities/booking_patient_entity.dart';
 import '../../domain/entities/booking_service_entity.dart';
@@ -39,23 +40,30 @@ class WalkInCubit extends Cubit<WalkInState> {
       (f) => emit(state.copyWith(isLoadingContext: false, contextError: f.message)),
       (ctx) => emit(state.copyWith(isLoadingContext: false, formContext: ctx)),
     );
+    searchPatients('');
   }
 
   void searchPatients(String query) {
     _searchDebounce?.cancel();
-    if (query.trim().isEmpty) {
-      emit(state.copyWith(searchResults: const [], isSearching: false));
+    final trimmed = query.trim();
+    emit(state.copyWith(isSearching: true));
+
+    if (trimmed.isEmpty) {
+      _executeSearch('');
       return;
     }
 
-    emit(state.copyWith(isSearching: true));
-    _searchDebounce = Timer(const Duration(milliseconds: 350), () async {
-      final res = await _searchPatientsUseCase(query.trim());
-      res.fold(
-        (f) => emit(state.copyWith(isSearching: false)),
-        (list) => emit(state.copyWith(isSearching: false, searchResults: list)),
-      );
+    _searchDebounce = Timer(const Duration(milliseconds: 250), () {
+      _executeSearch(trimmed);
     });
+  }
+
+  Future<void> _executeSearch(String query) async {
+    final res = await _searchPatientsUseCase(query);
+    res.fold(
+      (f) => emit(state.copyWith(isSearching: false)),
+      (list) => emit(state.copyWith(isSearching: false, searchResults: list)),
+    );
   }
 
   void selectPatient(BookingPatientEntity patient) =>
@@ -140,6 +148,13 @@ class WalkInCubit extends Cubit<WalkInState> {
   Future<void> submit() async {
     final params = state.toWalkInParams();
     if (state.isSubmitting || params == null) return;
+
+    final vitalsError = VitalsValidator.validateAll(state.vitalSigns);
+    if (vitalsError != null) {
+      emit(state.copyWith(isSubmitting: false, submitError: vitalsError));
+      return;
+    }
+
     emit(state.copyWith(isSubmitting: true, clearSubmitError: true));
     final res = await _createWalkInUseCase(params);
     res.fold(

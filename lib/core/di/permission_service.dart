@@ -30,6 +30,11 @@ class PermissionService {
   bool get isClinicAdmin => _accountType == 'clinic_admin';
   bool get isPatient => _accountType == 'patient';
 
+  bool get canViewPatientsList =>
+      isClinicAdmin ||
+      isReceptionist ||
+      hasAny(['patients.view', 'عرض_المرضى']);
+
   bool get canAccessReceptionDashboard =>
       isReceptionist ||
       isClinicAdmin ||
@@ -52,30 +57,19 @@ class PermissionService {
   bool get canCheckIn =>
       isReceptionist ||
       isClinicAdmin ||
-      hasAny([
-        'reception.appointments.check_in',
-        'appointments.check_in',
-      ]);
+      hasAny(['reception.appointments.check_in', 'appointments.check_in']);
 
   bool get canAccessInternalChat =>
       isReceptionist ||
       isClinicAdmin ||
-      hasAny([
-        'messages.view',
-        'messages.create',
-        'عرض_ارسال_الرسائل',
-      ]);
+      hasAny(['messages.view', 'messages.create', 'عرض_ارسال_الرسائل']);
 
   bool get canSendInternalChat =>
       isReceptionist ||
       isClinicAdmin ||
-      hasAny([
-        'messages.create',
-        'عرض_ارسال_الرسائل',
-      ]);
+      hasAny(['messages.create', 'عرض_ارسال_الرسائل']);
 
   String get accountType => _accountType;
   String get role => _role;
   List<String> get permissions => _permissions;
 }
-

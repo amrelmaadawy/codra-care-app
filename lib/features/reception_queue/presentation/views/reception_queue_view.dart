@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/app_snackbar.dart';
 import '../../domain/entities/reception_queue_item_entity.dart';
 import '../cubit/reception_queue_cubit.dart';
 import '../cubit/reception_queue_state.dart';
@@ -25,22 +28,11 @@ class ReceptionQueueView extends StatelessWidget {
           prev.actionFeedbackKey != curr.actionFeedbackKey ||
           prev.errorMessage != curr.errorMessage,
       listener: (context, state) {
-        final feedback = state.actionFeedbackKey;
-        final error = state.errorMessage;
-        if (feedback != null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(feedback.tr()),
-            backgroundColor: AppColors.emerald,
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
-          ));
+        if (state.actionFeedbackKey != null) {
+          AppSnackBar.showSuccess(context, state.actionFeedbackKey!.tr());
           context.read<ReceptionQueueCubit>().clearFeedback();
-        } else if (error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(error.tr()),
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-          ));
+        } else if (state.errorMessage != null) {
+          AppSnackBar.showError(context, state.errorMessage!.tr());
           context.read<ReceptionQueueCubit>().clearFeedback();
         }
       },
@@ -51,6 +43,8 @@ class ReceptionQueueView extends StatelessWidget {
           appBar: ReceptionQueueAppBar(
             isRefreshing: state.isSilentRefreshing,
             lastRefreshedAt: state.lastRefreshedAt,
+            totalPatients: state.queue.summary.total,
+            onRefresh: cubit.loadQueue,
             onSearchChanged: cubit.setSearch,
           ),
           body: Column(
@@ -148,6 +142,14 @@ class ReceptionQueueView extends StatelessWidget {
             item: item,
             onSaved: cubit.onItemUpdated,
           ),
+          onOpenPayment: item.appointmentId != null
+              ? () async {
+                  await context.push(
+                    AppRoutes.receptionPaymentPath(item.appointmentId!),
+                  );
+                  cubit.loadQueue(silent: true);
+                }
+              : null,
         );
       },
     );
@@ -189,10 +191,7 @@ class ReceptionQueueView extends StatelessWidget {
     ReceptionQueueCubit cubit,
     ReceptionQueueItemEntity item,
   ) async {
-    final reason = await QueueActionDialogs.showCancelDialog(
-      context: context,
-      patientName: item.patientName,
-    );
+    final reason = await QueueActionDialogs.showCancelDialog(context: context, patientName: item.patientName);
     if (reason != null && reason.isNotEmpty) cubit.cancelQueueItem(item.id, reason);
   }
 }

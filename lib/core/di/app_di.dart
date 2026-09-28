@@ -20,6 +20,8 @@ import '../../features/reception_booking/reception_booking_di.dart';
 import '../../features/reception_queue/reception_queue_di.dart';
 import '../../features/reception_follow_ups/reception_follow_ups_di.dart';
 import '../../features/internal_chat/internal_chat_di.dart';
+import '../../features/patient_management/patient_management_di.dart';
+import '../../features/reception_payments/reception_payments_di.dart';
 import 'package:dio/dio.dart';
 import '../../features/shell/shell_di.dart';
 import '../network/api_client.dart';
@@ -60,5 +62,6 @@ Future<void> setupDi() async {
   setupReceptionQueueDi();
   setupReceptionFollowUpsDi();
   setupInternalChatDi();
+  setupReceptionPaymentsDi();
+  initPatientManagementDi(sl);
 }
-

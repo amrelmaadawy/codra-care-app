@@ -6,8 +6,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/appointment_entity.dart';
-import '../../domain/entities/appointment_enums.dart';
-import 'appointment_card_check_in_button.dart';
+import 'appointment_card_footer.dart';
 import 'appointment_status_chip.dart';
 
 class AppointmentCard extends StatelessWidget {
@@ -44,7 +43,11 @@ class AppointmentCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           _buildDoctorAndService(context),
           const SizedBox(height: AppSpacing.sm),
-          _buildFooter(context),
+          AppointmentCardFooter(
+            appointment: appointment,
+            onCheckIn: onCheckIn,
+            isCheckingIn: isCheckingIn,
+          ),
         ],
       ),
     );
@@ -81,7 +84,11 @@ class AppointmentCard extends StatelessWidget {
         if (appointment.canCancel && onCancel != null) ...[
           const SizedBox(width: AppSpacing.xs),
           PopupMenuButton<String>(
-            icon: Icon(Icons.more_vert, size: 20, color: context.textMutedColor),
+            icon: Icon(
+              Icons.more_vert,
+              size: 20,
+              color: context.textMutedColor,
+            ),
             padding: EdgeInsets.zero,
             onSelected: (val) {
               if (val == 'cancel') onCancel!();
@@ -91,11 +98,17 @@ class AppointmentCard extends StatelessWidget {
                 value: 'cancel',
                 child: Row(
                   children: [
-                    const Icon(Icons.cancel_outlined, size: 18, color: AppColors.error),
+                    const Icon(
+                      Icons.cancel_outlined,
+                      size: 18,
+                      color: AppColors.error,
+                    ),
                     const SizedBox(width: AppSpacing.sm),
                     Text(
                       'reception_appointments.cancel_appointment'.tr(),
-                      style: AppTypography.bodyMedium.copyWith(color: AppColors.error),
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColors.error,
+                      ),
                     ),
                   ],
                 ),
@@ -110,84 +123,20 @@ class AppointmentCard extends StatelessWidget {
   Widget _buildDoctorAndService(BuildContext context) {
     return Row(
       children: [
-        Icon(Icons.medical_services_outlined, size: 16, color: context.textMutedColor),
+        Icon(
+          Icons.medical_services_outlined,
+          size: 16,
+          color: context.textMutedColor,
+        ),
         const SizedBox(width: AppSpacing.xs),
         Expanded(
           child: Text(
             '${appointment.doctor.name} • ${appointment.service?.name ?? ''}',
-            style: AppTypography.bodySmall.copyWith(color: context.textMutedColor),
+            style: AppTypography.bodySmall.copyWith(
+              color: context.textMutedColor,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFooter(BuildContext context) {
-    final isTimed = appointment.bookingMode == AppointmentBookingMode.scheduled;
-    final timeOrQueueText = appointment.startTime != null
-        ? '${appointment.startTime ?? ''} - ${appointment.endTime ?? ''}'
-        : (appointment.queuePosition != null
-            ? '${'reception_appointments.queue_num'.tr()} #${appointment.queuePosition}'
-            : 'reception_appointments.type_queue'.tr());
-
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-          decoration: BoxDecoration(
-            color: context.surfaceVariantColor,
-            borderRadius: BorderRadius.circular(AppRadius.sm),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                isTimed ? Icons.access_time : Icons.format_list_numbered,
-                size: 13,
-                color: context.primaryColor,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                timeOrQueueText,
-                style: AppTypography.bodySmall.copyWith(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 11,
-                  color: context.textColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (appointment.isPackage) ...[
-          const SizedBox(width: AppSpacing.xs),
-          Flexible(
-            child: Text(
-              '${'reception_appointments.session'.tr()} ${appointment.completedSessions ?? 0}/${appointment.totalSessions ?? 0}',
-              style: AppTypography.bodySmall.copyWith(
-                fontSize: 10,
-                color: AppColors.accent,
-                fontWeight: FontWeight.bold,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-        const Spacer(),
-        if (onCheckIn != null) ...[
-          AppointmentCardCheckInButton(
-            isCheckingIn: isCheckingIn,
-            onPressed: onCheckIn!,
-          ),
-          const SizedBox(width: AppSpacing.sm),
-        ],
-        Text(
-          '${appointment.servicePrice.toStringAsFixed(0)} ${'reception_appointments.currency'.tr()}',
-          style: AppTypography.titleSmall.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.primaryColor,
           ),
         ),
       ],
