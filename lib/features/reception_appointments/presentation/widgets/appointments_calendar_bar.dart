@@ -163,11 +163,12 @@ class AppointmentsCalendarBar extends StatelessWidget {
             '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
         return SizedBox(
           width: 38,
-          height: 52,
+          height: 44,
           child: AppointmentCalendarDayTile(
             date: d,
             isSelected: dStr == selectedDate,
             count: _countMap[dStr] ?? 0,
+            showDayName: false,
             onDateSelected: onDateSelected,
           ),
         );

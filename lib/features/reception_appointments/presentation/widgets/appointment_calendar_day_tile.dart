@@ -8,6 +8,7 @@ class AppointmentCalendarDayTile extends StatelessWidget {
   final DateTime date;
   final bool isSelected;
   final int count;
+  final bool showDayName;
   final ValueChanged<String> onDateSelected;
 
   const AppointmentCalendarDayTile({
@@ -15,6 +16,7 @@ class AppointmentCalendarDayTile extends StatelessWidget {
     required this.date,
     required this.isSelected,
     required this.count,
+    this.showDayName = true,
     required this.onDateSelected,
   });
 
@@ -35,7 +37,7 @@ class AppointmentCalendarDayTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(AppRadius.sm),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         decoration: BoxDecoration(
           color: isSelected ? context.primaryColor : context.surfaceColor,
           borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -45,16 +47,21 @@ class AppointmentCalendarDayTile extends StatelessWidget {
           ),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              dayName,
-              style: AppTypography.bodySmall.copyWith(
-                fontSize: 10,
-                color: isSelected ? Colors.white : context.textMutedColor,
+            if (showDayName) ...[
+              Text(
+                dayName,
+                style: AppTypography.bodySmall.copyWith(
+                  fontSize: 10,
+                  color: isSelected ? Colors.white : context.textMutedColor,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            const SizedBox(height: 2),
+              const SizedBox(height: 2),
+            ],
             Text(
               '${date.day}',
               style: AppTypography.titleSmall.copyWith(

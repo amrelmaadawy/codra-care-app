@@ -1,12 +1,12 @@
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_icons.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../domain/entities/patient_list_entity.dart';
+import 'patient_card_info.dart';
 
 class PatientCard extends StatelessWidget {
   final PatientListEntity patient;
@@ -18,20 +18,19 @@ class PatientCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: context.surfaceColor,
-        borderRadius: AppRadius.cardRadius,
+        borderRadius: BorderRadius.circular(16),
         boxShadow: context.cardShadow,
-        border: Border.all(color: context.dividerColor),
+        border: Border.all(color: context.dividerColor.withValues(alpha: 0.6)),
       ),
-      padding: AppSpacing.cardPadding,
+      padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildAvatar(context),
-              const SizedBox(width: AppSpacing.md),
+              const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,22 +40,33 @@ class PatientCard extends StatelessWidget {
                       style: AppTypography.titleMedium.copyWith(
                         color: context.textColor,
                         fontWeight: FontWeight.bold,
+                        fontSize: 15,
                       ),
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: 3),
                     _buildCodeBadge(context),
                   ],
                 ),
               ),
+              const SizedBox(width: AppSpacing.xs),
+              Icon(
+                Icons.chevron_left_rounded,
+                size: 20,
+                color: context.textMutedColor.withValues(alpha: 0.5),
+              ),
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
-          _buildInfoRow(context),
           const SizedBox(height: AppSpacing.sm),
-          const Divider(height: 1),
+          PatientCardInfo(patient: patient),
           const SizedBox(height: AppSpacing.sm),
+          Divider(
+            height: 1,
+            thickness: 0.7,
+            color: context.dividerColor.withValues(alpha: 0.4),
+          ),
+          const SizedBox(height: AppSpacing.xs),
           _buildLastVisitRow(context),
         ],
       ),
@@ -65,11 +75,22 @@ class PatientCard extends StatelessWidget {
 
   Widget _buildAvatar(BuildContext context) {
     return Container(
-      width: 44,
-      height: 44,
+      width: 46,
+      height: 46,
       decoration: BoxDecoration(
-        color: context.primaryColor.withValues(alpha: 0.12),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            context.primaryColor.withValues(alpha: 0.15),
+            context.primaryColor.withValues(alpha: 0.05),
+          ],
+        ),
         shape: BoxShape.circle,
+        border: Border.all(
+          color: context.primaryColor.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
       ),
       alignment: Alignment.center,
       child: Text(
@@ -77,6 +98,7 @@ class PatientCard extends StatelessWidget {
         style: AppTypography.titleSmall.copyWith(
           color: context.primaryColor,
           fontWeight: FontWeight.bold,
+          fontSize: 14,
         ),
       ),
     );
@@ -84,12 +106,9 @@ class PatientCard extends StatelessWidget {
 
   Widget _buildCodeBadge(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xxs,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       decoration: BoxDecoration(
-        color: context.surfaceVariantColor,
+        color: context.surfaceVariantColor.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(AppRadius.xs),
       ),
       child: Text(
@@ -97,83 +116,9 @@ class PatientCard extends StatelessWidget {
         style: AppTypography.labelSmall.copyWith(
           color: context.textMutedColor,
           fontWeight: FontWeight.w600,
+          fontSize: 10.5,
         ),
       ),
-    );
-  }
-
-  Widget _buildInfoRow(BuildContext context) {
-    final isFemale = patient.gender?.toLowerCase() == 'female';
-    final genderKey = isFemale
-        ? 'patients.gender_female'
-        : 'patients.gender_male';
-    final ageText = patient.age != null
-        ? 'patients.age_years'.tr(namedArgs: {'years': '${patient.age}'})
-        : null;
-
-    return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.xs,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        if (patient.phone != null && patient.phone!.isNotEmpty)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.phone_outlined,
-                size: 14,
-                color: context.textMutedColor,
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: Text(
-                  patient.phone!,
-                  style: AppTypography.bodySmall.copyWith(
-                    color: context.textMutedColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm,
-            vertical: AppSpacing.xxs,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.info.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(AppRadius.xs),
-          ),
-          child: Text(
-            genderKey.tr(),
-            style: AppTypography.labelSmall.copyWith(
-              color: AppColors.info,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        if (ageText != null)
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.sm,
-              vertical: AppSpacing.xxs,
-            ),
-            decoration: BoxDecoration(
-              color: context.surfaceVariantColor,
-              borderRadius: BorderRadius.circular(AppRadius.xs),
-            ),
-            child: Text(
-              ageText,
-              style: AppTypography.labelSmall.copyWith(
-                color: context.textColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-      ],
     );
   }
 
@@ -189,16 +134,17 @@ class PatientCard extends StatelessWidget {
       children: [
         Icon(
           AppIcons.calendar,
-          size: 14,
+          size: 13,
           color: hasVisit ? context.primaryColor : context.textMutedColor,
         ),
-        const SizedBox(width: AppSpacing.xs),
+        const SizedBox(width: 5),
         Expanded(
           child: Text(
             text,
             style: AppTypography.bodySmall.copyWith(
               color: hasVisit ? context.textColor : context.textMutedColor,
               fontWeight: hasVisit ? FontWeight.w500 : FontWeight.normal,
+              fontSize: 11.5,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

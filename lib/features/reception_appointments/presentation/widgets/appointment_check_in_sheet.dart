@@ -10,6 +10,7 @@ import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/app_shimmer_box.dart';
 import '../../domain/entities/appointment_entity.dart';
+import 'appointment_check_in_priority_selector.dart';
 import 'appointment_check_in_summary.dart';
 
 class AppointmentCheckInSheet extends StatefulWidget {
@@ -107,7 +108,11 @@ class _AppointmentCheckInSheetState extends State<AppointmentCheckInSheet> {
             style: AppTypography.labelMedium.copyWith(fontWeight: FontWeight.w600, color: context.textColor),
           ),
           const SizedBox(height: AppSpacing.xs),
-          _buildPrioritySelector(context),
+          AppointmentCheckInPrioritySelector(
+            selectedPriority: _priority,
+            isSubmitting: widget.isSubmitting,
+            onPriorityChanged: (p) => setState(() => _priority = p),
+          ),
           if (_priority == 'urgent') ...[
             const SizedBox(height: AppSpacing.xs),
             Text(
@@ -119,35 +124,6 @@ class _AppointmentCheckInSheetState extends State<AppointmentCheckInSheet> {
           _buildConfirmButton(context),
         ],
       ),
-    );
-  }
-
-  Widget _buildPrioritySelector(BuildContext context) {
-    final priorities = [
-      ('normal', 'reception_appointments.priority_normal'.tr()),
-      ('urgent', 'reception_appointments.priority_urgent'.tr()),
-      ('vip', 'reception_appointments.priority_vip'.tr()),
-    ];
-
-    return Row(
-      children: priorities.map((p) {
-        final selected = _priority == p.$1;
-        return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ChoiceChip(
-              label: Text(p.$2),
-              selected: selected,
-              onSelected: widget.isSubmitting ? null : (_) => setState(() => _priority = p.$1),
-              selectedColor: context.primaryColor.withValues(alpha: 0.15),
-              labelStyle: TextStyle(
-                color: selected ? context.primaryColor : context.textColor,
-                fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ),
-        );
-      }).toList(),
     );
   }
 

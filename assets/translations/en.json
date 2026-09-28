@@ -684,6 +684,8 @@
     "check_in_confirm_msg": "Do you want to check in this patient and add them to the waiting queue?",
     "check_in_confirm_btn": "Confirm Check-in",
     "check_in_success": "Appointment checked in successfully",
+    "check_in_success_msg": "Appointment checked in successfully and added to queue",
+    "already_checked_in_msg": "Patient is already checked in and in the queue",
     "check_in_not_eligible": "Not eligible for check-in right now",
     "check_in_package_info": "Next package session ({current} of {total})"
   },

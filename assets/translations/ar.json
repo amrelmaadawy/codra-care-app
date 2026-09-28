@@ -684,6 +684,8 @@
     "check_in_confirm_msg": "هل تريد تسجيل حضور المريض وإضافته لطابور الانتظار؟",
     "check_in_confirm_btn": "تأكيد تسجيل الحضور",
     "check_in_success": "تم تسجيل حضور الموعد بنجاح",
+    "check_in_success_msg": "تم تسجيل حضور الموعد بنجاح وإضافته لطابور الانتظار",
+    "already_checked_in_msg": "المريض مسجل حضوره بالفعل في طابور الانتظار",
     "check_in_not_eligible": "غير مؤهل لتسجيل الحضور الآن",
     "check_in_package_info": "الجلسة القادمة من الباقة ({current} من {total})"
   },
