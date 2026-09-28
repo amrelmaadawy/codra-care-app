@@ -389,8 +389,7 @@ lib/
 **API**: `GET /api/mobile/patients?search=&page=`
 **PatientListEntity**: { id, code, name, phone, gender, age, lastVisitDate }
 
----
-
+---// next stage=========================================================================
 ### 3.2 — Patient Profile (الملف الطبي الكامل)
 **Screen**: `PatientProfileScreen` — Tabs:
 1. **البيانات الشخصية** (اسم، تليفون، جنس، تاريخ ميلاد، فصيلة دم، تأمين)
